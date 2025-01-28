@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:matchpoint/services/auth.dart';
+import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/widgets/login_page.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,13 +19,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Match Point',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => AppProfileProvider(),
+      child: MaterialApp(
+        title: 'Match Point',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const LoginPage(),
       ),
-      home: const LoginPage(),
     );
   }
 }

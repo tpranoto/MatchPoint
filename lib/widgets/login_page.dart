@@ -2,28 +2,45 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/services/auth.dart';
-import 'package:matchpoint/widgets/home_page.dart';
+import 'package:matchpoint/widgets/home_screen.dart';
+import 'package:matchpoint/widgets/main_scaffold.dart';
+import 'package:provider/provider.dart';
+
+import '../services/firestore.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AppProfileProvider profileProvider =
+        Provider.of<AppProfileProvider>(context);
+
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return FutureBuilder(
+              future: FirestoreService().getById(snapshot.data!.uid),
+              builder: (context, profileSnapshot) {
+                if (profileSnapshot.hasData) {
+                  final storedProfile = profileSnapshot.data;
+                  profileProvider.saveProfile(storedProfile);
+                }
+                return MainScaffold();
+              },
+            );
           }
-          return _loginPageContent();
+          return _loginPageContent(context);
         },
       ),
     );
   }
 
-  Widget _loginPageContent() {
+  Widget _loginPageContent(BuildContext context) {
     return Center(
       child: Column(
         children: [
@@ -45,20 +62,31 @@ class LoginPage extends StatelessWidget {
           ),
           Expanded(
             flex: 3,
-            child: _signInButton(),
+            child: _signInButton(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _signInButton() {
+  Widget _signInButton(BuildContext context) {
+    final profileProvider = Provider.of<AppProfileProvider>(context);
     return Column(
       children: [
         SignInButton(
           Buttons.Google,
           onPressed: () {
-            AuthService().signInWithGoogle();
+            final Future<User?> gUser = AuthService().signInWithGoogle();
+
+            gUser.then((gUserDt) {
+              if (gUserDt != null) {
+                final appProfile = FirestoreService()
+                    .addProfileIfNotExists(Profile.fromUser(gUserDt));
+                if (appProfile != null) {
+                  profileProvider.saveProfile(appProfile);
+                }
+              }
+            });
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
