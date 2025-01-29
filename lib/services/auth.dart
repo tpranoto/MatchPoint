@@ -1,21 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:matchpoint/models/profile.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn();
 
   User? get getCurrentUser {
     return _firebaseAuth.currentUser;
   }
 
   Future<User?> signInWithGoogle() async {
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    if (gUser == null) {
+    final googleAuth = await _googleSignIn.signIn();
+    if (googleAuth == null) {
       return null;
     }
 
-    final GoogleSignInAuthentication gAuth = await gUser.authentication;
+    final GoogleSignInAuthentication gAuth = await googleAuth.authentication;
     final OAuthCredential creds = GoogleAuthProvider.credential(
       idToken: gAuth.idToken,
       accessToken: gAuth.accessToken,
@@ -30,6 +30,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    await _googleSignIn.signOut();
     return await _firebaseAuth.signOut();
   }
 }

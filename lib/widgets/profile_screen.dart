@@ -14,20 +14,23 @@ class ProfileScreen extends StatelessWidget {
     final profileData = profileProvider.getData;
 
     return SafeArea(
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage(profileData!.photoUrl),
-          ),
-          Text(
-            profileData.name,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(profileData!.photoUrl),
             ),
-          )
-        ],
+            Text(
+              profileData.name,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
