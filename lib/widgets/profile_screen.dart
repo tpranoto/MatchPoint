@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/models/profile.dart';
-import 'package:matchpoint/services/firestore.dart';
 import 'package:matchpoint/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
-
+import '../providers/profile_provider.dart';
 import '../services/auth.dart';
 
 class ProfileScreen extends StatelessWidget {

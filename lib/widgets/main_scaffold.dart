@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/services/auth.dart';
 import 'package:matchpoint/widgets/home_screen.dart';
 import 'package:matchpoint/widgets/profile_screen.dart';
 import 'package:matchpoint/widgets/reservations_screen.dart';

@@ -2,12 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-import 'package:matchpoint/models/profile.dart';
-import 'package:matchpoint/services/auth.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
 import 'package:provider/provider.dart';
-
-import '../services/firestore.dart';
+import '../providers/profile_provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

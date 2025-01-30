@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:matchpoint/models/profile.dart';
+import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/widgets/login_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
