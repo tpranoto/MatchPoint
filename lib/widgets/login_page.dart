@@ -4,7 +4,6 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/services/auth.dart';
-import 'package:matchpoint/widgets/home_screen.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
 import 'package:provider/provider.dart';
 
@@ -12,16 +11,6 @@ import '../services/firestore.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
-
-  void _loadAndSaveProfile(BuildContext context, String uid) async {
-    try {
-      final storedProfile = await FirestoreService().getById(uid);
-      final profileProvider = context.read<AppProfileProvider>();
-      profileProvider.saveProfile(storedProfile);
-    } catch (e) {
-      print("Error loading profile: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +20,7 @@ class LoginPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            _loadAndSaveProfile(context, snapshot.data!.uid);
-
+            profileProvider.loadAndSaveProfile(snapshot.data!.uid);
             return MainScaffold();
           }
           return _loginPageContent(context);
@@ -70,19 +58,6 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  _onPressedSignIn(AppProfileProvider profileProvider) {
-    final Future<User?> gUser = AuthService().signInWithGoogle();
-    gUser.then((gUserDt) {
-      if (gUserDt != null) {
-        final appProfile =
-            FirestoreService().addProfileIfNotExists(Profile.fromUser(gUserDt));
-        if (appProfile != null) {
-          profileProvider.saveProfile(appProfile);
-        }
-      }
-    });
-  }
-
   Widget _signInButton(BuildContext context) {
     final profileProvider = context.read<AppProfileProvider>();
     return Column(
@@ -90,7 +65,7 @@ class LoginPage extends StatelessWidget {
         SignInButton(
           Buttons.Google,
           onPressed: () {
-            _onPressedSignIn(profileProvider);
+            profileProvider.signInAndSaveProfile();
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),

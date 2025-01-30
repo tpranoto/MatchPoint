@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../services/auth.dart';
+import '../services/firestore.dart';
+
 class Profile {
   final String id;
   final String email;
@@ -54,6 +57,27 @@ class AppProfileProvider extends ChangeNotifier {
 
   Profile? get getData {
     return _currentProfile;
+  }
+
+  void loadAndSaveProfile(String uid) async {
+    final storedProfile = await FirestoreService().getById(uid);
+    _currentProfile = storedProfile;
+    notifyListeners();
+  }
+
+  void signInAndSaveProfile() async {
+    final gUser = await AuthService().signInWithGoogle();
+    if (gUser == null) {
+      return;
+    }
+
+    final appProfile =
+        FirestoreService().addProfileIfNotExists(Profile.fromUser(gUser));
+    if (appProfile == null) {
+      return;
+    }
+    _currentProfile = appProfile;
+    notifyListeners();
   }
 
   void saveProfile(Profile? curr) {
