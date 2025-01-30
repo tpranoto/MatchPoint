@@ -10,6 +10,11 @@ class AppProfileProvider extends ChangeNotifier {
     return _currentProfile;
   }
 
+  void saveProfile(Profile? currentProfile) {
+    _currentProfile = currentProfile;
+    notifyListeners();
+  }
+
   void loadAndSaveProfile(String uid) async {
     final storedProfile = await FirestoreService().getById(uid);
     _currentProfile = storedProfile;
