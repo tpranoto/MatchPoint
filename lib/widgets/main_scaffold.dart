@@ -20,6 +20,12 @@ class _MainScaffoldState extends State<MainScaffold> {
     ProfileScreen(),
   ];
 
+  final List<String> _screen_title = [
+    "Match Point",
+    "My Reservations",
+    "Profile",
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -29,15 +35,15 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          _screen_title[_selectedIndex],
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: navBar(),
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          AuthService().signOut();
-        },
-        child: Icon(Icons.back_hand),
-      ),
     );
   }
 

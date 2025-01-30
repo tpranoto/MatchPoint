@@ -15,9 +15,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppProfileProvider profileProvider =
-        Provider.of<AppProfileProvider>(context);
-
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -28,6 +25,7 @@ class LoginPage extends StatelessWidget {
               builder: (context, profileSnapshot) {
                 if (profileSnapshot.hasData) {
                   final storedProfile = profileSnapshot.data;
+                  final profileProvider = context.watch<AppProfileProvider>();
                   profileProvider.saveProfile(storedProfile);
                 }
                 return MainScaffold();
@@ -69,24 +67,27 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  _onPressedSignIn(AppProfileProvider profileProvider) {
+    final Future<User?> gUser = AuthService().signInWithGoogle();
+    gUser.then((gUserDt) {
+      if (gUserDt != null) {
+        final appProfile =
+            FirestoreService().addProfileIfNotExists(Profile.fromUser(gUserDt));
+        if (appProfile != null) {
+          profileProvider.saveProfile(appProfile);
+        }
+      }
+    });
+  }
+
   Widget _signInButton(BuildContext context) {
-    final profileProvider = Provider.of<AppProfileProvider>(context);
+    final profileProvider = context.read<AppProfileProvider>();
     return Column(
       children: [
         SignInButton(
           Buttons.Google,
           onPressed: () {
-            final Future<User?> gUser = AuthService().signInWithGoogle();
-
-            gUser.then((gUserDt) {
-              if (gUserDt != null) {
-                final appProfile = FirestoreService()
-                    .addProfileIfNotExists(Profile.fromUser(gUserDt));
-                if (appProfile != null) {
-                  profileProvider.saveProfile(appProfile);
-                }
-              }
-            });
+            _onPressedSignIn(profileProvider);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
