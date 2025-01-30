@@ -30,4 +30,10 @@ class AppProfileProvider extends ChangeNotifier {
     _currentProfile = appProfile;
     notifyListeners();
   }
+
+  void signOutAndRmProfile() async {
+    await AuthService().signOut();
+    _currentProfile = null;
+    notifyListeners();
+  }
 }

@@ -3,7 +3,6 @@ import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
-import '../services/auth.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -100,6 +99,8 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _logoutButton(BuildContext context) {
+    final AppProfileProvider profileProvider =
+        context.read<AppProfileProvider>();
     return Row(
       children: [
         Expanded(
@@ -108,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
               showConfirmationDialog(
                 context,
                 "Log Out",
-                AuthService().signOut,
+                profileProvider.signOutAndRmProfile,
               );
             },
             style: ButtonStyle(

@@ -13,7 +13,10 @@ class FirestoreService {
           ref.set(currProf.toMap());
           return currProf;
         } else {
-          final foundProfile = getById(currProf.id);
+          final foundProfile = Profile.fromMap(
+            snapshot.data() as Map<String, dynamic>,
+            snapshot.id,
+          );
           return foundProfile;
         }
       });
