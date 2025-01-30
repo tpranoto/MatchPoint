@@ -13,24 +13,27 @@ import '../services/firestore.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
+  void _loadAndSaveProfile(BuildContext context, String uid) async {
+    try {
+      final storedProfile = await FirestoreService().getById(uid);
+      final profileProvider = context.read<AppProfileProvider>();
+      profileProvider.saveProfile(storedProfile);
+    } catch (e) {
+      print("Error loading profile: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final profileProvider = context.read<AppProfileProvider>();
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return FutureBuilder(
-              future: FirestoreService().getById(snapshot.data!.uid),
-              builder: (context, profileSnapshot) {
-                if (profileSnapshot.hasData) {
-                  final storedProfile = profileSnapshot.data;
-                  final profileProvider = context.watch<AppProfileProvider>();
-                  profileProvider.saveProfile(storedProfile);
-                }
-                return MainScaffold();
-              },
-            );
+            _loadAndSaveProfile(context, snapshot.data!.uid);
+
+            return MainScaffold();
           }
           return _loginPageContent(context);
         },

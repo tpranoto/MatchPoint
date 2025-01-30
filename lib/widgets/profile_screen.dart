@@ -13,7 +13,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppProfileProvider profileProvider =
         context.watch<AppProfileProvider>();
-
     final profileData = profileProvider.getData;
 
     return Center(

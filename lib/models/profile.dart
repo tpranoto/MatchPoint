@@ -58,5 +58,6 @@ class AppProfileProvider extends ChangeNotifier {
 
   void saveProfile(Profile? curr) {
     _currentProfile = curr;
+    notifyListeners();
   }
 }
