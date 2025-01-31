@@ -1,6 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/profile.dart';
-import '../services/auth.dart';
 import '../services/firestore.dart';
 
 class AppProfileProvider extends ChangeNotifier {
@@ -10,19 +10,13 @@ class AppProfileProvider extends ChangeNotifier {
     return _currentProfile;
   }
 
-  void saveProfile(Profile? currentProfile) {
-    _currentProfile = currentProfile;
-    notifyListeners();
-  }
-
   void loadAndSaveProfile(String uid) async {
     final storedProfile = await FirestoreService().getById(uid);
     _currentProfile = storedProfile;
     notifyListeners();
   }
 
-  void signInAndSaveProfile() async {
-    final gUser = await AuthService().signInWithGoogle();
+  void saveProfileFromUser(User? gUser) async {
     if (gUser == null) {
       return;
     }
@@ -36,8 +30,7 @@ class AppProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void signOutAndRmProfile() async {
-    await AuthService().signOut();
+  void removeProfile() async {
     _currentProfile = null;
     notifyListeners();
   }

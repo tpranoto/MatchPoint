@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
+import 'package:matchpoint/services/auth.dart';
 import 'package:matchpoint/widgets/login_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -19,8 +21,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppProfileProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AppProfileProvider(),
+        ),
+        Provider(
+          create: (context) => AuthService(FirebaseAuth.instance),
+        )
+      ],
       child: MaterialApp(
         title: 'Match Point',
         theme: ThemeData(

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -13,9 +12,11 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileProvider = context.read<AppProfileProvider>();
+    final authProvider = context.watch<AuthService>();
+
     return Scaffold(
       body: StreamBuilder(
-        stream: AuthService().loginChanges,
+        stream: authProvider.loginChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             profileProvider.loadAndSaveProfile(snapshot.data!.uid);
@@ -58,12 +59,17 @@ class LoginPage extends StatelessWidget {
 
   Widget _signInButton(BuildContext context) {
     final profileProvider = context.read<AppProfileProvider>();
+    final authProvider = context.read<AuthService>();
+
     return Column(
       children: [
         SignInButton(
           Buttons.Google,
           onPressed: () {
-            profileProvider.signInAndSaveProfile();
+            final gUser = authProvider.signInWithGoogle();
+            gUser.then(
+              (auth) => profileProvider.saveProfileFromUser(auth),
+            );
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
