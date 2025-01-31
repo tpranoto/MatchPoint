@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:matchpoint/services/auth.dart';
@@ -63,21 +64,20 @@ class LoginPage extends StatelessWidget {
 
     return Column(
       children: [
-        SignInButton(
-          Buttons.Google,
+        ElevatedButton.icon(
           onPressed: () {
             final gUser = authProvider.signInWithGoogle();
             gUser.then(
               (auth) => profileProvider.saveProfileFromUser(auth),
             );
           },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(7),
-            side: BorderSide(
-              color: const Color(
-                0x80808080,
-              ),
-            ),
+          icon: Image.asset(
+            'assets/google_logo.png', // Make sure to add the Google logo to your assets
+            height: 30,
+          ),
+          label: Text("Sign in with Google"),
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(Colors.white),
           ),
         ),
       ],

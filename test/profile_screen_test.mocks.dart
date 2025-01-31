@@ -4,10 +4,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
-import 'dart:ui' as _i7;
+import 'dart:ui' as _i6;
 
 import 'package:firebase_auth/firebase_auth.dart' as _i4;
-import 'package:matchpoint/models/profile.dart' as _i6;
 import 'package:matchpoint/providers/profile_provider.dart' as _i5;
 import 'package:matchpoint/services/auth.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -85,25 +84,19 @@ class MockAppProfileProvider extends _i1.Mock
   );
 
   @override
-  void saveProfile(_i6.Profile? currentProfile) => super.noSuchMethod(
-    Invocation.method(#saveProfile, [currentProfile]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
   void removeProfile() => super.noSuchMethod(
     Invocation.method(#removeProfile, []),
     returnValueForMissingStub: null,
   );
 
   @override
-  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
