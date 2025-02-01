@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "488347209769",
+    "project_id": "matchpoint-20eb8",
+    "storage_bucket": "matchpoint-20eb8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488347209769:android:b5e6076160193f27fccc38",
+        "android_client_info": {
+          "package_name": "matchpoint.group7.cpsc5250"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKzlYNBM_vBKvSc9E7wjw_sKl7MHPZQb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
