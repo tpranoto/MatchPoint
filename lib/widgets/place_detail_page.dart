@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/models/static_data.dart';
 
 import '../models/place.dart';
 
@@ -54,9 +55,9 @@ class PlaceDetailPage extends StatelessWidget {
           spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _iconWithText(Icons.location_on, place.location),
-            _iconWithText(Icons.sports, place.sportType),
-            _iconWithText(Icons.attach_money, "\$${place.pricePerHour}/hr",
+            _iconWithText(Icons.location_on, place.address),
+            _iconWithText(Icons.sports, place.sportCategory.categoryString),
+            _iconWithText(Icons.attach_money, "\$${place.priceInCent / 100}/hr",
                 textColor: Colors.green),
           ],
         ),

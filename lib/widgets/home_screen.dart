@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showFilterDialog(
       context,
       "Filter by specific sport",
-      sportsCategories,
+      sportsCategoriesToList(),
       selectedSportsFilter,
       (value) {
         setState(() {
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Place> filteredCourts = placeProvider.getList
         .where((place) =>
             (selectedSportsFilter == "All" ||
-                place.sportType == selectedSportsFilter) &&
+                place.sportCategory.categoryString == selectedSportsFilter) &&
             (searchPlaceQuery.isEmpty ||
                 place.name
                     .toLowerCase()
@@ -134,8 +134,9 @@ class PlaceList extends StatelessWidget {
           margin: const EdgeInsets.all(10.0),
           child: ListTile(
             title: Text(place.name),
-            subtitle: Text("${place.sportType} - ${place.location}"),
-            trailing: Text("\$${place.pricePerHour}/hr"),
+            subtitle: Text(
+                "${place.sportCategory.categoryString} - ${place.address}"),
+            trailing: Text("\$${place.priceInCent / 100}/hr"),
             onTap: () {
               Navigator.push(
                 context,
