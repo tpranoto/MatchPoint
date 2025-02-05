@@ -34,7 +34,7 @@ class Place {
     final List<dynamic> photos = data["photos"];
     String? photoUrl;
     if (photos.isNotEmpty) {
-      photoUrl = "${photos[0]["prefix"]}original${photos[0]["suffix"]}";
+      photoUrl = "${photos.last["prefix"]}original${photos.last["suffix"]}";
     }
 
     final List<dynamic> categories = data["categories"];

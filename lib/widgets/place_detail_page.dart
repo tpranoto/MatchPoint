@@ -13,7 +13,7 @@ class PlaceDetailPage extends StatelessWidget {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Center(
             child: Column(
               spacing: 16,
@@ -32,7 +32,16 @@ class PlaceDetailPage extends StatelessWidget {
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Placeholder(),
+                  child: Image(
+                    height: 360,
+                    width: 360,
+                    fit: BoxFit.fill,
+                    image: place.photoUrl != null
+                        ? NetworkImage(place.photoUrl!)
+                        : AssetImage(
+                            "assets/matchpoint.png",
+                          ),
+                  ),
                 ),
                 _placeInfo(),
               ],
@@ -71,14 +80,16 @@ class PlaceDetailPage extends StatelessWidget {
       spacing: 8,
       children: [
         Icon(icon, color: Colors.blueAccent),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: textColor,
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: textColor,
+            ),
           ),
-        ),
+        )
       ],
     );
   }

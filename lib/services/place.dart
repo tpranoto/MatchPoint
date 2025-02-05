@@ -12,8 +12,8 @@ class PlaceService {
 
   Future<Map<String, dynamic>> fetchNearbyPlaces(
       Position pos, SportsCategories cat,
-      {int radius = 20000, int limit = 20}) async {
-    String url = _setUpPlacesUrl(pos, cat, radius, limit);
+      {String? searchName, int radius = 20000, int limit = 20}) async {
+    String url = _setUpPlacesUrl(pos, cat, searchName, radius, limit);
 
     final headers = {
       "Authorization": _apiKey,
@@ -35,16 +35,21 @@ class PlaceService {
     return _handleResponse(response);
   }
 
-  _setUpPlacesUrl(
-      Position curPos, SportsCategories cat, int radius, int limit) {
+  _setUpPlacesUrl(Position curPos, SportsCategories cat, String? searchName,
+      int radius, int limit) {
     String placesUrl =
         "https://api.foursquare.com/v3/places/search?radius=$radius&categories=${cat.category4SCode}";
+
+    if (searchName != null && searchName != "") {
+      placesUrl = "$placesUrl&query=$searchName";
+    }
 
     placesUrl =
         "$placesUrl&fields=fsq_id,categories,distance,geocodes,location,name,description,rating,photos,stats,price";
 
     placesUrl = "$placesUrl&sort=DISTANCE&limit=$limit";
     placesUrl = "$placesUrl&ll=${curPos.latitude},${curPos.longitude}";
+
     return placesUrl;
   }
 

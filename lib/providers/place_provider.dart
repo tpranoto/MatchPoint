@@ -8,7 +8,9 @@ class PlaceProvider extends ChangeNotifier {
   List<Place> _listOfPlaces = [];
   String _nextPageUrl = "";
   bool _isLoading = false;
+  bool _isScrollLoading = false;
   String _errorMessage = '';
+  String _errorScrollMessage = '';
 
   List<Place> get getList {
     return [..._listOfPlaces];
@@ -22,11 +24,20 @@ class PlaceProvider extends ChangeNotifier {
     return _isLoading;
   }
 
+  bool get isScrollLoading {
+    return _isScrollLoading;
+  }
+
   String get errMsg {
     return _errorMessage;
   }
 
-  Future<void> fetchPlaces(Position pos, SportsCategories cat) async {
+  String get errScrollMsg {
+    return _errorScrollMessage;
+  }
+
+  Future<void> fetchPlaces(Position pos, SportsCategories cat,
+      {String searchName = ""}) async {
     if (_isLoading) return;
 
     _isLoading = true;
@@ -34,7 +45,8 @@ class PlaceProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await PlaceService().fetchNearbyPlaces(pos, cat);
+      final response = await PlaceService()
+          .fetchNearbyPlaces(pos, cat, searchName: searchName);
 
       if (response["statusCode"] == 200) {
         _listOfPlaces = response["results"];
@@ -51,7 +63,29 @@ class PlaceProvider extends ChangeNotifier {
   }
 
   fetchNextPagePlaces() async {
-    PlaceService().fetchNearbyPlacesNextPage(nextPageUrl);
+    if (_isScrollLoading) return;
+
+    _isScrollLoading = true;
+    _errorScrollMessage = '';
+    notifyListeners();
+
+    try {
+      final response =
+          await PlaceService().fetchNearbyPlacesNextPage(nextPageUrl);
+
+      if (response["statusCode"] == 200) {
+        _listOfPlaces.addAll(response["results"]);
+        _nextPageUrl = response["nextPage"];
+      } else {
+        _errorScrollMessage =
+            "${response["statusCode"]}: failed to load places";
+      }
+    } catch (error) {
+      _errorScrollMessage = 'error: $error';
+    } finally {
+      _isScrollLoading = false;
+      notifyListeners();
+    }
   }
 
   addList(List<Place> places) {

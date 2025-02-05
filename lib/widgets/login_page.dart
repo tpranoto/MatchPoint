@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/services/auth.dart';
-import 'package:matchpoint/widgets/disabled_permission_page.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
