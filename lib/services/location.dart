@@ -16,14 +16,17 @@ class LocationService {
     return permission;
   }
 
-  Future<Placemark> getCurrentLocation() async {
+  Future<Map<String, dynamic>> getCurrentLocation() async {
     // Get the current position
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high, // You can adjust this as needed
     );
+    Map<String, dynamic> result = {};
+    result["Position"] = position;
 
     final placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
-    return placemarks[0];
+    result["Placemark"] = placemarks[0];
+    return result;
   }
 }

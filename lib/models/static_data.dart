@@ -67,12 +67,6 @@ extension SportsCategoriesData on SportsCategories {
   }
 }
 
-List<String> sportsCategoriesToList() {
-  return SportsCategories.values
-      .map((category) => category.toString().split('.').last)
-      .toList();
-}
-
 SportsCategories categoryEnum(String category) {
   switch (category) {
     case "Badminton Court":

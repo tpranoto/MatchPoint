@@ -11,8 +11,8 @@ class Place {
   final SportsCategories sportCategory;
   final int priceInCent;
   final List<String> availableTimeslots;
-  final double ratings;
-  final int ratingsTotal;
+  final double? ratings;
+  final int? ratingsTotal;
 
   Place({
     required this.id,
@@ -31,15 +31,20 @@ class Place {
 
   factory Place.fromResponse(Map<String, dynamic> data) {
     final mainGeocodes = data["geocodes"]["main"];
-    final List<Map<String, dynamic>> photos = data["photos"];
-    String photoUrl = "";
+    final List<dynamic> photos = data["photos"];
+    String? photoUrl;
     if (photos.isNotEmpty) {
       photoUrl = "${photos[0]["prefix"]}original${photos[0]["suffix"]}";
     }
 
-    final List<Map<String, dynamic>> categories = data["categories"];
+    final List<dynamic> categories = data["categories"];
     final currCategory = categoryEnum(categories[0]["name"]);
     final double metersInOneMile = 1609.344;
+
+    int? ratingTotal = 0;
+    if (data["stats"] != null) {
+      ratingTotal = data["stats"]["total_ratings"];
+    }
 
     return Place(
       id: data["fsq_id"],
@@ -53,7 +58,7 @@ class Place {
       priceInCent: currCategory.categoryBasedPrice,
       availableTimeslots: allTimeSlots,
       ratings: data["rating"],
-      ratingsTotal: data["stats"]["total_ratings"],
+      ratingsTotal: ratingTotal,
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/models/static_data.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/services/location.dart';
-import 'package:matchpoint/widgets/filter_dialog.dart';
+import 'package:matchpoint/widgets/sports_filter_dialog.dart';
 import 'package:matchpoint/widgets/place_detail_page.dart';
 import 'package:provider/provider.dart';
 import '../models/place.dart';
@@ -19,41 +19,55 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String searchPlaceQuery = "";
-  String selectedSportsFilter = "All";
+  SportsCategories selectedCategory = SportsCategories.all;
 
-  bool _isLoading = true;
+  bool _isLocLoading = true;
+
+  Position? latLong;
   Placemark? currentLocation;
 
   @override
   void initState() {
     super.initState();
-    LocationService().getPermission().then((permission) {
-      if (permission == LocationPermission.deniedForever ||
-          permission == LocationPermission.denied) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DisabledPermissionPage()),
-        );
-      }
 
-      LocationService().getCurrentLocation().then((curr) {
-        setState(() {
-          currentLocation = curr;
-          _isLoading = false;
+    if (mounted && latLong == null) {
+      LocationService().getPermission().then((permission) {
+        if (permission == LocationPermission.deniedForever ||
+            permission == LocationPermission.denied) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DisabledPermissionPage()),
+          );
+        }
+
+        LocationService().getCurrentLocation().then((curr) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              currentLocation = curr["Placemark"];
+              latLong = curr["Position"];
+              _isLocLoading = false;
+            });
+
+            Future.delayed(Duration.zero, () {
+              final prov = Provider.of<PlaceProvider>(context, listen: false);
+              if (prov.getList.isEmpty) {
+                prov.fetchPlaces(latLong!, SportsCategories.all);
+              }
+            });
+          });
         });
       });
-    });
+    }
   }
 
   _onPressedFilterBySports() {
-    showFilterDialog(
+    showSportsFilterDialog(
       context,
       "Filter by specific sport",
-      sportsCategoriesToList(),
-      selectedSportsFilter,
+      selectedCategory,
       (value) {
         setState(() {
-          selectedSportsFilter = value;
+          selectedCategory = value;
         });
       },
     );
@@ -62,37 +76,61 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final placeProvider = context.watch<PlaceProvider>();
-    List<Place> filteredCourts = placeProvider.getList
-        .where((place) =>
-            (selectedSportsFilter == "All" ||
-                place.sportCategory.categoryString == selectedSportsFilter) &&
-            (searchPlaceQuery.isEmpty ||
-                place.name
-                    .toLowerCase()
-                    .contains(searchPlaceQuery.toLowerCase())))
-        .toList();
-    return _isLoading
+    // List<Place> filteredCourts = placeProvider.getList
+    //     .where((place) =>
+    //         (selectedSportsFilter == "All" ||
+    //             place.sportCategory.categoryString == selectedSportsFilter) &&
+    //         (searchPlaceQuery.isEmpty ||
+    //             place.name
+    //                 .toLowerCase()
+    //                 .contains(searchPlaceQuery.toLowerCase())))
+    //     .toList();
+    return _isLocLoading
         ? Center(
             child: CircularProgressIndicator(),
           )
-        : Column(
-            children: [
-              Text(currentLocation!.toString()),
-              _SearchPlaceBar(onSearch: (value) {
-                setState(() {
-                  searchPlaceQuery = value;
-                });
-              }),
-              ElevatedButton.icon(
-                onPressed: _onPressedFilterBySports,
-                icon: const Icon(Icons.filter_list),
-                label: const Text("Category"),
-              ),
-              Expanded(
-                child: PlaceList(places: filteredCourts),
-              ),
-            ],
+        : Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            child: Column(
+              children: [
+                _SearchPlaceBar(onSearch: (value) {
+                  setState(() {
+                    searchPlaceQuery = value;
+                  });
+                }),
+                _filterBar(),
+                Expanded(
+                  child: placeProvider.isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : PlaceList(places: placeProvider.getList),
+                ),
+              ],
+            ),
           );
+  }
+
+  Widget _filterBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Icon(Icons.location_on_outlined),
+            Text(currentLocation!.postalCode ?? ""),
+          ],
+        ),
+        Flexible(
+          child: ElevatedButton.icon(
+            onPressed: _onPressedFilterBySports,
+            icon: const Icon(Icons.filter_list),
+            label: Text(selectedCategory == SportsCategories.all
+                ? "Category"
+                : selectedCategory.categoryString),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -103,18 +141,15 @@ class _SearchPlaceBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: "Search by court name",
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+    return TextField(
+      decoration: InputDecoration(
+        hintText: "Search by court name",
+        prefixIcon: const Icon(Icons.search),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
-        onChanged: onSearch,
       ),
+      onChanged: onSearch,
     );
   }
 }
@@ -131,11 +166,22 @@ class PlaceList extends StatelessWidget {
       itemBuilder: (context, index) {
         final place = places[index];
         return Card(
-          margin: const EdgeInsets.all(10.0),
+          margin: const EdgeInsets.symmetric(vertical: 10.0),
           child: ListTile(
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: Image(
+                height: 56,
+                width: 56,
+                fit: BoxFit.fill,
+                image: place.photoUrl != null
+                    ? NetworkImage(place.photoUrl!)
+                    : AssetImage("assets/matchpoint.png"),
+              ),
+            ),
             title: Text(place.name),
             subtitle: Text(
-                "${place.sportCategory.categoryString} - ${place.address}"),
+                "${place.sportCategory.categoryString} - ${place.distance.toStringAsPrecision(2)} mi"),
             trailing: Text("\$${place.priceInCent / 100}/hr"),
             onTap: () {
               Navigator.push(
