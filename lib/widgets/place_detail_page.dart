@@ -31,10 +31,12 @@ class PlaceDetailPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                ImageWithDefault(
-                  photoUrl: place.photoUrl,
-                  defaultAsset: "assets/matchpoint.png",
-                  size: 360,
+                Center(
+                  child: ImageWithDefault(
+                    photoUrl: place.photoUrl,
+                    defaultAsset: "assets/matchpoint.png",
+                    size: 360,
+                  ),
                 ),
                 _placeInfo(),
               ],
