@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/models/place.dart';
-import 'package:matchpoint/models/static_data.dart';
+import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/services/place.dart';
 
 class PlaceProvider extends ChangeNotifier {

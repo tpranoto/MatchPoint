@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/models/static_data.dart';
+import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/widgets/common.dart';
 
 import '../models/place.dart';

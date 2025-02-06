@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/models/static_data.dart';
+import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/widgets/common.dart';
 import 'package:matchpoint/widgets/home_place_list.dart';
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return locProvider.permissionDenied
         ? DisabledPermissionPage()
-        : locProvider.isLoading
+        : locProvider.isLoading || locProvider.currentLocation == null
             ? Center(child: CircularProgressIndicator())
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -86,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _FilterBar(
                       selectedCategory: selectedCategory,
                       onPressed: _onPressedFilterBySports,
+                      postalCode: locProvider.currentLocation!.postalCode,
                     ),
                     Expanded(
                       child: placeProvider.isLoading
@@ -105,20 +106,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class _FilterBar extends StatelessWidget {
   final SportsCategories selectedCategory;
+  final String? postalCode;
   final Function() onPressed;
-  const _FilterBar({required this.selectedCategory, required this.onPressed});
+  const _FilterBar({
+    required this.selectedCategory,
+    required this.onPressed,
+    required this.postalCode,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final locProvider = context.watch<LocationProvider>();
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           child: IconWithText(
             icon: Icons.location_on_outlined,
-            text: locProvider.currentLocation!.postalCode ?? "",
+            text: postalCode ?? "",
           ),
         ),
         Flexible(
