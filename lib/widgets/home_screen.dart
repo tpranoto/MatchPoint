@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/models/static_data.dart';
 import 'package:matchpoint/providers/place_provider.dart';
+import 'package:matchpoint/widgets/common.dart';
+import 'package:matchpoint/widgets/home_place_list.dart';
 import 'package:matchpoint/widgets/sports_filter_dialog.dart';
-import 'package:matchpoint/widgets/place_detail_page.dart';
 import 'package:provider/provider.dart';
-import '../models/place.dart';
 import '../providers/location_provider.dart';
 import 'disabled_permission_screen.dart';
 
@@ -72,9 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return locProvider.permissionDenied
         ? DisabledPermissionPage()
         : locProvider.isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? Center(child: CircularProgressIndicator())
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Column(
@@ -85,11 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         fetchPlacesList();
                       },
                     ),
-                    _filterBar(),
+                    _FilterBar(
+                      selectedCategory: selectedCategory,
+                      onPressed: _onPressedFilterBySports,
+                    ),
                     Expanded(
                       child: placeProvider.isLoading
                           ? Center(child: CircularProgressIndicator())
-                          : PlaceList(
+                          : HomePlaceList(
                               places: placeProvider.getList,
                               onRefresh: () async {
                                 fetchPlacesList();
@@ -100,22 +101,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
   }
+}
 
-  Widget _filterBar() {
+class _FilterBar extends StatelessWidget {
+  final SportsCategories selectedCategory;
+  final Function() onPressed;
+  const _FilterBar({required this.selectedCategory, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
     final locProvider = context.watch<LocationProvider>();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          spacing: 8,
-          children: [
-            Icon(Icons.location_on_outlined),
-            Text(locProvider.currentLocation?.postalCode ?? ""),
-          ],
+        Flexible(
+          child: IconWithText(
+            icon: Icons.location_on_outlined,
+            text: locProvider.currentLocation!.postalCode ?? "",
+          ),
         ),
         Flexible(
           child: ElevatedButton.icon(
-            onPressed: _onPressedFilterBySports,
+            onPressed: onPressed,
             icon: const Icon(Icons.filter_list),
             label: Text(selectedCategory == SportsCategories.all
                 ? "Category"
@@ -156,100 +164,6 @@ class _SearchPlaceBar extends StatelessWidget {
         ),
       ),
       onSubmitted: onSubmit,
-    );
-  }
-}
-
-class PlaceList extends StatefulWidget {
-  final List<Place> places;
-  final Future<void> Function() onRefresh;
-
-  const PlaceList({super.key, required this.places, required this.onRefresh});
-
-  @override
-  State<PlaceList> createState() => _PlaceListState();
-}
-
-class _PlaceListState extends State<PlaceList> {
-  final ScrollController _scrollCtrl = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollCtrl.addListener(_infiniteScrollListener);
-  }
-
-  @override
-  void dispose() {
-    _scrollCtrl.removeListener(_infiniteScrollListener);
-    _scrollCtrl.dispose();
-    super.dispose();
-  }
-
-  void _infiniteScrollListener() {
-    final placeProvider = Provider.of<PlaceProvider>(context, listen: false);
-
-    if (_scrollCtrl.position.pixels == _scrollCtrl.position.maxScrollExtent &&
-        placeProvider.nextPageUrl != "") {
-      placeProvider.fetchNextPagePlaces();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final placeProvider = context.watch<PlaceProvider>();
-    return RefreshIndicator(
-      onRefresh: widget.onRefresh,
-      child: ListView.builder(
-        controller: _scrollCtrl,
-        itemCount: widget.places.length + 1,
-        itemBuilder: (context, index) {
-          if (index == widget.places.length) {
-            return placeProvider.isScrollLoading
-                ? Center(child: CircularProgressIndicator())
-                : SizedBox(); // Empty space if not loading
-          }
-
-          final place = widget.places[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 10.0),
-            child: ListTile(
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: Image(
-                  height: 56,
-                  width: 56,
-                  fit: BoxFit.fill,
-                  image: place.photoUrl != null
-                      ? NetworkImage(place.photoUrl!)
-                      : AssetImage("assets/matchpoint.png"),
-                ),
-              ),
-              title: Text(place.name),
-              subtitle: Text(
-                "${place.sportCategory.categoryString} • ${place.distance.toStringAsPrecision(2)} mi",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: Text(
-                "\$${place.priceInCent / 100}/hr",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PlaceDetailPage(place: place),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
     );
   }
 }

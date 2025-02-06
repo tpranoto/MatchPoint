@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/models/static_data.dart';
+import 'package:matchpoint/widgets/common.dart';
 
 import '../models/place.dart';
 
@@ -30,18 +31,10 @@ class PlaceDetailPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image(
-                    height: 360,
-                    width: 360,
-                    fit: BoxFit.fill,
-                    image: place.photoUrl != null
-                        ? NetworkImage(place.photoUrl!)
-                        : AssetImage(
-                            "assets/matchpoint.png",
-                          ),
-                  ),
+                ImageWithDefault(
+                  photoUrl: place.photoUrl,
+                  defaultAsset: "assets/matchpoint.png",
+                  size: 360,
                 ),
                 _placeInfo(),
               ],
@@ -64,33 +57,18 @@ class PlaceDetailPage extends StatelessWidget {
           spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _iconWithText(Icons.location_on, place.address),
-            _iconWithText(Icons.sports, place.sportCategory.categoryString),
-            _iconWithText(Icons.attach_money, "\$${place.priceInCent / 100}/hr",
-                textColor: Colors.green),
+            IconWithText(icon: Icons.location_on, text: place.address),
+            IconWithText(
+                icon: Icons.sports_tennis,
+                text: place.sportCategory.categoryString),
+            IconWithText(
+              icon: Icons.attach_money,
+              text: "\$${place.priceInCent / 100}/hr",
+              textColor: Colors.green,
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _iconWithText(IconData icon, String text,
-      {Color textColor = Colors.black}) {
-    return Row(
-      spacing: 8,
-      children: [
-        Icon(icon, color: Colors.blueAccent),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: textColor,
-            ),
-          ),
-        )
-      ],
     );
   }
 }
