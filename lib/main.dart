@@ -6,6 +6,7 @@ import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/services/auth.dart';
+import 'package:matchpoint/services/firestore.dart';
 import 'package:matchpoint/widgets/login_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthService(FirebaseAuth.instance),
         ),
         ChangeNotifierProvider(
-          create: (context) => AppProfileProvider(),
+          create: (context) =>
+              AppProfileProvider(firestoreService: FirestoreService()),
         ),
         ChangeNotifierProvider(
           create: (context) => LocationProvider(),

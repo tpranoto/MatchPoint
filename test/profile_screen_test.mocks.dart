@@ -3,12 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
-import 'dart:ui' as _i6;
+import 'dart:async' as _i4;
+import 'dart:ui' as _i7;
 
-import 'package:firebase_auth/firebase_auth.dart' as _i4;
-import 'package:matchpoint/providers/profile_provider.dart' as _i5;
-import 'package:matchpoint/services/auth.dart' as _i2;
+import 'package:firebase_auth/firebase_auth.dart' as _i5;
+import 'package:matchpoint/providers/profile_provider.dart' as _i6;
+import 'package:matchpoint/services/auth.dart' as _i3;
+import 'package:matchpoint/services/firestore.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -25,43 +26,64 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeFirestoreService_0 extends _i1.SmartFake
+    implements _i2.FirestoreService {
+  _FakeFirestoreService_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [AuthService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthService extends _i1.Mock implements _i2.AuthService {
+class MockAuthService extends _i1.Mock implements _i3.AuthService {
   @override
-  _i3.Stream<_i4.User?> get loginChanges =>
+  _i4.Stream<_i5.User?> get loginChanges =>
       (super.noSuchMethod(
             Invocation.getter(#loginChanges),
-            returnValue: _i3.Stream<_i4.User?>.empty(),
-            returnValueForMissingStub: _i3.Stream<_i4.User?>.empty(),
+            returnValue: _i4.Stream<_i5.User?>.empty(),
+            returnValueForMissingStub: _i4.Stream<_i5.User?>.empty(),
           )
-          as _i3.Stream<_i4.User?>);
+          as _i4.Stream<_i5.User?>);
 
   @override
-  _i3.Future<_i4.User?> signInWithGoogle() =>
+  _i4.Future<_i5.User?> signInWithGoogle() =>
       (super.noSuchMethod(
             Invocation.method(#signInWithGoogle, []),
-            returnValue: _i3.Future<_i4.User?>.value(),
-            returnValueForMissingStub: _i3.Future<_i4.User?>.value(),
+            returnValue: _i4.Future<_i5.User?>.value(),
+            returnValueForMissingStub: _i4.Future<_i5.User?>.value(),
           )
-          as _i3.Future<_i4.User?>);
+          as _i4.Future<_i5.User?>);
 
   @override
-  _i3.Future<void> signOut() =>
+  _i4.Future<void> signOut() =>
       (super.noSuchMethod(
             Invocation.method(#signOut, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 }
 
 /// A class which mocks [AppProfileProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAppProfileProvider extends _i1.Mock
-    implements _i5.AppProfileProvider {
+    implements _i6.AppProfileProvider {
+  @override
+  _i2.FirestoreService get firestoreService =>
+      (super.noSuchMethod(
+            Invocation.getter(#firestoreService),
+            returnValue: _FakeFirestoreService_0(
+              this,
+              Invocation.getter(#firestoreService),
+            ),
+            returnValueForMissingStub: _FakeFirestoreService_0(
+              this,
+              Invocation.getter(#firestoreService),
+            ),
+          )
+          as _i2.FirestoreService);
+
   @override
   bool get hasListeners =>
       (super.noSuchMethod(
@@ -72,13 +94,16 @@ class MockAppProfileProvider extends _i1.Mock
           as bool);
 
   @override
-  void loadAndSaveProfile(String? uid) => super.noSuchMethod(
-    Invocation.method(#loadAndSaveProfile, [uid]),
-    returnValueForMissingStub: null,
-  );
+  _i4.Future<void> loadAndSaveProfile(String? uid) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadAndSaveProfile, [uid]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  void saveProfileFromUser(_i4.User? gUser) => super.noSuchMethod(
+  void saveProfileFromUser(_i5.User? gUser) => super.noSuchMethod(
     Invocation.method(#saveProfileFromUser, [gUser]),
     returnValueForMissingStub: null,
   );
@@ -90,13 +115,13 @@ class MockAppProfileProvider extends _i1.Mock
   );
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );

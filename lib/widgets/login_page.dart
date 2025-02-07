@@ -17,8 +17,19 @@ class LoginPage extends StatelessWidget {
         stream: authProvider.loginChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            profileProvider.loadAndSaveProfile(snapshot.data!.uid);
-            return MainScaffold();
+            final profileFuture =
+                profileProvider.loadAndSaveProfile(snapshot.data!.uid);
+
+            return FutureBuilder(
+              future: profileFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Show loading while async task is processing
+                }
+
+                return MainScaffold();
+              },
+            );
           }
           return _LoginContent();
         },
