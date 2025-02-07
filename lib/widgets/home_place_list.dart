@@ -28,8 +28,10 @@ class _HomePlaceListState extends State<HomePlaceList> {
 
   @override
   void dispose() {
-    _scrollCtrl.removeListener(_infiniteScrollListener);
-    _scrollCtrl.dispose();
+    if (mounted) {
+      _scrollCtrl.removeListener(_infiniteScrollListener);
+      _scrollCtrl.dispose();
+    }
     super.dispose();
   }
 
