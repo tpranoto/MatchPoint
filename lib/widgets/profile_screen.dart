@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/services/auth.dart';
+import 'package:matchpoint/widgets/common.dart';
 import 'package:matchpoint/widgets/confirmation_dialog.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
@@ -10,32 +11,36 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppProfileProvider profileProvider =
-        context.watch<AppProfileProvider>();
-    final profileData = profileProvider.getData;
+    final profileData = context.watch<AppProfileProvider>().getData;
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
           spacing: 20,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _profileInfo(profileData),
-            _profileAppStats(profileData),
-            _logoutButton(context),
+            _ProfileInfo(profileData: profileData!),
+            _ProfileStats(profileData: profileData),
+            _LogOutButton(),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _profileInfo(Profile? profileData) {
+class _ProfileInfo extends StatelessWidget {
+  final Profile profileData;
+  const _ProfileInfo({required this.profileData});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         CircleAvatar(
           radius: 50,
-          backgroundImage: NetworkImage(profileData!.photoUrl),
+          backgroundImage: NetworkImage(profileData.photoUrl),
         ),
         Text(
           profileData.name,
@@ -51,8 +56,15 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _profileAppStats(Profile? profileData) {
+class _ProfileStats extends StatelessWidget {
+  final Profile profileData;
+
+  const _ProfileStats({required this.profileData});
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
@@ -61,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
             Expanded(
               child: _profileAppStatsData(
                 "Reservations",
-                profileData!.reservationsCount,
+                profileData.reservationsCount,
               ),
             ),
             Expanded(
@@ -98,8 +110,13 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _logoutButton(BuildContext context) {
+class _LogOutButton extends StatelessWidget {
+  const _LogOutButton();
+
+  @override
+  Widget build(BuildContext context) {
     final AppProfileProvider profileProvider =
         context.read<AppProfileProvider>();
     final authProvider = context.read<AuthService>();
@@ -121,12 +138,10 @@ class ProfileScreen extends StatelessWidget {
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(Color(0xFFFFCCCC)),
             ),
-            child: Row(
-              spacing: 10,
-              children: [
-                Icon(Icons.logout),
-                Text("Logout"),
-              ],
+            child: IconWithText(
+              icon: Icons.logout,
+              text: "Logout",
+              textColor: Colors.red,
             ),
           ),
         ),

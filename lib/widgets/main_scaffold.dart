@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/widgets/home_screen.dart';
 import 'package:matchpoint/widgets/profile_screen.dart';
-import 'package:matchpoint/widgets/reservations_screen.dart';
+import 'package:matchpoint/widgets/my_reservations_screen.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});

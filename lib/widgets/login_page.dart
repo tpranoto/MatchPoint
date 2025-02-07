@@ -20,13 +20,18 @@ class LoginPage extends StatelessWidget {
             profileProvider.loadAndSaveProfile(snapshot.data!.uid);
             return MainScaffold();
           }
-          return _loginPageContent(context);
+          return _LoginContent();
         },
       ),
     );
   }
+}
 
-  Widget _loginPageContent(BuildContext context) {
+class _LoginContent extends StatelessWidget {
+  const _LoginContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
@@ -48,14 +53,19 @@ class LoginPage extends StatelessWidget {
           ),
           Expanded(
             flex: 3,
-            child: _signInButton(context),
+            child: _SignInButton(),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _signInButton(BuildContext context) {
+class _SignInButton extends StatelessWidget {
+  const _SignInButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     final profileProvider = context.read<AppProfileProvider>();
     final authProvider = context.read<AuthService>();
 
@@ -69,7 +79,7 @@ class LoginPage extends StatelessWidget {
             );
           },
           icon: Image.asset(
-            'assets/google_logo.png', // Make sure to add the Google logo to your assets
+            'assets/google_logo.png',
             height: 30,
           ),
           label: Text("Sign in with Google"),

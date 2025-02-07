@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/services/auth.dart';
@@ -11,8 +9,6 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  await dotenv.load();
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -33,9 +29,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => AppProfileProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => LocationProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => PlaceProvider(),
