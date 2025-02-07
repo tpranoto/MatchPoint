@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/widgets/common.dart';
+import 'package:matchpoint/widgets/disabled_permission_page.dart';
 import 'package:matchpoint/widgets/home_place_list.dart';
 import 'package:matchpoint/widgets/sports_filter_dialog.dart';
 import 'package:provider/provider.dart';
 import '../providers/location_provider.dart';
-import 'disabled_permission_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
