@@ -20,11 +20,11 @@ class LocationProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    LocationPermission permission = await Geolocator.checkPermission();
+    LocationPermission permission = await geolocator.checkPermission();
 
     if (permission != LocationPermission.whileInUse &&
         permission != LocationPermission.always) {
-      permission = await Geolocator.requestPermission();
+      permission = await geolocator.requestPermission();
     }
 
     if (permission == LocationPermission.deniedForever ||
@@ -39,8 +39,8 @@ class LocationProvider extends ChangeNotifier {
       _permissionDenied = false;
       notifyListeners();
 
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+      Position position = await geolocator.getCurrentPosition(
+          locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
 
       _latLong = position;
 
