@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/models/category.dart';
@@ -7,7 +6,6 @@ import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/services/place.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 import 'place_provider_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<PlaceService>()])

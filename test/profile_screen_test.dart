@@ -8,7 +8,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
-
 import "profile_screen_test.mocks.dart";
 
 @GenerateNiceMocks([MockSpec<AuthService>(), MockSpec<AppProfileProvider>()])
