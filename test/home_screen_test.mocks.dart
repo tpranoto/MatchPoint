@@ -3,16 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
-import 'dart:ui' as _i4;
+import 'dart:async' as _i4;
+import 'dart:ui' as _i5;
 
-import 'package:geolocator/geolocator.dart' as _i8;
+import 'package:geolocator/geolocator.dart' as _i2;
 import 'package:matchpoint/models/category.dart' as _i9;
-import 'package:matchpoint/models/place.dart' as _i6;
-import 'package:matchpoint/providers/location_provider.dart' as _i2;
-import 'package:matchpoint/providers/place_provider.dart' as _i5;
+import 'package:matchpoint/models/place.dart' as _i7;
+import 'package:matchpoint/providers/location_provider.dart' as _i3;
+import 'package:matchpoint/providers/place_provider.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:mockito/src/dummies.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -28,10 +28,31 @@ import 'package:mockito/src/dummies.dart' as _i7;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeGeolocatorPlatform_0 extends _i1.SmartFake
+    implements _i2.GeolocatorPlatform {
+  _FakeGeolocatorPlatform_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [LocationProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLocationProvider extends _i1.Mock implements _i2.LocationProvider {
+class MockLocationProvider extends _i1.Mock implements _i3.LocationProvider {
+  @override
+  _i2.GeolocatorPlatform get geolocator =>
+      (super.noSuchMethod(
+            Invocation.getter(#geolocator),
+            returnValue: _FakeGeolocatorPlatform_0(
+              this,
+              Invocation.getter(#geolocator),
+            ),
+            returnValueForMissingStub: _FakeGeolocatorPlatform_0(
+              this,
+              Invocation.getter(#geolocator),
+            ),
+          )
+          as _i2.GeolocatorPlatform);
+
   @override
   bool get permissionDenied =>
       (super.noSuchMethod(
@@ -60,22 +81,22 @@ class MockLocationProvider extends _i1.Mock implements _i2.LocationProvider {
           as bool);
 
   @override
-  _i3.Future<void> getCurrentLocation() =>
+  _i4.Future<void> getCurrentLocation() =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentLocation, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  void addListener(_i4.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i4.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
@@ -96,25 +117,25 @@ class MockLocationProvider extends _i1.Mock implements _i2.LocationProvider {
 /// A class which mocks [PlaceProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPlaceProvider extends _i1.Mock implements _i5.PlaceProvider {
+class MockPlaceProvider extends _i1.Mock implements _i6.PlaceProvider {
   @override
-  List<_i6.Place> get getList =>
+  List<_i7.Place> get getList =>
       (super.noSuchMethod(
             Invocation.getter(#getList),
-            returnValue: <_i6.Place>[],
-            returnValueForMissingStub: <_i6.Place>[],
+            returnValue: <_i7.Place>[],
+            returnValueForMissingStub: <_i7.Place>[],
           )
-          as List<_i6.Place>);
+          as List<_i7.Place>);
 
   @override
   String get nextPageUrl =>
       (super.noSuchMethod(
             Invocation.getter(#nextPageUrl),
-            returnValue: _i7.dummyValue<String>(
+            returnValue: _i8.dummyValue<String>(
               this,
               Invocation.getter(#nextPageUrl),
             ),
-            returnValueForMissingStub: _i7.dummyValue<String>(
+            returnValueForMissingStub: _i8.dummyValue<String>(
               this,
               Invocation.getter(#nextPageUrl),
             ),
@@ -143,11 +164,11 @@ class MockPlaceProvider extends _i1.Mock implements _i5.PlaceProvider {
   String get errMsg =>
       (super.noSuchMethod(
             Invocation.getter(#errMsg),
-            returnValue: _i7.dummyValue<String>(
+            returnValue: _i8.dummyValue<String>(
               this,
               Invocation.getter(#errMsg),
             ),
-            returnValueForMissingStub: _i7.dummyValue<String>(
+            returnValueForMissingStub: _i8.dummyValue<String>(
               this,
               Invocation.getter(#errMsg),
             ),
@@ -158,11 +179,11 @@ class MockPlaceProvider extends _i1.Mock implements _i5.PlaceProvider {
   String get errScrollMsg =>
       (super.noSuchMethod(
             Invocation.getter(#errScrollMsg),
-            returnValue: _i7.dummyValue<String>(
+            returnValue: _i8.dummyValue<String>(
               this,
               Invocation.getter(#errScrollMsg),
             ),
-            returnValueForMissingStub: _i7.dummyValue<String>(
+            returnValueForMissingStub: _i8.dummyValue<String>(
               this,
               Invocation.getter(#errScrollMsg),
             ),
@@ -179,8 +200,8 @@ class MockPlaceProvider extends _i1.Mock implements _i5.PlaceProvider {
           as bool);
 
   @override
-  _i3.Future<void> fetchPlaces(
-    _i8.Position? pos,
+  _i4.Future<void> fetchPlaces(
+    _i2.Position? pos,
     _i9.SportsCategories? cat, {
     String? searchName = '',
   }) =>
@@ -190,31 +211,31 @@ class MockPlaceProvider extends _i1.Mock implements _i5.PlaceProvider {
               [pos, cat],
               {#searchName: searchName},
             ),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  dynamic addList(List<_i6.Place>? places) => super.noSuchMethod(
+  dynamic addList(List<_i7.Place>? places) => super.noSuchMethod(
     Invocation.method(#addList, [places]),
     returnValueForMissingStub: null,
   );
 
   @override
-  dynamic replaceList(List<_i6.Place>? places) => super.noSuchMethod(
+  dynamic replaceList(List<_i7.Place>? places) => super.noSuchMethod(
     Invocation.method(#replaceList, [places]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void addListener(_i4.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i4.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );

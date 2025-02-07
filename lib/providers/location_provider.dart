@@ -3,10 +3,13 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationProvider extends ChangeNotifier {
+  final GeolocatorPlatform geolocator;
   bool _permissionDenied = false;
   Position? _latLong;
   Placemark? _currentLocation;
   bool _isLoading = false;
+
+  LocationProvider({required this.geolocator});
 
   bool get permissionDenied => _permissionDenied;
   bool get isLoading => _isLoading;
@@ -17,11 +20,11 @@ class LocationProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    LocationPermission permission = await Geolocator.checkPermission();
+    LocationPermission permission = await geolocator.checkPermission();
 
     if (permission != LocationPermission.whileInUse &&
         permission != LocationPermission.always) {
-      permission = await Geolocator.requestPermission();
+      permission = await geolocator.requestPermission();
     }
 
     if (permission == LocationPermission.deniedForever ||
@@ -36,8 +39,8 @@ class LocationProvider extends ChangeNotifier {
       _permissionDenied = false;
       notifyListeners();
 
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+      Position position = await geolocator.getCurrentPosition(
+          locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
 
       _latLong = position;
 
