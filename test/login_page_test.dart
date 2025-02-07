@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import "profile_screen_test.mocks.dart";
 import "login_page_test.mocks.dart";
 
-@GenerateNiceMocks([MockSpec<User>()])
 void main() {
   testWidgets('Login Page stays in Login Page if user is not authenticated.',
       (WidgetTester tester) async {
