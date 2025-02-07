@@ -3,10 +3,13 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationProvider extends ChangeNotifier {
+  final GeolocatorPlatform geolocator;
   bool _permissionDenied = false;
   Position? _latLong;
   Placemark? _currentLocation;
   bool _isLoading = false;
+
+  LocationProvider({required this.geolocator});
 
   bool get permissionDenied => _permissionDenied;
   bool get isLoading => _isLoading;

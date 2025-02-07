@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
               AppProfileProvider(firestoreService: FirestoreService()),
         ),
         ChangeNotifierProvider(
-          create: (context) => LocationProvider(),
+          create: (context) => LocationProvider(geolocator: GeolocatorPlatform.instance),
         ),
         ChangeNotifierProvider(
           create: (context) => PlaceProvider(),
