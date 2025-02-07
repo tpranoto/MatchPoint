@@ -5,6 +5,10 @@ import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/services/place.dart';
 
 class PlaceProvider extends ChangeNotifier {
+  final PlaceService placeService;
+
+  PlaceProvider({required this.placeService});
+
   List<Place> _listOfPlaces = [];
   String _nextPageUrl = "";
   bool _isLoading = false;
@@ -45,12 +49,12 @@ class PlaceProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await PlaceService()
-          .fetchNearbyPlaces(pos, cat, searchName: searchName);
+      final response = await placeService.fetchNearbyPlaces(pos, cat,
+          searchName: searchName);
 
       if (response["statusCode"] == 200) {
         _listOfPlaces = response["results"];
-        _nextPageUrl = response["nextPage"];
+        _nextPageUrl = response["nextPage"] ?? "";
       } else {
         _errorMessage = "${response["statusCode"]}: failed to load places";
       }
@@ -71,7 +75,7 @@ class PlaceProvider extends ChangeNotifier {
 
     try {
       final response =
-          await PlaceService().fetchNearbyPlacesNextPage(nextPageUrl);
+          await placeService.fetchNearbyPlacesNextPage(nextPageUrl);
 
       if (response["statusCode"] == 200) {
         _listOfPlaces.addAll(response["results"]);
@@ -86,15 +90,5 @@ class PlaceProvider extends ChangeNotifier {
       _isScrollLoading = false;
       notifyListeners();
     }
-  }
-
-  addList(List<Place> places) {
-    _listOfPlaces.addAll(places);
-    notifyListeners();
-  }
-
-  replaceList(List<Place> places) {
-    _listOfPlaces = places;
-    notifyListeners();
   }
 }

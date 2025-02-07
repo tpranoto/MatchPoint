@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/models/timeslot.dart';
 
@@ -61,5 +62,40 @@ class Place {
       ratings: data["rating"],
       ratingsTotal: ratingTotal,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Place &&
+        other.id == id &&
+        other.name == name &&
+        other.address == address &&
+        other.latitude == latitude &&
+        other.longitude == longitude &&
+        other.distance == distance &&
+        other.photoUrl == photoUrl &&
+        other.sportCategory == sportCategory &&
+        other.priceInCent == priceInCent &&
+        listEquals(other.availableTimeslots, availableTimeslots) &&
+        other.ratings == ratings &&
+        other.ratingsTotal == ratingsTotal;
+  }
+
+  // Override hashCode
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        address.hashCode ^
+        latitude.hashCode ^
+        longitude.hashCode ^
+        distance.hashCode ^
+        photoUrl.hashCode ^
+        sportCategory.hashCode ^
+        priceInCent.hashCode ^
+        availableTimeslots.hashCode ^
+        ratings.hashCode ^
+        ratingsTotal.hashCode;
   }
 }
