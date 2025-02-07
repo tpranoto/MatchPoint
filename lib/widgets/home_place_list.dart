@@ -59,36 +59,45 @@ class _HomePlaceListState extends State<HomePlaceList> {
                 : SizedBox(); // Empty space if not loading
           }
 
-          final place = widget.places[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 10.0),
-            child: ListTile(
-              leading: ImageWithDefault(
-                photoUrl: place.photoUrl,
-                defaultAsset: "assets/matchpoint.png",
-                size: 56,
-              ),
-              title: Text(place.name),
-              subtitle: Text(
-                "${place.sportCategory.categoryString} • ${place.distance.toStringAsPrecision(2)} mi",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: Text(
-                "\$${place.priceInCent / 100}/hr",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PlaceDetailPage(place: place),
-                  ),
-                );
-              },
+          return _PlacesCard(place: widget.places[index]);
+        },
+      ),
+    );
+  }
+}
+
+class _PlacesCard extends StatelessWidget {
+  final Place place;
+  const _PlacesCard({required this.place});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      child: ListTile(
+        leading: ImageWithDefault(
+          photoUrl: place.photoUrl,
+          defaultAsset: "assets/matchpoint.png",
+          size: 56,
+        ),
+        title: Text(place.name),
+        subtitle: Text(
+          "${place.sportCategory.categoryString} • ${place.distance.toStringAsPrecision(2)} mi",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        trailing: Text(
+          "\$${place.priceInCent / 100}/hr",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PlaceDetailPage(place: place),
             ),
           );
         },
