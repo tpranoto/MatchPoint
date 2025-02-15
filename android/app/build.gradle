@@ -34,8 +34,8 @@ android {
     }
 
     signingConfigs{
-        sharedDev{
-            storeFile rootProject.file("../sharedDev.keystore")
+        debug{
+            storeFile file("sharedDev.keystore")
             storePassword "Group7"
             keyAlias "group7"
             keyPassword "Group7"
@@ -46,7 +46,7 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.sharedDev
+            signingConfig = signingConfigs.debug
         }
     }
 }

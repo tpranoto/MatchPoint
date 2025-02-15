@@ -6,8 +6,8 @@ Group 7 project for CPSC 5250:
 
 ## Getting Started
 
-The project requires Foursquare API in `.env` and SHA-1/SHA-256 fingerprints in `sharedDev.keystore`
-to run.
+The project requires Foursquare API in `.env` placed in root directory and SHA-1/SHA-256 fingerprints in `sharedDev.keystore`
+placed in `android/app` to run.
 
 ## Current Progress
 
