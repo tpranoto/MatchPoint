@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,11 +6,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/place_provider.dart';
+import 'package:matchpoint/providers/profile_prov.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
+import 'package:matchpoint/providers/auth_provider.dart';
 import 'package:matchpoint/services/auth.dart';
 import 'package:matchpoint/services/firestore.dart';
 import 'package:matchpoint/services/place.dart';
-import 'package:matchpoint/widgets/login_page.dart';
+import 'package:matchpoint/widgets_new/login_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -31,6 +34,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => AppAuthProvider(FirebaseAuth.instance),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ProfileProvider(FirebaseFirestore.instance),
+        ),
         Provider(
           create: (context) => AuthService(FirebaseAuth.instance),
         ),

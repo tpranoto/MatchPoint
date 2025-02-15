@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'auth.dart';
+
 class Profile {
   final String id;
   final String email;
@@ -27,6 +29,17 @@ class Profile {
       user.email ?? "",
       user.displayName ?? "",
       user.photoURL ?? "",
+      0,
+      0,
+    );
+  }
+
+  factory Profile.fromAuth(Auth auth) {
+    return Profile(
+      auth.uid,
+      auth.email,
+      auth.displayName,
+      auth.photoUrl,
       0,
       0,
     );

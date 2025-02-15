@@ -1,0 +1,2 @@
+/Users/tpranoto/Documents/dev/flutter_workspace/MatchPoint/android/app/.cxx/Debug/1a2k4k30/x86_64/CMakeFiles/edit_cache.dir
+/Users/tpranoto/Documents/dev/flutter_workspace/MatchPoint/android/app/.cxx/Debug/1a2k4k30/x86_64/CMakeFiles/rebuild_cache.dir

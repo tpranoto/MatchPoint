@@ -60,3 +60,64 @@ class ImageWithDefault extends StatelessWidget {
     );
   }
 }
+
+class CenteredLoading extends StatelessWidget {
+  const CenteredLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class CenteredTitle extends StatelessWidget {
+  final String text;
+  final double size;
+  const CenteredTitle(this.text, {super.key, this.size = 14});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: size),
+      ),
+    );
+  }
+}
+
+class SquaredButton extends StatelessWidget {
+  final String text;
+  final Function() onPressed;
+
+  final Widget icon;
+  final Color bg;
+  final Color fg;
+
+  const SquaredButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    required this.icon,
+    this.bg = Colors.white,
+    this.fg = Colors.black,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bg,
+        foregroundColor: fg,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
+      icon: icon,
+      label: Text(text),
+    );
+  }
+}
