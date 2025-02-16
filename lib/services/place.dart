@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchpoint/models/category.dart';
-import '../models/place.dart';
+import '../models/venue.dart';
 
 class PlaceService {
   final String _apiKey = dotenv.env["SQUARESPACE_API_KEY"] ?? "";
@@ -66,9 +66,9 @@ class PlaceService {
     if (resp.statusCode == 200) {
       final data = json.decode(resp.body);
       List<dynamic> list = data["results"];
-      List<Place> places = [];
+      List<Venue> places = [];
       for (var currItem in list) {
-        places.add(Place.fromResponse(currItem));
+        places.add(Venue.fromResponse(currItem));
       }
       result["results"] = places;
 

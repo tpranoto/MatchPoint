@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/widgets/common.dart';
+import 'package:matchpoint/widgets_new/home_screen.dart';
 import 'package:matchpoint/widgets_new/profile_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -20,7 +21,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   final List<Widget> _screens = [
-    Placeholder(),
+    HomeScreen(),
     Placeholder(),
     ProfileScreen(),
   ];

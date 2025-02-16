@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:matchpoint/models/place.dart';
+import 'package:matchpoint/models/venue.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/services/place.dart';
 
@@ -9,14 +9,14 @@ class PlaceProvider extends ChangeNotifier {
 
   PlaceProvider({required this.placeService});
 
-  List<Place> _listOfPlaces = [];
+  List<Venue> _listOfPlaces = [];
   String _nextPageUrl = "";
   bool _isLoading = false;
   bool _isScrollLoading = false;
   String _errorMessage = '';
   String _errorScrollMessage = '';
 
-  List<Place> get getList {
+  List<Venue> get getList {
     return [..._listOfPlaces];
   }
 

@@ -9,6 +9,7 @@ import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/providers/profile_prov.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/auth_provider.dart';
+import 'package:matchpoint/providers/venue_provider.dart';
 import 'package:matchpoint/services/auth.dart';
 import 'package:matchpoint/services/firestore.dart';
 import 'package:matchpoint/services/place.dart';
@@ -29,9 +30,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final apiKey = dotenv.env["SQUARESPACE_API_KEY"] ?? "";
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -40,16 +42,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => ProfileProvider(FirebaseFirestore.instance),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) =>
+              LocationProvider(geolocator: GeolocatorPlatform.instance),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => VenueProvider(apiKey),
+        ),
         Provider(
           create: (context) => AuthService(FirebaseAuth.instance),
         ),
         ChangeNotifierProvider(
           create: (context) =>
               AppProfileProvider(firestoreService: FirestoreService()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) =>
-              LocationProvider(geolocator: GeolocatorPlatform.instance),
         ),
         ChangeNotifierProvider(
           create: (context) => PlaceProvider(placeService: PlaceService()),

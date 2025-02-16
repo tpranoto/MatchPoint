@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/models/timeslot.dart';
 
-class Place {
+class Venue {
   final String id;
   final String name;
   final String address;
@@ -16,7 +16,7 @@ class Place {
   final double? ratings;
   final int? ratingsTotal;
 
-  Place({
+  Venue({
     required this.id,
     required this.name,
     required this.address,
@@ -31,7 +31,7 @@ class Place {
     required this.ratingsTotal,
   });
 
-  factory Place.fromResponse(Map<String, dynamic> data) {
+  factory Venue.fromResponse(Map<String, dynamic> data) {
     final mainGeocodes = data["geocodes"]["main"];
     final List<dynamic> photos = data["photos"];
     String? photoUrl;
@@ -48,7 +48,7 @@ class Place {
       ratingTotal = data["stats"]["total_ratings"];
     }
 
-    return Place(
+    return Venue(
       id: data["fsq_id"],
       name: data["name"],
       address: data["location"]["formatted_address"],
@@ -67,7 +67,7 @@ class Place {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Place &&
+    return other is Venue &&
         other.id == id &&
         other.name == name &&
         other.address == address &&

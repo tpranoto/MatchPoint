@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/widgets/place_detail_page.dart';
 import 'package:provider/provider.dart';
-import '../models/place.dart';
+import '../models/venue.dart';
 import '../providers/place_provider.dart';
 import 'common.dart';
 
 class HomePlaceList extends StatefulWidget {
-  final List<Place> places;
+  final List<Venue> places;
   final Future<void> Function() onRefresh;
 
   const HomePlaceList(
@@ -67,7 +67,7 @@ class _HomePlaceListState extends State<HomePlaceList> {
 }
 
 class _PlacesCard extends StatelessWidget {
-  final Place place;
+  final Venue place;
   const _PlacesCard({required this.place});
 
   @override

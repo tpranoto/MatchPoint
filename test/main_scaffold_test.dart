@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/models/place.dart';
+import 'package:matchpoint/models/venue.dart';
 import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/place_provider.dart';
@@ -42,7 +42,7 @@ void main() {
     final mockPlaceProvider = MockPlaceProvider();
     when(mockPlaceProvider.isLoading).thenReturn(false);
     when(mockPlaceProvider.getList).thenReturn([
-      Place(
+      Venue(
         id: "id1",
         name: "the tennis court",
         address: "123 Hey Ho",

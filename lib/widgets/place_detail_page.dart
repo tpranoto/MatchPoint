@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/widgets/common.dart';
 
-import '../models/place.dart';
+import '../models/venue.dart';
 
 class PlaceDetailPage extends StatelessWidget {
-  final Place place;
+  final Venue place;
   const PlaceDetailPage({super.key, required this.place});
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/models/place.dart';
+import 'package:matchpoint/models/venue.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/services/place.dart';
 import 'package:mockito/annotations.dart';
@@ -32,7 +32,7 @@ void main() {
       return <String, dynamic>{
         "statusCode": 200,
         "results": [
-          Place(
+          Venue(
             id: "id1",
             name: "the tennis court",
             address: "123 Hey Ho",
@@ -58,7 +58,7 @@ void main() {
     expect(
         placeProvider.getList,
         equals([
-          Place(
+          Venue(
             id: "id1",
             name: "the tennis court",
             address: "123 Hey Ho",
