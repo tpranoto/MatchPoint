@@ -6,7 +6,6 @@ import 'package:matchpoint/widgets/venue_detail_page.dart';
 import 'package:matchpoint/widgets/home_venue_card.dart';
 import 'package:provider/provider.dart';
 import '../models/venue.dart';
-import '../providers/place_provider.dart';
 import 'common.dart';
 
 class HomeVenueList extends StatefulWidget {
@@ -31,17 +30,17 @@ class _HomeVenueListState extends State<HomeVenueList> {
   }
 
   void _infiniteScrollHandler() {
-    final venueProvider = context.read<PlaceProvider>();
+    final venueProvider = context.read<VenueProvider>();
 
     if (_scrollCtrl.position.pixels == _scrollCtrl.position.maxScrollExtent &&
         venueProvider.nextPageUrl != "") {
-      venueProvider.fetchNextPagePlaces();
+      venueProvider.fetchNextPageVenues();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final venueProvider = context.watch<PlaceProvider>();
+    final venueProvider = context.watch<VenueProvider>();
 
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
@@ -51,7 +50,7 @@ class _HomeVenueListState extends State<HomeVenueList> {
         itemBuilder: (context, index) {
           if (index == widget.venues.length) {
             // return empty space when loading finished
-            return venueProvider.isScrollLoading
+            return venueProvider.isNextPageLoading
                 ? Center(child: CircularProgressIndicator())
                 : SizedBox();
           }

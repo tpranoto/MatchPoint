@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/providers/place_provider.dart';
+import 'package:matchpoint/providers/venue_provider.dart';
 import 'package:matchpoint/widgets/common.dart';
 import 'package:matchpoint/widgets/disabled_permission_page.dart';
 import 'package:matchpoint/widgets/home_navigation.dart';
@@ -23,55 +23,46 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
-        final locProvider =
-            Provider.of<LocationProvider>(context, listen: false);
-        if (locProvider.latLong == null) {
-          locProvider.getCurrentLocation().then((_) {
-            final latLong = locProvider.latLong;
-            if (latLong != null) {
-              final placeProvider =
-                  Provider.of<PlaceProvider>(context, listen: false);
-              if (placeProvider.getList.isEmpty) {
-                placeProvider.fetchPlaces(latLong, selectedCategory);
-              }
-            }
-          });
+        final locProvider = context.read<LocationProvider>();
+        await locProvider.loadCurrentLocation();
+        final venueProvider = context.read<VenueProvider>();
+        if (venueProvider.getList.isEmpty) {
+          await venueProvider.fetchVenues(
+              locProvider.latLong, selectedCategory);
         }
       }
     });
   }
 
-  _onPressedFilterBySports() {
-    showSportsFilterDialog(
-      context,
-      "Filter by specific sport",
-      selectedCategory,
-      (value) {
-        setState(() {
-          selectedCategory = value;
-        });
-        fetchPlacesList();
-      },
-    );
-  }
-
-  fetchPlacesList() async {
-    final locProvider = Provider.of<LocationProvider>(context, listen: false);
-    final placeProvider = Provider.of<PlaceProvider>(context, listen: false);
-    placeProvider.fetchPlaces(locProvider.latLong!, selectedCategory,
-        searchName: searchPlaceQuery.text);
-  }
-
   @override
   Widget build(BuildContext context) {
     final locProvider = context.watch<LocationProvider>();
-    final placeProvider = context.watch<PlaceProvider>();
+    final venueProvider = context.watch<VenueProvider>();
+
+    fetchPlacesList() async {
+      venueProvider.fetchVenues(locProvider.latLong, selectedCategory,
+          searchName: searchPlaceQuery.text);
+    }
+
+    onPressedFilterBySports() {
+      showSportsFilterDialog(
+        context,
+        "Filter by specific sport",
+        selectedCategory,
+        (value) {
+          setState(() {
+            selectedCategory = value;
+          });
+          fetchPlacesList();
+        },
+      );
+    }
 
     return locProvider.permissionDenied
         ? DisabledPermissionPage()
-        : locProvider.isLoading || locProvider.currentLocation == null
+        : locProvider.isLoading
             ? Center(child: CircularProgressIndicator())
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -84,16 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         fetchPlacesList();
                       },
                     ),
+                    SizedBox(height: 10),
                     FilterBar(
                       selectedCategory: selectedCategory,
-                      onPressed: _onPressedFilterBySports,
-                      postalCode: locProvider.currentLocation!.postalCode!,
+                      onPressed: onPressedFilterBySports,
+                      postalCode: locProvider.currentLocation.postalCode!,
                     ),
                     Expanded(
-                      child: placeProvider.isLoading
+                      child: venueProvider.isLoading
                           ? Center(child: CircularProgressIndicator())
                           : HomeVenueList(
-                              venues: placeProvider.getList,
+                              venues: venueProvider.getList,
                               onRefresh: () async {
                                 fetchPlacesList();
                               },

@@ -26,12 +26,13 @@ class FilterBar extends StatelessWidget {
           ),
         ),
         Flexible(
-          child: ElevatedButton.icon(
+          child: SquaredButton(
+            text: selectedCategory == SportsCategories.all
+                ? "Category"
+                : selectedCategory.categoryString,
             onPressed: onPressed,
             icon: const Icon(Icons.filter_list),
-            label: Text(selectedCategory == SportsCategories.all
-                ? "Category"
-                : selectedCategory.categoryString),
+            bg: Theme.of(context).colorScheme.inversePrimary,
           ),
         ),
       ],

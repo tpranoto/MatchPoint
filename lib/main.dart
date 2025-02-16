@@ -5,11 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/providers/location_provider.dart';
-import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/auth_provider.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
-import 'package:matchpoint/services/place.dart';
 import 'package:matchpoint/widgets/login_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -40,14 +38,10 @@ class MyApp extends StatelessWidget {
           create: (ctx) => ProfileProvider(FirebaseFirestore.instance),
         ),
         ChangeNotifierProvider(
-          create: (ctx) =>
-              LocationProvider(geolocator: GeolocatorPlatform.instance),
+          create: (ctx) => LocationProvider(GeolocatorPlatform.instance),
         ),
         ChangeNotifierProvider(
           create: (ctx) => VenueProvider(apiKey),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => PlaceProvider(placeService: PlaceService()),
         ),
       ],
       child: MaterialApp(

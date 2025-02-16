@@ -9,6 +9,7 @@ class VenueProvider extends ChangeNotifier {
   final String apiKey;
   List<Venue> _listOfVenues = [];
   String _nextPageUrl = "";
+
   bool _isLoading = false;
   bool _isNextPageLoading = false;
 
@@ -17,6 +18,7 @@ class VenueProvider extends ChangeNotifier {
   List<Venue> get getList => [..._listOfVenues];
 
   String get nextPageUrl => _nextPageUrl;
+
   bool get isLoading => _isLoading;
   bool get isNextPageLoading => _isNextPageLoading;
 
@@ -28,7 +30,6 @@ class VenueProvider extends ChangeNotifier {
     int limit = 20,
   }) async {
     if (_isLoading) return;
-
     _isLoading = true;
     notifyListeners();
 

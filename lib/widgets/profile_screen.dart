@@ -51,8 +51,12 @@ class _LogOutButton extends StatelessWidget {
                 },
               );
             },
-            icon: Icon(Icons.logout),
-            bg: Color(0xFFFFCCCC),
+            icon: Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            bg: Colors.redAccent,
+            fg: Colors.white,
           ),
         ),
       ],
