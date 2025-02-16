@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/category.dart';
+
 class IconWithText extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -174,4 +176,69 @@ class MPFutureBuilder<T> extends StatelessWidget {
       },
     );
   }
+}
+
+void showSportsFilterDialog(
+  BuildContext context,
+  String title,
+  SportsCategories selectedFilter,
+  Function(SportsCategories) onFilterSelected,
+) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...SportsCategories.values.map(
+              (value) {
+                return RadioListTile(
+                  title: Text(value.categoryString),
+                  value: value,
+                  groupValue: selectedFilter,
+                  onChanged: (value) {
+                    onFilterSelected(value!);
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+void showConfirmationDialog(
+  BuildContext context,
+  String action,
+  Function callback,
+) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(action),
+        content: Text('Are you sure you want to ${action.toLowerCase()}?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              callback();
+              Navigator.of(context).pop();
+            },
+            child: Text("Confirm"),
+          ),
+        ],
+      );
+    },
+  );
 }

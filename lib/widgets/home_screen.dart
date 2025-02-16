@@ -3,8 +3,8 @@ import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/providers/place_provider.dart';
 import 'package:matchpoint/widgets/common.dart';
 import 'package:matchpoint/widgets/disabled_permission_page.dart';
-import 'package:matchpoint/widgets/home_place_list.dart';
-import 'package:matchpoint/widgets/sports_filter_dialog.dart';
+import 'package:matchpoint/widgets/home_navigation.dart';
+import 'package:matchpoint/widgets/home_venue_list.dart';
 import 'package:provider/provider.dart';
 import '../providers/location_provider.dart';
 
@@ -77,22 +77,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Column(
                   children: [
-                    _SearchPlaceBar(
+                    SearchVenueBar(
                       outputCtrl: searchPlaceQuery,
+                      selectedCat: selectedCategory,
                       onSubmit: (value) {
                         fetchPlacesList();
                       },
                     ),
-                    _FilterBar(
+                    FilterBar(
                       selectedCategory: selectedCategory,
                       onPressed: _onPressedFilterBySports,
-                      postalCode: locProvider.currentLocation!.postalCode,
+                      postalCode: locProvider.currentLocation!.postalCode!,
                     ),
                     Expanded(
                       child: placeProvider.isLoading
                           ? Center(child: CircularProgressIndicator())
-                          : HomePlaceList(
-                              places: placeProvider.getList,
+                          : HomeVenueList(
+                              venues: placeProvider.getList,
                               onRefresh: () async {
                                 fetchPlacesList();
                               },
@@ -101,73 +102,5 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               );
-  }
-}
-
-class _FilterBar extends StatelessWidget {
-  final SportsCategories selectedCategory;
-  final String? postalCode;
-  final Function() onPressed;
-  const _FilterBar({
-    required this.selectedCategory,
-    required this.onPressed,
-    required this.postalCode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          child: IconWithText(
-            icon: Icons.location_on_outlined,
-            text: postalCode ?? "",
-          ),
-        ),
-        Flexible(
-          child: ElevatedButton.icon(
-            onPressed: onPressed,
-            icon: const Icon(Icons.filter_list),
-            label: Text(selectedCategory == SportsCategories.all
-                ? "Category"
-                : selectedCategory.categoryString),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SearchPlaceBar extends StatelessWidget {
-  final TextEditingController outputCtrl;
-  final Function(String) onSubmit;
-
-  const _SearchPlaceBar({required this.outputCtrl, required this.onSubmit});
-
-  void _clearText() {
-    outputCtrl.clear();
-    onSubmit("");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: outputCtrl,
-      decoration: InputDecoration(
-        hintText: "Search by court name",
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: outputCtrl.text.isNotEmpty
-            ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: _clearText,
-              )
-            : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      onSubmitted: onSubmit,
-    );
   }
 }

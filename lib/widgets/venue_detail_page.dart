@@ -4,9 +4,9 @@ import 'package:matchpoint/widgets/common.dart';
 
 import '../models/venue.dart';
 
-class PlaceDetailPage extends StatelessWidget {
-  final Venue place;
-  const PlaceDetailPage({super.key, required this.place});
+class VenueDetailPage extends StatelessWidget {
+  final Venue venue;
+  const VenueDetailPage(this.venue, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class PlaceDetailPage extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                    place.name,
+                    venue.name,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -33,7 +33,7 @@ class PlaceDetailPage extends StatelessWidget {
                 ),
                 Center(
                   child: ImageWithDefault(
-                    photoUrl: place.photoUrl,
+                    photoUrl: venue.photoUrl,
                     defaultAsset: "assets/matchpoint.png",
                     size: 360,
                   ),
@@ -59,13 +59,13 @@ class PlaceDetailPage extends StatelessWidget {
           spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconWithText(icon: Icons.location_on, text: place.address),
+            IconWithText(icon: Icons.location_on, text: venue.address),
             IconWithText(
                 icon: Icons.sports_tennis,
-                text: place.sportCategory.categoryString),
+                text: venue.sportCategory.categoryString),
             IconWithText(
               icon: Icons.attach_money,
-              text: "\$${place.priceInCent / 100}/hr",
+              text: "\$${venue.priceInCent / 100}/hr",
               textColor: Colors.green,
             ),
           ],

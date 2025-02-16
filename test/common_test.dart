@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:matchpoint/widgets/common.dart';
+import 'package:matchpoint/widgets_new/common.dart';
 
-void main(){
-
-  testWidgets('IconWithText displays icon and text correctly', (WidgetTester tester) async {
+void main() {
+  testWidgets('IconWithText displays icon and text correctly',
+      (WidgetTester tester) async {
     const testIcon = Icons.home;
     const testText = 'Home';
     const testTextColor = Colors.red;
@@ -24,7 +24,8 @@ void main(){
     expect(find.text(testText), findsOneWidget);
   });
 
-  testWidgets('ImageWithDefault shows correct image', (WidgetTester tester) async {
+  testWidgets('ImageWithDefault shows correct image',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(

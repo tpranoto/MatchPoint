@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/widgets/common.dart';
 import 'package:matchpoint/widgets/home_screen.dart';
 import 'package:matchpoint/widgets/profile_screen.dart';
-import 'package:matchpoint/widgets/my_reservations_screen.dart';
 
 class MainScaffold extends StatefulWidget {
-  const MainScaffold({super.key});
+  final int startIndex;
+  const MainScaffold({super.key, this.startIndex = 0});
 
   @override
   State<MainScaffold> createState() => _MainScaffoldState();
 }
 
 class _MainScaffoldState extends State<MainScaffold> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.startIndex;
+  }
 
   final List<Widget> _screens = [
     HomeScreen(),
-    ReservationsScreen(),
+    Placeholder(),
     ProfileScreen(),
   ];
 
-  final List<String> _screen_title = [
+  final List<String> _screenTitle = [
     "Match Point",
     "My Reservations",
-    "Profile",
+    "My Profile",
   ];
 
   void _onItemTapped(int index) {
@@ -35,41 +42,36 @@ class _MainScaffoldState extends State<MainScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _screen_title[_selectedIndex],
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: CenteredTitle(
+          _screenTitle[_selectedIndex],
+          size: 20,
         ),
-        centerTitle: true,
       ),
       body: _screens[_selectedIndex],
-      bottomNavigationBar: navBar(),
-    );
-  }
-
-  Widget navBar() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: (idx) => _onItemTapped(idx),
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (idx) => _onItemTapped(idx),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+            ),
+            label: 'Home',
           ),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.article,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.article,
+            ),
+            label: 'Reservations',
           ),
-          label: 'Reservations',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.account_circle,
-          ),
-          label: 'Account',
-        )
-      ],
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_circle,
+            ),
+            label: 'Account',
+          )
+        ],
+      ),
     );
   }
 }

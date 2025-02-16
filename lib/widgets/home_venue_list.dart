@@ -2,26 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
-import 'package:matchpoint/widgets/place_detail_page.dart';
-import 'package:matchpoint/widgets_new/home_venue_card.dart';
+import 'package:matchpoint/widgets/venue_detail_page.dart';
+import 'package:matchpoint/widgets/home_venue_card.dart';
 import 'package:provider/provider.dart';
 import '../models/venue.dart';
 import '../providers/place_provider.dart';
-import '../widgets/common.dart';
+import 'common.dart';
 
 class HomeVenueList extends StatefulWidget {
   final List<Venue> venues;
-  final Position latLong;
-  final SportsCategories selectedCat;
 
   final Future<void> Function() onRefresh;
 
   const HomeVenueList(
-      {super.key,
-      required this.venues,
-      required this.latLong,
-      required this.selectedCat,
-      required this.onRefresh});
+      {super.key, required this.venues, required this.onRefresh});
 
   @override
   State<HomeVenueList> createState() => _HomeVenueListState();
@@ -34,26 +28,20 @@ class _HomeVenueListState extends State<HomeVenueList> {
   void initState() {
     super.initState();
     _scrollCtrl.addListener(_infiniteScrollHandler);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (venueProvider.getList.isEmpty) {
-        await venueProvider.fetchVenues(widget.latLong, widget.selectedCat);
-      }
-    });
   }
 
   void _infiniteScrollHandler() {
-    final venueProvider = context.read<VenueProvider>();
+    final venueProvider = context.read<PlaceProvider>();
 
     if (_scrollCtrl.position.pixels == _scrollCtrl.position.maxScrollExtent &&
         venueProvider.nextPageUrl != "") {
-      venueProvider.fetchNextPageVenues();
+      venueProvider.fetchNextPagePlaces();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final venueProvider = context.watch<VenueProvider>();
+    final venueProvider = context.watch<PlaceProvider>();
 
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
@@ -63,7 +51,7 @@ class _HomeVenueListState extends State<HomeVenueList> {
         itemBuilder: (context, index) {
           if (index == widget.venues.length) {
             // return empty space when loading finished
-            return venueProvider.isNextPageLoading
+            return venueProvider.isScrollLoading
                 ? Center(child: CircularProgressIndicator())
                 : SizedBox();
           }

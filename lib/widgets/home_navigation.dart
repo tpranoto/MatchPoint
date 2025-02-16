@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/category.dart';
-import '../widgets/common.dart';
+import 'common.dart';
 
 class FilterBar extends StatelessWidget {
   final SportsCategories selectedCategory;
@@ -60,8 +60,11 @@ class _SearchVenueBarState extends State<SearchVenueBar> {
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.outputCtrl,
+      onChanged: (newValue) {
+        setState(() {});
+      },
       decoration: InputDecoration(
-        labelText: "Venue",
+        labelText: "Venue name",
         hintText: "Search by venue name",
         prefixIcon: const Icon(Icons.search),
         suffixIcon: widget.outputCtrl.text.isNotEmpty

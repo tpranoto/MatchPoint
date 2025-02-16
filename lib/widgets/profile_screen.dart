@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/models/profile.dart';
-import 'package:matchpoint/services/auth.dart';
 import 'package:matchpoint/widgets/common.dart';
-import 'package:matchpoint/widgets/confirmation_dialog.dart';
+import 'package:matchpoint/widgets/profile_information.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
+import '../providers/auth_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final profileData = context.watch<AppProfileProvider>().getData;
+    final profileData = context.watch<ProfileProvider>().getProfile;
 
     return Center(
       child: Padding(
@@ -20,94 +19,12 @@ class ProfileScreen extends StatelessWidget {
           spacing: 20,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _ProfileInfo(profileData: profileData!),
-            _ProfileStats(profileData: profileData),
+            ProfileInfo(profileData: profileData),
+            ProfileStats(profileData: profileData),
             _LogOutButton(),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ProfileInfo extends StatelessWidget {
-  final Profile profileData;
-  const _ProfileInfo({required this.profileData});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: NetworkImage(profileData.photoUrl),
-        ),
-        Text(
-          profileData.name,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          profileData.email,
-          style: TextStyle(fontSize: 12),
-        )
-      ],
-    );
-  }
-}
-
-class _ProfileStats extends StatelessWidget {
-  final Profile profileData;
-
-  const _ProfileStats({required this.profileData});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            Expanded(
-              child: _profileAppStatsData(
-                "Reservations",
-                profileData.reservationsCount,
-              ),
-            ),
-            Expanded(
-              child: _profileAppStatsData(
-                "Reviews",
-                profileData.reviewsCount,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _profileAppStatsData(String title, int count) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(
-          height: 5.0,
-        ),
-        Text(
-          "$count",
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        )
-      ],
     );
   }
 }
@@ -117,32 +34,25 @@ class _LogOutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppProfileProvider profileProvider =
-        context.read<AppProfileProvider>();
-    final authProvider = context.read<AuthService>();
+    final profileProvider = context.read<ProfileProvider>();
+    final authProvider = context.read<AppAuthProvider>();
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton(
+          child: SquaredButton(
+            text: "Log Out",
             onPressed: () {
               showConfirmationDialog(
                 context,
                 "Log Out",
-                () {
-                  authProvider
-                      .signOut()
-                      .then((_) => profileProvider.removeProfile());
+                () async {
+                  await authProvider.signOut();
+                  profileProvider.removeProfile();
                 },
               );
             },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Color(0xFFFFCCCC)),
-            ),
-            child: IconWithText(
-              icon: Icons.logout,
-              text: "Logout",
-              textColor: Colors.red,
-            ),
+            icon: Icon(Icons.logout),
+            bg: Color(0xFFFFCCCC),
           ),
         ),
       ],

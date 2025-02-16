@@ -6,14 +6,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/place_provider.dart';
-import 'package:matchpoint/providers/profile_prov.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/auth_provider.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
-import 'package:matchpoint/services/auth.dart';
-import 'package:matchpoint/services/firestore.dart';
 import 'package:matchpoint/services/place.dart';
-import 'package:matchpoint/widgets_new/login_page.dart';
+import 'package:matchpoint/widgets/login_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -48,13 +45,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => VenueProvider(apiKey),
-        ),
-        Provider(
-          create: (context) => AuthService(FirebaseAuth.instance),
-        ),
-        ChangeNotifierProvider(
-          create: (context) =>
-              AppProfileProvider(firestoreService: FirestoreService()),
         ),
         ChangeNotifierProvider(
           create: (context) => PlaceProvider(placeService: PlaceService()),

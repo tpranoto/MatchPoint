@@ -1,36 +1,46 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../models/auth.dart';
 import '../models/profile.dart';
-import '../services/firestore.dart';
 
-class AppProfileProvider extends ChangeNotifier {
-  final FirestoreService firestoreService;
+class ProfileProvider extends ChangeNotifier {
+  final CollectionReference _profileCollection;
 
   Profile? _currentProfile;
 
-  AppProfileProvider({required this.firestoreService});
+  ProfileProvider(FirebaseFirestore firestore)
+      : _profileCollection = firestore.collection("profile");
 
-  Profile? get getData {
-    return _currentProfile;
+  Profile get getProfile => _currentProfile!;
+
+  Future<void> loadProfile(String uid) async {
+    final profileRef = _profileCollection.doc(uid);
+    final snapshot = await profileRef.get();
+    if (!snapshot.exists) {
+      throw Exception('error no profile found');
+    }
+    _currentProfile = Profile.fromMap(
+      snapshot.data() as Map<String, dynamic>,
+      snapshot.id,
+    );
   }
 
-  Future<void> loadAndSaveProfile(String uid) async {
-    final storedProfile = await firestoreService.getById(uid);
-    _currentProfile = storedProfile;
-    notifyListeners();
-  }
+  Future<void> loadAndSaveProfile(Auth auth) async {
+    final profileRef = _profileCollection.doc(auth.uid);
 
-  void saveProfileFromUser(User? gUser) {
-    if (gUser == null) {
+    final snapshot = await profileRef.get();
+    if (!snapshot.exists) {
+      final newProfile = Profile.fromAuth(auth);
+      await profileRef.set(newProfile);
+      _currentProfile = newProfile;
+      notifyListeners();
       return;
     }
 
-    final appProfile =
-        firestoreService.addProfileIfNotExists(Profile.fromUser(gUser));
-    if (appProfile == null) {
-      return;
-    }
-    _currentProfile = appProfile;
+    _currentProfile = Profile.fromMap(
+      snapshot.data() as Map<String, dynamic>,
+      snapshot.id,
+    );
     notifyListeners();
   }
 
