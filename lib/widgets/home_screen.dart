@@ -27,13 +27,29 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         final locProvider = context.read<LocationProvider>();
         await locProvider.loadCurrentLocation();
-        final venueProvider = context.read<VenueProvider>();
-        if (venueProvider.getList.isEmpty) {
-          await venueProvider.fetchVenues(
-              locProvider.latLong, selectedCategory);
-        }
       }
     });
+  }
+
+  fetchPlacesList() async {
+    final locProvider = context.read<LocationProvider>();
+    final venueProvider = context.read<VenueProvider>();
+    await venueProvider.fetchVenues(locProvider.latLong, selectedCategory,
+        searchName: searchPlaceQuery.text);
+  }
+
+  onPressedFilterBySports() {
+    showSportsFilterDialog(
+      context,
+      "Filter by specific sport",
+      selectedCategory,
+      (value) {
+        setState(() {
+          selectedCategory = value;
+        });
+        fetchPlacesList();
+      },
+    );
   }
 
   @override
@@ -41,58 +57,62 @@ class _HomeScreenState extends State<HomeScreen> {
     final locProvider = context.watch<LocationProvider>();
     final venueProvider = context.watch<VenueProvider>();
 
-    fetchPlacesList() async {
-      venueProvider.fetchVenues(locProvider.latLong, selectedCategory,
-          searchName: searchPlaceQuery.text);
-    }
+    return StreamBuilder<LocationData>(
+      stream: locProvider.locationStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CenteredLoading();
+        }
 
-    onPressedFilterBySports() {
-      showSportsFilterDialog(
-        context,
-        "Filter by specific sport",
-        selectedCategory,
-        (value) {
-          setState(() {
-            selectedCategory = value;
+        if (snapshot.hasError) {
+          errorDialog(context, snapshot.error.toString());
+          return SizedBox.shrink();
+        }
+
+        if (!snapshot.hasData || locProvider.permissionDenied) {
+          return DisabledPermissionPage();
+        }
+
+        final currentLocation = snapshot.data!;
+
+        if (venueProvider.getList.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            venueProvider.fetchVenues(
+                currentLocation.position, selectedCategory);
           });
-          fetchPlacesList();
-        },
-      );
-    }
+        }
 
-    return locProvider.permissionDenied
-        ? DisabledPermissionPage()
-        : locProvider.isLoading
-            ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                child: Column(
-                  children: [
-                    SearchVenueBar(
-                      outputCtrl: searchPlaceQuery,
-                      selectedCat: selectedCategory,
-                      onSubmit: (value) {
-                        fetchPlacesList();
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    FilterBar(
-                      selectedCategory: selectedCategory,
-                      onPressed: onPressedFilterBySports,
-                      postalCode: locProvider.currentLocation.postalCode!,
-                    ),
-                    Expanded(
-                      child: venueProvider.isLoading
-                          ? Center(child: CircularProgressIndicator())
-                          : HomeVenueList(
-                              venues: venueProvider.getList,
-                              onRefresh: () async {
-                                fetchPlacesList();
-                              },
-                            ),
-                    ),
-                  ],
-                ),
-              );
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          child: Column(
+            children: [
+              SearchVenueBar(
+                outputCtrl: searchPlaceQuery,
+                selectedCat: selectedCategory,
+                onSubmit: (value) {
+                  fetchPlacesList();
+                },
+              ),
+              SizedBox(height: 10),
+              FilterBar(
+                selectedCategory: selectedCategory,
+                onPressed: onPressedFilterBySports,
+                postalCode: currentLocation.placemark.postalCode!,
+              ),
+              Expanded(
+                child: venueProvider.isLoading
+                    ? CenteredLoading()
+                    : HomeVenueList(
+                        venues: venueProvider.getList,
+                        onRefresh: () async {
+                          fetchPlacesList();
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
