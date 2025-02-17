@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/category.dart';
-import '../providers/location_provider.dart';
-import '../providers/venue_provider.dart';
 import 'common.dart';
 import 'home_navigation.dart';
 import 'home_venue_list.dart';
+import '../models/category.dart';
+import '../providers/location_provider.dart';
+import '../providers/venue_provider.dart';
 
 class HomeScreenContent extends StatefulWidget {
   const HomeScreenContent({super.key});

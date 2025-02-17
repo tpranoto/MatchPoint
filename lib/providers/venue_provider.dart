@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:matchpoint/models/places.dart';
-import 'package:matchpoint/models/venue.dart';
-import 'package:matchpoint/models/category.dart';
+import '../models/places.dart';
+import '../models/venue.dart';
+import '../models/category.dart';
 
 class VenueProvider extends ChangeNotifier {
   final String apiKey;
@@ -28,7 +28,7 @@ class VenueProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void streamCurrentVenue() {
+  void streamCurrentVenues() {
     if (_listOfVenues.isNotEmpty) {
       _venueStream.add(_listOfVenues);
     }

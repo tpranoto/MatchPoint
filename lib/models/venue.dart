@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/models/timeslot.dart';
+import 'category.dart';
+import 'timeslot.dart';
 
 class Venue {
   final String id;

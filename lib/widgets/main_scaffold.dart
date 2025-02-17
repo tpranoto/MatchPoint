@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/widgets/common.dart';
-import 'package:matchpoint/widgets/home_screen.dart';
-import 'package:matchpoint/widgets/profile_screen.dart';
+import 'common.dart';
+import 'home_screen.dart';
+import 'profile_screen.dart';
 
 class MainScaffold extends StatefulWidget {
   final int startIndex;

@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile {
   final String id;

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:matchpoint/providers/location_provider.dart';
-import 'package:matchpoint/providers/profile_provider.dart';
-import 'package:matchpoint/providers/auth_provider.dart';
-import 'package:matchpoint/providers/venue_provider.dart';
-import 'package:matchpoint/widgets/login_page.dart';
 import 'package:provider/provider.dart';
+import 'widgets/login_page.dart';
 import 'firebase_options.dart';
+import 'providers/location_provider.dart';
+import 'providers/profile_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/venue_provider.dart';
 
 void main() async {
   await dotenv.load();

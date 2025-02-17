@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/widgets/venue_detail_page.dart';
-
-import '../models/venue.dart';
+import 'venue_detail_page.dart';
 import 'common.dart';
+import '../models/category.dart';
+import '../models/venue.dart';
 
 class HomeVenueCard extends StatelessWidget {
   final Venue venue;

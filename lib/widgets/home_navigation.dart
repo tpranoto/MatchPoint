@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../models/category.dart';
 import 'common.dart';
+import '../models/category.dart';
 
 class FilterBar extends StatelessWidget {
   final SportsCategories selectedCategory;

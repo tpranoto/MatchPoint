@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/providers/venue_provider.dart';
-import 'package:matchpoint/widgets/venue_detail_page.dart';
-import 'package:matchpoint/widgets/home_venue_card.dart';
 import 'package:provider/provider.dart';
-import '../models/venue.dart';
+import 'home_venue_card.dart';
 import 'common.dart';
+import '../models/venue.dart';
+import '../providers/venue_provider.dart';
 
 class HomeVenueList extends StatefulWidget {
   final List<Venue> venues;
@@ -49,9 +46,8 @@ class _HomeVenueListState extends State<HomeVenueList> {
         itemCount: widget.venues.length + 1,
         itemBuilder: (context, index) {
           if (index == widget.venues.length) {
-            // return empty space when loading finished
             return venueProvider.isNextPageLoading
-                ? Center(child: CircularProgressIndicator())
+                ? CenteredLoading()
                 : SizedBox();
           }
 

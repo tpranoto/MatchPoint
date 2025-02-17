@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/providers/venue_provider.dart';
-import 'package:matchpoint/widgets/common.dart';
-import 'package:matchpoint/widgets/disabled_permission_page.dart';
-import 'package:matchpoint/widgets/home_navigation.dart';
-import 'package:matchpoint/widgets/home_venue_list.dart';
 import 'package:provider/provider.dart';
-import '../providers/location_provider.dart';
+import 'common.dart';
+import 'disabled_permission_page.dart';
 import 'home_screen_content.dart';
+import '../providers/location_provider.dart';
+import '../providers/venue_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 if (venueProvider.getList.isNotEmpty) {
-                  venueProvider.streamCurrentVenue();
+                  venueProvider.streamCurrentVenues();
                 }
                 return CenteredLoading();
               }

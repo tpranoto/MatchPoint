@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/widgets/common.dart';
-import 'package:matchpoint/widgets/profile_information.dart';
 import 'package:provider/provider.dart';
+import 'common.dart';
+import 'profile_information.dart';
 import '../providers/profile_provider.dart';
 import '../providers/auth_provider.dart';
 

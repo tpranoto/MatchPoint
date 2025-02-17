@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/profile.dart';
 import 'common.dart';
+import '../models/profile.dart';
 
 class ProfileInfo extends StatelessWidget {
   final Profile profileData;
