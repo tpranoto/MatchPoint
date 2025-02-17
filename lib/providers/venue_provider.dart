@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -9,18 +10,29 @@ class VenueProvider extends ChangeNotifier {
   final String apiKey;
   List<Venue> _listOfVenues = [];
   String _nextPageUrl = "";
-
-  bool _isLoading = false;
   bool _isNextPageLoading = false;
+  final StreamController<List<Venue>> _venueStream =
+      StreamController<List<Venue>>.broadcast();
 
   VenueProvider(this.apiKey);
 
   List<Venue> get getList => [..._listOfVenues];
-
   String get nextPageUrl => _nextPageUrl;
-
-  bool get isLoading => _isLoading;
   bool get isNextPageLoading => _isNextPageLoading;
+  Stream<List<Venue>> get venueStream => _venueStream.stream;
+
+  void resetVenues() {
+    _listOfVenues.clear();
+    _nextPageUrl = "";
+    _venueStream.add([]);
+    notifyListeners();
+  }
+
+  void streamCurrentVenue() {
+    if (_listOfVenues.isNotEmpty) {
+      _venueStream.add(_listOfVenues);
+    }
+  }
 
   Future<void> fetchVenues(
     Position pos,
@@ -29,31 +41,21 @@ class VenueProvider extends ChangeNotifier {
     int radius = 20000,
     int limit = 20,
   }) async {
-    if (_isLoading) return;
-    _isLoading = true;
-    notifyListeners();
+    final url = _setUpPlacesUrl(pos, cat, searchName, radius, limit);
 
-    try {
-      final url = _setUpPlacesUrl(pos, cat, searchName, radius, limit);
+    final headers = {
+      "Authorization": apiKey,
+      "accept": "application/json",
+    };
 
-      final headers = {
-        "Authorization": apiKey,
-        "accept": "application/json",
-      };
-
-      final response = await http.get(Uri.parse(url), headers: headers);
-      final parsedResp = Places.fromResponse(response);
-      if (parsedResp.statusCode != 200) {
-        throw Exception('error response status code: ${parsedResp.statusCode}');
-      }
-      _listOfVenues = parsedResp.venues;
-      _nextPageUrl = parsedResp.nextPage ?? "";
-    } catch (e) {
-      throw Exception('error response status code: ${e.toString()}');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+    final response = await http.get(Uri.parse(url), headers: headers);
+    final parsedResp = Places.fromResponse(response);
+    if (parsedResp.statusCode != 200) {
+      throw Exception('error response status code: ${parsedResp.statusCode}');
     }
+    _listOfVenues = parsedResp.venues;
+    _venueStream.add(parsedResp.venues);
+    _nextPageUrl = parsedResp.nextPage ?? "";
   }
 
   fetchNextPageVenues() async {
@@ -74,6 +76,7 @@ class VenueProvider extends ChangeNotifier {
         throw Exception('error response status code: ${parsedResp.statusCode}');
       }
       _listOfVenues.addAll(parsedResp.venues);
+      _venueStream.add(parsedResp.venues);
       _nextPageUrl = parsedResp.nextPage ?? "";
     } catch (e) {
       throw Exception('error response status code: ${e.toString()}');
@@ -99,5 +102,11 @@ class VenueProvider extends ChangeNotifier {
     placesUrl = "$placesUrl&ll=${curPos.latitude},${curPos.longitude}";
 
     return placesUrl;
+  }
+
+  @override
+  void dispose() {
+    _venueStream.close();
+    super.dispose();
   }
 }

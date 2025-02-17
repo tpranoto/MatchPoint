@@ -15,7 +15,7 @@ class LocationProvider extends ChangeNotifier {
   final GeolocatorPlatform geolocator;
   bool _permissionDenied = false;
   late Position _latLong;
-  late Placemark _currentLocation;
+  Placemark? _currentLocation;
   final StreamController<LocationData> _locStream =
       StreamController<LocationData>.broadcast();
 
@@ -23,8 +23,14 @@ class LocationProvider extends ChangeNotifier {
 
   bool get permissionDenied => _permissionDenied;
   Position get latLong => _latLong;
-  Placemark get currentLocation => _currentLocation;
+  Placemark? get currentLocation => _currentLocation;
   Stream<LocationData> get locationStream => _locStream.stream;
+
+  void streamCurrentLocation() {
+    if (_currentLocation != null) {
+      _locStream.add(LocationData(_latLong, _currentLocation!));
+    }
+  }
 
   Future<void> loadCurrentLocation() async {
     LocationPermission permission = await geolocator.checkPermission();
@@ -48,7 +54,7 @@ class LocationProvider extends ChangeNotifier {
         await placemarkFromCoordinates(_latLong.latitude, _latLong.longitude);
     _currentLocation = placemarks.first;
 
-    _locStream.add(LocationData(_latLong, _currentLocation));
+    _locStream.add(LocationData(_latLong, _currentLocation!));
   }
 
   @override
