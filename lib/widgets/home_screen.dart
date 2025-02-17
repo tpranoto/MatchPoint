@@ -4,7 +4,6 @@ import 'common.dart';
 import 'disabled_permission_page.dart';
 import 'home_screen_content.dart';
 import '../providers/location_provider.dart';
-import '../providers/venue_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,43 +28,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final locProvider = context.watch<LocationProvider>();
-    final venueProvider = context.watch<VenueProvider>();
 
-    return StreamBuilder<LocationData>(
+    return MPStreamBuilder(
         stream: locProvider.locationStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            if (locProvider.currentLocation != null) {
-              locProvider.streamCurrentLocation();
-            }
-            return CenteredLoading();
+        streamContinuation: () {
+          if (locProvider.currentLocation != null) {
+            locProvider.streamCurrentLocation();
           }
-
-          if (snapshot.hasError) {
-            errorDialog(context, snapshot.error.toString());
-            return SizedBox.shrink();
-          }
-
-          if (!snapshot.hasData || locProvider.permissionDenied) {
+        },
+        onSuccess: (context, snapshot) {
+          if (locProvider.permissionDenied) {
             return DisabledPermissionPage();
           }
-          return StreamBuilder(
-            stream: venueProvider.venueStream,
-            builder: (ctx, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                if (venueProvider.getList.isNotEmpty) {
-                  venueProvider.streamCurrentVenues();
-                }
-                return CenteredLoading();
-              }
 
-              if (snapshot.hasError) {
-                errorDialog(context, snapshot.error.toString());
-                return SizedBox.shrink();
-              }
-              return HomeScreenContent();
-            },
-          );
+          return HomeScreenContent();
         });
   }
 }

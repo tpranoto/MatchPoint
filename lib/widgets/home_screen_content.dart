@@ -25,18 +25,11 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         searchName: searchPlaceQuery.text);
   }
 
-  onPressedFilterBySports() {
-    showSportsFilterDialog(
-      context,
-      "Filter by specific sport",
-      selectedCategory,
-      (value) {
-        setState(() {
-          selectedCategory = value;
-        });
-        fetchVenuesList();
-      },
-    );
+  onFilterSelected(value) {
+    setState(() {
+      selectedCategory = value;
+    });
+    fetchVenuesList();
   }
 
   @override
@@ -57,34 +50,43 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     final locProvider = context.watch<LocationProvider>();
     final venueProvider = context.watch<VenueProvider>();
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: Column(
-        children: [
-          SearchVenueBar(
-            outputCtrl: searchPlaceQuery,
-            selectedCat: selectedCategory,
-            onSubmit: (value) {
-              fetchVenuesList();
-            },
-          ),
-          SizedBox(height: 10),
-          FilterBar(
-            selectedCategory: selectedCategory,
-            onPressed: onPressedFilterBySports,
-            postalCode: locProvider.currentLocation!.postalCode!,
-          ),
-          Expanded(
-            child: HomeVenueList(
-              venues: venueProvider.getList,
-              onRefresh: () async {
-                venueProvider.resetVenues();
-                fetchVenuesList();
-              },
+    return MPStreamBuilder(
+        stream: venueProvider.venueStream,
+        streamContinuation: () {
+          if (venueProvider.getList.isNotEmpty) {
+            venueProvider.streamCurrentVenues();
+          }
+        },
+        onSuccess: (ctx, snapshot) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            child: Column(
+              children: [
+                SearchVenueBar(
+                  outputCtrl: searchPlaceQuery,
+                  selectedCat: selectedCategory,
+                  onSubmit: (value) {
+                    fetchVenuesList();
+                  },
+                ),
+                SizedBox(height: 10),
+                FilterBar(
+                  selectedCategory: selectedCategory,
+                  onFilterSelected: onFilterSelected,
+                  postalCode: locProvider.currentLocation!.postalCode!,
+                ),
+                Expanded(
+                  child: HomeVenueList(
+                    venues: venueProvider.getList,
+                    onRefresh: () async {
+                      venueProvider.resetVenues();
+                      fetchVenuesList();
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }

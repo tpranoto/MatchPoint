@@ -5,11 +5,11 @@ import '../models/category.dart';
 class FilterBar extends StatelessWidget {
   final SportsCategories selectedCategory;
   final String postalCode;
-  final Function() onPressed;
+  final Function(SportsCategories) onFilterSelected;
   const FilterBar({
     super.key,
     required this.selectedCategory,
-    required this.onPressed,
+    required this.onFilterSelected,
     required this.postalCode,
   });
 
@@ -29,7 +29,14 @@ class FilterBar extends StatelessWidget {
             text: selectedCategory == SportsCategories.all
                 ? "Category"
                 : selectedCategory.categoryString,
-            onPressed: onPressed,
+            onPressed: () {
+              showSportsFilterDialog(
+                context,
+                "Filter by specific sport",
+                selectedCategory,
+                onFilterSelected,
+              );
+            },
             icon: const Icon(Icons.filter_list),
             bg: Theme.of(context).colorScheme.inversePrimary,
           ),
