@@ -2,106 +2,120 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/models/venue.dart';
-import 'package:matchpoint/models/profile.dart';
-import 'package:matchpoint/providers/location_provider.dart';
-import 'package:matchpoint/providers/place_provider.dart';
-import 'package:matchpoint/providers/profile_provider.dart';
-import 'package:matchpoint/services/auth.dart';
+import 'package:provider/provider.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:matchpoint/widgets/home_screen.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
 import 'package:matchpoint/widgets/profile_screen.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mocktail_image_network/mocktail_image_network.dart';
-import 'package:provider/provider.dart';
-import 'home_screen_test.mocks.dart';
-import "profile_screen_test.mocks.dart";
+import 'package:matchpoint/models/category.dart';
+import 'package:matchpoint/models/profile.dart';
+import 'package:matchpoint/models/venue.dart';
+import 'package:matchpoint/providers/auth_provider.dart';
+import 'package:matchpoint/providers/location_provider.dart';
+import 'package:matchpoint/providers/profile_provider.dart';
+import 'package:matchpoint/providers/venue_provider.dart';
+import 'main_scaffold_test.mocks.dart';
 
+@GenerateNiceMocks([
+  MockSpec<LocationProvider>(),
+  MockSpec<AppAuthProvider>(),
+  MockSpec<ProfileProvider>(),
+  MockSpec<VenueProvider>(),
+])
 void main() {
   testWidgets(
-      'Main Scaffold will redirect to Login Screen from Home Screen when Account navigation tab clicked',
-      (WidgetTester tester) async {
-    final mockLocProvider = MockLocationProvider();
-    when(mockLocProvider.latLong).thenReturn(Position(
-      latitude: 47.6062,
-      longitude: -122.3321,
-      timestamp: DateTime.now(),
-      accuracy: 5.0,
-      altitude: 0.0,
-      altitudeAccuracy: 0.0,
-      heading: 0.0,
-      headingAccuracy: 0.0,
-      speed: 0.0,
-      speedAccuracy: 0.0,
-    ));
-    when(mockLocProvider.currentLocation).thenReturn(Placemark(
-      postalCode: "98122",
-    ));
-    when(mockLocProvider.isLoading).thenReturn(false);
-    final mockPlaceProvider = MockPlaceProvider();
-    when(mockPlaceProvider.isLoading).thenReturn(false);
-    when(mockPlaceProvider.getList).thenReturn([
-      Venue(
-        id: "id1",
-        name: "the tennis court",
-        address: "123 Hey Ho",
-        latitude: 48,
-        longitude: -122,
-        distance: 2,
-        photoUrl: "",
-        sportCategory: SportsCategories.tennis,
-        priceInCent: 30,
-        availableTimeslots: ["9:00"],
-        ratings: 8.9,
-        ratingsTotal: 12,
-      ),
-    ]);
+      'Main Scaffold will redirect to Profile Screen from Home Screen when Account navigation tab clicked',
+          (WidgetTester tester) async {
+        final mockLocProvider = MockLocationProvider();
+        final mockAuthProvider = MockAppAuthProvider();
+        final mockProfileProvider = MockProfileProvider();
+        final mockVenueProvider = MockVenueProvider();
 
-    final mockAuthService = MockAuthService();
+        final locData = LocationData(
+            Position(
+              latitude: 47.6062,
+              longitude: -122.3321,
+              timestamp: DateTime.now(),
+              accuracy: 5.0,
+              altitude: 0.0,
+              altitudeAccuracy: 0.0,
+              heading: 0.0,
+              headingAccuracy: 0.0,
+              speed: 0.0,
+              speedAccuracy: 0.0,
+            ),
+            Placemark(postalCode: "33221"));
+        when(mockLocProvider.locationStream).thenAnswer((_) {
+          return Stream.value(locData);
+        });
+        when(mockLocProvider.currentLocation).thenReturn(locData.placemark);
+        when(mockLocProvider.latLong).thenReturn(locData.position);
 
-    final mockProfile = Profile(
-      "id1",
-      "myemail@gmail.com",
-      "Hey Ho",
-      "http://my-profile-pic",
-      13,
-      1,
-    );
-    final mockProfileProv = MockAppProfileProvider();
-    when(mockProfileProv.getData).thenReturn(mockProfile);
-
-    await mockNetworkImages(
-      () async => tester.pumpWidget(
-        MaterialApp(
-          home: MultiProvider(
-            providers: [
-              Provider<AuthService>.value(
-                value: mockAuthService,
-              ),
-              ChangeNotifierProvider<AppProfileProvider>.value(
-                value: mockProfileProv,
-              ),
-              ChangeNotifierProvider<LocationProvider>.value(
-                value: mockLocProvider,
-              ),
-              ChangeNotifierProvider<PlaceProvider>.value(
-                value: mockPlaceProvider,
-              ),
-            ],
-            child: MainScaffold(),
+        final venues = [
+          Venue(
+            id: "id1",
+            name: "the tennis court",
+            address: "123 Hey Ho",
+            latitude: 48,
+            longitude: -122,
+            distance: 2,
+            photoUrl: "",
+            sportCategory: SportsCategories.tennis,
+            priceInCent: 30,
+            availableTimeslots: ["9:00"],
+            ratings: 8.9,
+            ratingsTotal: 12,
           ),
-        ),
-      ),
-    );
+        ];
+        when(mockVenueProvider.venueStream).thenAnswer((_) {
+          return Stream.value(venues);
+        });
+        when(mockVenueProvider.getList).thenReturn(venues);
+        when(mockVenueProvider.isNextPageLoading).thenReturn(false);
 
-    // starts from home screen
-    expect(find.byType(HomeScreen), findsOneWidget);
+        when(mockProfileProvider.getProfile).thenReturn(Profile(
+          "id1",
+          "myemail@gmail.com",
+          "Hey Ho",
+          "http://my-profile-pic",
+          13,
+          1,
+        ));
 
-    await tester.tap(find.text("Account"));
-    await tester.pumpAndSettle();
+        await mockNetworkImages(
+              () async => tester.pumpWidget(
+            MultiProvider(
+              providers: [
+                ChangeNotifierProvider<LocationProvider>.value(
+                  value: mockLocProvider,
+                ),
+                ChangeNotifierProvider<AppAuthProvider>.value(
+                  value: mockAuthProvider,
+                ),
+                ChangeNotifierProvider<ProfileProvider>.value(
+                  value: mockProfileProvider,
+                ),
+                ChangeNotifierProvider<VenueProvider>.value(
+                  value: mockVenueProvider,
+                ),
+              ],
+              builder: (context, child) {
+                return MaterialApp(
+                  home: MainScaffold(),
+                );
+              },
+            ),
+          ),
+        );
 
-    expect(find.byType(HomeScreen), findsNothing);
-    expect(find.byType(ProfileScreen), findsOneWidget);
-  });
+        expect(find.byType(HomeScreen), findsOneWidget);
+
+        await tester.tap(find.text("Account"));
+        await mockNetworkImages(() async => tester.pumpAndSettle());
+
+        expect(find.byType(HomeScreen), findsNothing);
+        expect(find.byType(ProfileScreen), findsOneWidget);
+      });
 }
