@@ -49,17 +49,16 @@ class _VenueDetailTimeslotState extends State<VenueDetailTimeslot> {
                     itemCount: snapshot.data!.reservations.length,
                     itemBuilder: (context, index) {
                       final timeSlot =
-                          snapshot.data!.reservations[index].timeSlot.time;
+                          snapshot.data!.reservations[index].timeSlot;
 
                       return widget.selectedDate
-                              .add(timeSlot)
+                              .add(timeSlot.time)
                               .isBefore(DateTime.now())
                           ? SizedBox.shrink()
                           : Padding(
                               padding: EdgeInsets.symmetric(horizontal: 5),
                               child: SquaredButton(
-                                text:
-                                    "${(timeSlot.inHours % 60).toString().padLeft(2, '0')}:${(timeSlot.inMinutes % 60).toString().padLeft(2, '0')}",
+                                text: timeSlot.toString(),
                                 onPressed:
                                     snapshot.data!.reservations[index].reserved
                                         ? null

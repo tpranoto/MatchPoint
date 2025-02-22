@@ -34,10 +34,29 @@ class RsvConfirmationPage extends StatelessWidget {
           SimpleVenueDetail(venue),
           Column(
             children: [
+              CenteredTitle("Booked Schedule"),
               Text(DateFormat('EEEE, dd MMM yyyy').format(selectedDate)),
-              ...rsvProvider.selectedTimeslots.map((item) {
-                return Text("${TimeSlot.values[item].time}");
+              ...(rsvProvider.selectedTimeslots
+                    ..sort((a, b) => TimeSlot.values[a].time
+                        .compareTo(TimeSlot.values[b].time)))
+                  .map((item) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(TimeSlot.values[item].showTimeRange),
+                    Text("${venue.priceInCent / 100}")
+                  ],
+                );
               }),
+              CenteredTitle("Payment Details"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Total cost"),
+                  Text(
+                      "${venue.priceInCent * rsvProvider.selectedTimeslots.length / 100}")
+                ],
+              ),
             ],
           ),
           SquaredButton(

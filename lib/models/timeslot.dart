@@ -17,4 +17,17 @@ enum TimeSlot {
   final Duration time;
 
   const TimeSlot(this.time);
+
+  @override
+  String toString() {
+    return "${(time.inHours % 60).toString().padLeft(2, '0')}:${(time.inMinutes % 60).toString().padLeft(2, '0')}";
+  }
+
+  String get showTimeRange {
+    final start = toString();
+    final end =
+        "${(time.inHours + 1 % 60).toString().padLeft(2, '0')}:${(time.inMinutes % 60).toString().padLeft(2, '0')}";
+
+    return "$start - $end";
+  }
 }
