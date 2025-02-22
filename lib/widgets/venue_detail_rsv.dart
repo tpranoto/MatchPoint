@@ -58,7 +58,6 @@ class _VenueDetailRsvState extends State<VenueDetailRsv> {
         VenueDetailTimeslot(selectedDate: selectedDate),
         SquaredButton(
           text: "Reserve ${rsvProvider.selectedTimeslots.length} slots",
-          icon: SizedBox.shrink(),
           bg: Theme.of(context).colorScheme.primary,
           fg: Theme.of(context).colorScheme.onPrimary,
           onPressed: rsvProvider.selectedTimeslots.isEmpty

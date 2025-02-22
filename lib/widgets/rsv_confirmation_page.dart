@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:matchpoint/models/timeslot.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import 'main_scaffold.dart';
 import 'simple_venue_detail.dart';
 import '../models/reservation.dart';
 import '../models/venue.dart';
+import '../models/timeslot.dart';
 import '../providers/profile_provider.dart';
 import '../providers/reservation_provider.dart';
 
@@ -16,11 +16,31 @@ class RsvConfirmationPage extends StatelessWidget {
 
   const RsvConfirmationPage(this.venue, this.selectedDate, {super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  _onConfirmPress(BuildContext context) async {
     final rsvProvider = context.watch<ReservationProvider>();
     final profileProvider = context.read<ProfileProvider>();
 
+    await rsvProvider.createReservation(Reservation(
+      venueId: venue.id,
+      profileId: profileProvider.getProfile.id,
+      createdAt: DateTime.now(),
+      reservationDate:
+          DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
+      timeSlots: rsvProvider.selectedTimeslots,
+    ));
+
+    await profileProvider.incrReservations();
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (ctx) => MainScaffold(
+                  startIndex: 1,
+                )),
+        (Route<dynamic> route) => false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -30,59 +50,89 @@ class RsvConfirmationPage extends StatelessWidget {
         ),
       ),
       body: Column(
+        spacing: 10,
         children: [
           SimpleVenueDetail(venue),
-          Column(
+          _PaymentSummary(venue, selectedDate),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CenteredTitle("Booked Schedule"),
-              Text(DateFormat('EEEE, dd MMM yyyy').format(selectedDate)),
-              ...(rsvProvider.selectedTimeslots
-                    ..sort((a, b) => TimeSlot.values[a].time
-                        .compareTo(TimeSlot.values[b].time)))
-                  .map((item) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(TimeSlot.values[item].showTimeRange),
-                    Text("${venue.priceInCent / 100}")
-                  ],
-                );
-              }),
-              CenteredTitle("Payment Details"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Total cost"),
-                  Text(
-                      "${venue.priceInCent * rsvProvider.selectedTimeslots.length / 100}")
-                ],
+              SquaredButton(
+                text: "  Edit  ",
+                bg: Theme.of(context).colorScheme.surfaceContainerLowest,
+                fg: Theme.of(context).colorScheme.onSurfaceVariant,
+                onPressed: () async => Navigator.of(context).pop(),
+                size: Size(150, 50),
+              ),
+              SquaredButton(
+                text: "Confirm",
+                bg: Theme.of(context).colorScheme.primary,
+                fg: Theme.of(context).colorScheme.onPrimary,
+                onPressed: () async => _onConfirmPress(context),
+                size: Size(150, 50),
               ),
             ],
           ),
-          SquaredButton(
-              text: "Confirm",
-              bg: Theme.of(context).colorScheme.primary,
-              fg: Theme.of(context).colorScheme.onPrimary,
-              onPressed: () async {
-                await rsvProvider.createReservation(Reservation(
-                  venueId: venue.id,
-                  profileId: profileProvider.getProfile.id,
-                  createdAt: DateTime.now(),
-                  reservationDate: DateTime(
-                      selectedDate.year, selectedDate.month, selectedDate.day),
-                  timeSlots: rsvProvider.selectedTimeslots,
-                ));
+        ],
+      ),
+    );
+  }
+}
 
-                await profileProvider.incrReservations();
+class _PaymentSummary extends StatelessWidget {
+  final Venue venue;
+  final DateTime selectedDate;
 
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (ctx) => MainScaffold(
-                              startIndex: 1,
-                            )),
-                    (Route<dynamic> route) => false);
-              },
-              icon: SizedBox.shrink()),
+  const _PaymentSummary(this.venue, this.selectedDate);
+
+  @override
+  Widget build(BuildContext context) {
+    final rsvProvider = context.watch<ReservationProvider>();
+
+    return PaddedCard(
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Payment Summary",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Divider(color: Colors.black, thickness: 1.0),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              DateFormat('EEEE, dd MMM yyyy').format(selectedDate),
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          SizedBox(height: 5),
+          ...(rsvProvider.selectedTimeslots
+                ..sort((a, b) =>
+                    TimeSlot.values[a].time.compareTo(TimeSlot.values[b].time)))
+              .map((item) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(TimeSlot.values[item].showTimeRange),
+                Text("${venue.priceInCent / 100}")
+              ],
+            );
+          }),
+          SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Total cost",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                "${venue.priceInCent * rsvProvider.selectedTimeslots.length / 100}",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
         ],
       ),
     );

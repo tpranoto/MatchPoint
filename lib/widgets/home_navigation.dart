@@ -39,6 +39,7 @@ class FilterBar extends StatelessWidget {
             },
             icon: const Icon(Icons.filter_list),
             bg: Theme.of(context).colorScheme.surfaceContainerHighest,
+            fg: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
       ],

@@ -65,7 +65,6 @@ class _VenueDetailTimeslotState extends State<VenueDetailTimeslot> {
                                         : () {
                                             _onTimeSlotClick(index);
                                           },
-                                icon: SizedBox.shrink(),
                                 bg: rsvProvider.selectedTimeslots
                                         .contains(index)
                                     ? Theme.of(context).colorScheme.primary
