@@ -5,12 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'widgets/login_page.dart';
 import 'firebase_options.dart';
+import 'widgets/entry.dart';
 import 'providers/location_provider.dart';
 import 'providers/profile_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/venue_provider.dart';
+import 'providers/reservation_provider.dart';
 
 void main() async {
   await dotenv.load();
@@ -31,26 +32,29 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        Provider(
           create: (ctx) => AppAuthProvider(FirebaseAuth.instance),
         ),
         ChangeNotifierProvider(
           create: (ctx) => ProfileProvider(FirebaseFirestore.instance),
         ),
-        ChangeNotifierProvider(
+        Provider(
           create: (ctx) => LocationProvider(GeolocatorPlatform.instance),
         ),
         ChangeNotifierProvider(
           create: (ctx) => VenueProvider(apiKey),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => ReservationProvider(FirebaseFirestore.instance),
+        ),
       ],
       child: MaterialApp(
         title: 'Match Point',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
           useMaterial3: true,
         ),
-        home: const LoginPage(),
+        home: const Entry(),
       ),
     );
   }

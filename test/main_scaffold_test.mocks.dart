@@ -4,16 +4,16 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
-import 'dart:ui' as _i7;
+import 'dart:ui' as _i9;
 
 import 'package:geolocator/geolocator.dart' as _i2;
 import 'package:matchpoint/models/auth.dart' as _i3;
 import 'package:matchpoint/models/category.dart' as _i13;
 import 'package:matchpoint/models/profile.dart' as _i4;
 import 'package:matchpoint/models/venue.dart' as _i12;
-import 'package:matchpoint/providers/auth_provider.dart' as _i8;
+import 'package:matchpoint/providers/auth_provider.dart' as _i7;
 import 'package:matchpoint/providers/location_provider.dart' as _i5;
-import 'package:matchpoint/providers/profile_provider.dart' as _i9;
+import 'package:matchpoint/providers/profile_provider.dart' as _i8;
 import 'package:matchpoint/providers/venue_provider.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i11;
@@ -103,15 +103,6 @@ class MockLocationProvider extends _i1.Mock implements _i5.LocationProvider {
           as _i6.Stream<_i5.LocationData>);
 
   @override
-  bool get hasListeners =>
-      (super.noSuchMethod(
-            Invocation.getter(#hasListeners),
-            returnValue: false,
-            returnValueForMissingStub: false,
-          )
-          as bool);
-
-  @override
   void streamCurrentLocation() => super.noSuchMethod(
     Invocation.method(#streamCurrentLocation, []),
     returnValueForMissingStub: null,
@@ -125,36 +116,12 @@ class MockLocationProvider extends _i1.Mock implements _i5.LocationProvider {
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
           as _i6.Future<void>);
-
-  @override
-  void dispose() => super.noSuchMethod(
-    Invocation.method(#dispose, []),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
-    Invocation.method(#addListener, [listener]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
-    Invocation.method(#removeListener, [listener]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void notifyListeners() => super.noSuchMethod(
-    Invocation.method(#notifyListeners, []),
-    returnValueForMissingStub: null,
-  );
 }
 
 /// A class which mocks [AppAuthProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAppAuthProvider extends _i1.Mock implements _i8.AppAuthProvider {
+class MockAppAuthProvider extends _i1.Mock implements _i7.AppAuthProvider {
   @override
   _i3.Auth get getData =>
       (super.noSuchMethod(
@@ -177,15 +144,6 @@ class MockAppAuthProvider extends _i1.Mock implements _i8.AppAuthProvider {
           as _i6.Stream<_i3.Auth?>);
 
   @override
-  bool get hasListeners =>
-      (super.noSuchMethod(
-            Invocation.getter(#hasListeners),
-            returnValue: false,
-            returnValueForMissingStub: false,
-          )
-          as bool);
-
-  @override
   _i6.Future<void> signInWithGoogle() =>
       (super.noSuchMethod(
             Invocation.method(#signInWithGoogle, []),
@@ -202,36 +160,12 @@ class MockAppAuthProvider extends _i1.Mock implements _i8.AppAuthProvider {
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
           as _i6.Future<void>);
-
-  @override
-  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
-    Invocation.method(#addListener, [listener]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
-    Invocation.method(#removeListener, [listener]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void dispose() => super.noSuchMethod(
-    Invocation.method(#dispose, []),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void notifyListeners() => super.noSuchMethod(
-    Invocation.method(#notifyListeners, []),
-    returnValueForMissingStub: null,
-  );
 }
 
 /// A class which mocks [ProfileProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockProfileProvider extends _i1.Mock implements _i9.ProfileProvider {
+class MockProfileProvider extends _i1.Mock implements _i8.ProfileProvider {
   @override
   _i4.Profile get getProfile =>
       (super.noSuchMethod(
@@ -278,13 +212,13 @@ class MockProfileProvider extends _i1.Mock implements _i9.ProfileProvider {
   );
 
   @override
-  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i9.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
@@ -410,13 +344,13 @@ class MockVenueProvider extends _i1.Mock implements _i10.VenueProvider {
   );
 
   @override
-  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i9.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );

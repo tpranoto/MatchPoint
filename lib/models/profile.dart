@@ -6,8 +6,8 @@ class Profile {
   final String email;
   final String name;
   final String photoUrl;
-  final int reservationsCount;
-  final int reviewsCount;
+  int reservationsCount;
+  int reviewsCount;
 
   Profile(this.id, this.email, this.name, this.photoUrl, this.reservationsCount,
       this.reviewsCount);

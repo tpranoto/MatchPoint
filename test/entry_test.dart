@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
-import 'package:mockito/annotations.dart';
+import 'package:matchpoint/widgets/entry.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
-import 'package:matchpoint/widgets/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:matchpoint/widgets/login_page.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
-import 'package:matchpoint/widgets/profile_screen.dart';
+import 'package:matchpoint/models/auth.dart';
 import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/models/profile.dart';
 import 'package:matchpoint/models/venue.dart';
 import 'package:matchpoint/providers/auth_provider.dart';
 import 'package:matchpoint/providers/location_provider.dart';
@@ -18,20 +17,44 @@ import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
 import 'main_scaffold_test.mocks.dart';
 
-@GenerateNiceMocks([
-  MockSpec<LocationProvider>(),
-  MockSpec<AppAuthProvider>(),
-  MockSpec<ProfileProvider>(),
-  MockSpec<VenueProvider>(),
-])
 void main() {
-  testWidgets(
-      'Main Scaffold will redirect to Profile Screen from Home Screen when Account navigation tab clicked',
+  testWidgets('Entry go to Login Page if user is not authenticated.',
+      (WidgetTester tester) async {
+    final mockAuthProvider = MockAppAuthProvider();
+    final mockProfileProvider = MockProfileProvider();
+
+    when(mockAuthProvider.stateChanges)
+        .thenAnswer((_) => Stream.fromIterable([]));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MultiProvider(
+          providers: [
+            Provider<AppAuthProvider>.value(
+              value: mockAuthProvider,
+            ),
+            ChangeNotifierProvider<ProfileProvider>.value(
+              value: mockProfileProvider,
+            ),
+          ],
+          child: Entry(),
+        ),
+      ),
+    );
+    await mockNetworkImages(() async => tester.pumpAndSettle());
+
+    expect(find.text("Sign in with Google"), findsOneWidget);
+  });
+
+  testWidgets('Entry go into MainScaffold if user is authenticated.',
       (WidgetTester tester) async {
     final mockLocProvider = MockLocationProvider();
     final mockAuthProvider = MockAppAuthProvider();
     final mockProfileProvider = MockProfileProvider();
     final mockVenueProvider = MockVenueProvider();
+
+    when(mockAuthProvider.stateChanges).thenAnswer((_) => Stream.value(
+        Auth("id1", "email1@gmail.com", "Hey Ho", "http://my-profile-pic")));
 
     final locData = LocationData(
         Position(
@@ -74,18 +97,9 @@ void main() {
     when(mockVenueProvider.getList).thenReturn(venues);
     when(mockVenueProvider.isNextPageLoading).thenReturn(false);
 
-    when(mockProfileProvider.getProfile).thenReturn(Profile(
-      "id1",
-      "myemail@gmail.com",
-      "Hey Ho",
-      "http://my-profile-pic",
-      13,
-      1,
-    ));
-
-    await mockNetworkImages(
-      () async => tester.pumpWidget(
-        MultiProvider(
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MultiProvider(
           providers: [
             Provider<LocationProvider>.value(
               value: mockLocProvider,
@@ -100,21 +114,13 @@ void main() {
               value: mockVenueProvider,
             ),
           ],
-          builder: (context, child) {
-            return MaterialApp(
-              home: MainScaffold(),
-            );
-          },
+          child: Entry(),
         ),
       ),
     );
 
-    expect(find.byType(HomeScreen), findsOneWidget);
-
-    await tester.tap(find.text("Account"));
     await mockNetworkImages(() async => tester.pumpAndSettle());
 
-    expect(find.byType(HomeScreen), findsNothing);
-    expect(find.byType(ProfileScreen), findsOneWidget);
+    expect(find.byType(MainScaffold), findsOneWidget);
   });
 }

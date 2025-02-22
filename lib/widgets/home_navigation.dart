@@ -38,7 +38,7 @@ class FilterBar extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.filter_list),
-            bg: Theme.of(context).colorScheme.inversePrimary,
+            bg: Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
         ),
       ],

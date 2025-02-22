@@ -44,6 +44,17 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> incrReservations() async {
+    final profileRef = _profileCollection.doc(_currentProfile!.id);
+
+    await profileRef.update({
+      'reservationsCount': FieldValue.increment(1),
+    });
+
+    _currentProfile!.reservationsCount++;
+    notifyListeners();
+  }
+
   void removeProfile() {
     _currentProfile = null;
     notifyListeners();

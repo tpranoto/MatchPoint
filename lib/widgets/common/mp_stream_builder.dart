@@ -4,7 +4,7 @@ import 'error_dialog.dart';
 
 class MPStreamBuilder<T> extends StatelessWidget {
   final Stream<T> stream;
-  final Widget Function(BuildContext context, T? data) onSuccess;
+  final Widget Function(BuildContext context, AsyncSnapshot<T> data) onSuccess;
   final Function() streamContinuation;
 
   const MPStreamBuilder({
@@ -29,7 +29,7 @@ class MPStreamBuilder<T> extends StatelessWidget {
           return SizedBox.shrink();
         }
 
-        return onSuccess(context, snapshot.data);
+        return onSuccess(context, snapshot);
       },
     );
   }

@@ -7,7 +7,6 @@ import '../providers/venue_provider.dart';
 
 class HomeVenueList extends StatefulWidget {
   final List<Venue> venues;
-
   final Future<void> Function() onRefresh;
 
   const HomeVenueList(

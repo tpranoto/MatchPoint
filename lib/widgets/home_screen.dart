@@ -41,6 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
             return DisabledPermissionPage();
           }
 
+          if (locProvider.currentLocation == null) {
+            errorDialog(context, "error getting location, please try again");
+            return DisabledPermissionPage();
+          }
+
           return HomeScreenContent();
         });
   }

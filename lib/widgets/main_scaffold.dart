@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'common.dart';
 import 'home_screen.dart';
+import 'my_rsv_screen.dart';
 import 'profile_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -22,7 +22,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    Placeholder(),
+    MyRsvScreen(),
     ProfileScreen(),
   ];
 
@@ -42,9 +42,10 @@ class _MainScaffoldState extends State<MainScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CenteredTitle(
+        centerTitle: true,
+        title: Text(
           _screenTitle[_selectedIndex],
-          size: 20,
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: _screens[_selectedIndex],

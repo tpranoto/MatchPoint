@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'category.dart';
-import 'timeslot.dart';
 
 class Venue {
   final String id;
@@ -12,7 +10,6 @@ class Venue {
   final String? photoUrl;
   final SportsCategories sportCategory;
   final int priceInCent;
-  final List<String> availableTimeslots;
   final double? ratings;
   final int? ratingsTotal;
 
@@ -26,7 +23,6 @@ class Venue {
     required this.photoUrl,
     required this.sportCategory,
     required this.priceInCent,
-    required this.availableTimeslots,
     required this.ratings,
     required this.ratingsTotal,
   });
@@ -58,7 +54,6 @@ class Venue {
       photoUrl: photoUrl,
       sportCategory: currCategory,
       priceInCent: currCategory.categoryBasedPrice,
-      availableTimeslots: allTimeSlots,
       ratings: data["rating"],
       ratingsTotal: ratingTotal,
     );
@@ -77,7 +72,6 @@ class Venue {
         other.photoUrl == photoUrl &&
         other.sportCategory == sportCategory &&
         other.priceInCent == priceInCent &&
-        listEquals(other.availableTimeslots, availableTimeslots) &&
         other.ratings == ratings &&
         other.ratingsTotal == ratingsTotal;
   }
@@ -94,7 +88,6 @@ class Venue {
         photoUrl.hashCode ^
         sportCategory.hashCode ^
         priceInCent.hashCode ^
-        availableTimeslots.hashCode ^
         ratings.hashCode ^
         ratingsTotal.hashCode;
   }

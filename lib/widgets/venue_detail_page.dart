@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'venue_detail_rsv.dart';
 import 'common.dart';
 import '../models/category.dart';
 import '../models/venue.dart';
@@ -10,12 +11,15 @@ class VenueDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text("Venue", style: TextStyle(fontWeight: FontWeight.bold))),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Center(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               spacing: 16,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -38,6 +42,8 @@ class VenueDetailPage extends StatelessWidget {
                   ),
                 ),
                 _placeInfo(),
+                Flexible(fit: FlexFit.loose, child: VenueDetailRsv(venue)),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.12)
               ],
             ),
           ),

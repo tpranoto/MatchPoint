@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'centered_loading.dart';
-import 'error_dialog.dart';
 
 class MPFutureBuilder<T> extends StatelessWidget {
   final Future<T> future;
-  final Widget Function(BuildContext context, T? data) onSuccess;
+  final Widget Function(BuildContext context, AsyncSnapshot<T> x) onSuccess;
 
   const MPFutureBuilder({
     super.key,
@@ -21,12 +20,7 @@ class MPFutureBuilder<T> extends StatelessWidget {
           return CenteredLoading();
         }
 
-        if (snapshot.hasError) {
-          errorDialog(context, "${snapshot.error}");
-          return SizedBox.shrink();
-        }
-
-        return onSuccess(context, snapshot.data);
+        return onSuccess(context, snapshot);
       },
     );
   }

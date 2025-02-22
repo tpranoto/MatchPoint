@@ -4,6 +4,7 @@ import 'common.dart';
 import 'profile_information.dart';
 import '../providers/profile_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/venue_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -36,6 +37,7 @@ class _LogOutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final profileProvider = context.read<ProfileProvider>();
     final authProvider = context.read<AppAuthProvider>();
+    final venueProvider = context.read<VenueProvider>();
     return Row(
       children: [
         Expanded(
@@ -48,6 +50,7 @@ class _LogOutButton extends StatelessWidget {
                 () async {
                   await authProvider.signOut();
                   profileProvider.removeProfile();
+                  venueProvider.resetVenues();
                 },
               );
             },

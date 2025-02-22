@@ -31,25 +31,24 @@ class ProfileStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            Expanded(
-              child: _profileAppStatsData(
-                "Reservations",
-                profileData.reservationsCount,
-              ),
+    return PaddedCard(
+      padding: 15,
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      child: Row(
+        children: [
+          Expanded(
+            child: _profileAppStatsData(
+              "Reservations",
+              profileData.reservationsCount,
             ),
-            Expanded(
-              child: _profileAppStatsData(
-                "Reviews",
-                profileData.reviewsCount,
-              ),
+          ),
+          Expanded(
+            child: _profileAppStatsData(
+              "Reviews",
+              profileData.reviewsCount,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

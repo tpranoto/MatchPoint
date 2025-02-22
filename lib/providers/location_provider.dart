@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -10,7 +9,7 @@ class LocationData {
   LocationData(this.position, this.placemark);
 }
 
-class LocationProvider extends ChangeNotifier {
+class LocationProvider {
   final GeolocatorPlatform geolocator;
   bool _permissionDenied = false;
   late Position _latLong;
@@ -54,11 +53,5 @@ class LocationProvider extends ChangeNotifier {
     _currentLocation = placemarks.first;
 
     _locStream.add(LocationData(_latLong, _currentLocation!));
-  }
-
-  @override
-  void dispose() {
-    _locStream.close();
-    super.dispose();
   }
 }

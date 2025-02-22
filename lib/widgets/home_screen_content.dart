@@ -75,6 +75,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                   onFilterSelected: onFilterSelected,
                   postalCode: locProvider.currentLocation!.postalCode!,
                 ),
+                SizedBox(height: 5),
                 Expanded(
                   child: HomeVenueList(
                     venues: venueProvider.getList,

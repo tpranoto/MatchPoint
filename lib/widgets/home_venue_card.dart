@@ -11,7 +11,8 @@ class HomeVenueCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      margin: const EdgeInsets.symmetric(vertical: 5.0),
       child: ListTile(
         leading: ImageWithDefault(
           photoUrl: venue.photoUrl,

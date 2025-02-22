@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SquaredButton extends StatelessWidget {
   final String text;
-  final Function() onPressed;
+  final Function()? onPressed;
 
   final Widget icon;
   final Color bg;
