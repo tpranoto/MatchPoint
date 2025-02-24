@@ -21,7 +21,7 @@ class ReservationProvider extends ChangeNotifier {
 
   set selectedTimeslots(List<int> timeSlots) {
     _selectedTimeslots = timeSlots;
-    notifyListeners(); // Notify all listeners of the change
+    notifyListeners();
   }
 
   void addTimeslot(int tsIdx) {
@@ -116,7 +116,7 @@ class ReservationProvider extends ChangeNotifier {
     try {
       QuerySnapshot snapshot = await _reservationCollection
           .where("profileId", isEqualTo: profileId)
-          .orderBy("reservation Date", descending: false)
+          .orderBy("reservationDate", descending: false)
           .get();
 
       return snapshot.docs
