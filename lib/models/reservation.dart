@@ -3,6 +3,7 @@ import 'package:matchpoint/models/timeslot.dart';
 
 class Reservation {
   final String venueId;
+  final String venueName;
   final String profileId;
   final DateTime createdAt;
   final DateTime reservationDate;
@@ -10,6 +11,7 @@ class Reservation {
 
   Reservation(
       {required this.venueId,
+        required this.venueName,
       required this.profileId,
       required this.createdAt,
       required this.reservationDate,
@@ -18,6 +20,7 @@ class Reservation {
   factory Reservation.fromMap(Map<String, dynamic> data) {
     return Reservation(
       venueId: data['venueId'],
+      venueName: data.containsKey('venueName') ? data['venueName'] : "Unknown Venue",
       profileId: data['profileId'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       reservationDate: (data['reservationDate'] as Timestamp).toDate(),
@@ -33,6 +36,16 @@ class Reservation {
       "createdAt": createdAt,
       "timeSlots": timeSlots,
     };
+  }
+  Reservation copyWith({String? venueName}) {
+    return Reservation(
+      venueId: venueId,
+      venueName: venueName ?? this.venueName,
+      profileId: profileId,
+      createdAt: createdAt,
+      reservationDate: reservationDate,
+      timeSlots: timeSlots,
+    );
   }
 }
 

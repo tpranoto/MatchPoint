@@ -9,7 +9,7 @@ class IconWithText extends StatelessWidget {
     super.key,
     required this.icon,
     required this.text,
-    this.textColor = Colors.black,
+    this.textColor = Colors.blueGrey,
   });
 
   @override
@@ -17,7 +17,7 @@ class IconWithText extends StatelessWidget {
     return Row(
       spacing: 10,
       children: [
-        Icon(icon, color: Colors.black),
+        Icon(icon, color: Colors.blueGrey),
         Expanded(
           child: Text(
             text,

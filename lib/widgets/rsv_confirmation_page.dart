@@ -22,6 +22,7 @@ class RsvConfirmationPage extends StatelessWidget {
 
     await rsvProvider.createReservation(Reservation(
       venueId: venue.id,
+      venueName: venue.name,
       profileId: profileProvider.getProfile.id,
       createdAt: DateTime.now(),
       reservationDate:

@@ -4,7 +4,7 @@ import 'common.dart';
 import '../models/category.dart';
 import '../models/venue.dart';
 import 'carousel_image.dart';
-import 'main_scaffold.dart';
+
 class VenueDetailPage extends StatelessWidget {
   final Venue venue;
   const VenueDetailPage(this.venue, {super.key});
@@ -34,7 +34,8 @@ class VenueDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                Center(
+            const SizedBox(height: 25),
+            Center(
                   child: Text(
                     venue.name,
                     style: const TextStyle(
@@ -45,7 +46,6 @@ class VenueDetailPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 10),
                 _placeInfo(),
                 VenueDetailRsv(venue),
             SizedBox(height: MediaQuery.of(context).size.height * 0.12),
@@ -60,36 +60,44 @@ class VenueDetailPage extends StatelessWidget {
   }
 
   Widget _placeInfo() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      color: Colors.white24,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          spacing: 8,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconWithText(icon: Icons.location_on, text: venue.address, textColor: Colors.black),
-            IconWithText(
-                icon: Icons.social_distance,
-                text: "${venue.distance.toStringAsPrecision(2)} miles",
-                textColor: Colors.black,
-            ),
-            IconWithText(
-                icon: Icons.sports_tennis,
-                text: venue.sportCategory.categoryString,
-                textColor: Colors.black,
-            ),
-            IconWithText(
-              icon: Icons.attach_money,
-              text: "\$${venue.priceInCent / 100}/hr",
-              textColor: Colors.black,
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: IconWithText(
+                  icon: Icons.social_distance,
+                  text: "${venue.distance.toStringAsPrecision(2)} miles",
+                  textColor: Colors.blueGrey,
+                ),
+              ),
+              SizedBox(width: 16), // Space between the two items
+              Expanded(
+                child: IconWithText(
+                  icon: Icons.sports_soccer_outlined,
+                  text: venue.sportCategory.categoryString,
+                  textColor: Colors.blueGrey,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          IconWithText(
+            icon: Icons.attach_money_outlined,
+            text: "\$${venue.priceInCent / 100}/hr",
+            textColor: Colors.blueGrey,
+          ),
+          SizedBox(height: 8),
+          IconWithText(
+              icon: Icons.location_on,
+              text: venue.address,
+              textColor: Colors.blueGrey,
+          ),
+        ],
       ),
     );
   }
