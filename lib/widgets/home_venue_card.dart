@@ -11,6 +11,7 @@ class HomeVenueCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 100,
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
