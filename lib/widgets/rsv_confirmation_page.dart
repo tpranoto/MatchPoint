@@ -17,7 +17,7 @@ class RsvConfirmationPage extends StatelessWidget {
   const RsvConfirmationPage(this.venue, this.selectedDate, {super.key});
 
   _onConfirmPress(BuildContext context) async {
-    final rsvProvider = context.watch<ReservationProvider>();
+    final rsvProvider = context.read<ReservationProvider>();
     final profileProvider = context.read<ProfileProvider>();
 
     await rsvProvider.createReservation(Reservation(
