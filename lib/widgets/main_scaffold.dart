@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'my_rsv_screen.dart';
+import 'my_reservation_page.dart';
 import 'profile_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -20,17 +21,10 @@ class _MainScaffoldState extends State<MainScaffold> {
     _selectedIndex = widget.startIndex;
   }
 
-  final List<Widget> _screens = [
-    HomeScreen(),
-    MyRsvScreen(),
-    ProfileScreen(),
-  ];
-
-  final List<String> _screenTitle = [
-    "Match Point",
-    "My Reservations",
-    "My Profile",
-  ];
+  Future<String> _fetchProfileId() async {
+    final user = FirebaseAuth.instance.currentUser;
+    return user?.uid ?? '';
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -40,39 +34,47 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          _screenTitle[_selectedIndex],
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (idx) => _onItemTapped(idx),
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
+    return FutureBuilder<String>(
+      future: _fetchProfileId(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasError || snapshot.data == '') {
+          return Scaffold(
+            body: Center(child: Text("Please log in to view reservations.")),
+          );
+        }
+
+        final String profileId = snapshot.data!;
+
+        return Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(
+              ["Match Point", "My Reservations", "My Profile"][_selectedIndex],
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.article,
-            ),
-            label: 'Reservations',
+          body: [
+            HomeScreen(),
+            MyReservationPage(profileId: profileId),
+            ProfileScreen(),
+          ]
+          [_selectedIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Reservations'),
+              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.account_circle,
-            ),
-            label: 'Account',
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }

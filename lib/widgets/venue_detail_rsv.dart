@@ -6,6 +6,7 @@ import 'venue_detail_timeslot.dart';
 import 'common.dart';
 import '../models/venue.dart';
 import '../providers/reservation_provider.dart';
+import '../widgets/common/centered_title.dart';
 
 class VenueDetailRsv extends StatefulWidget {
   final Venue venue;

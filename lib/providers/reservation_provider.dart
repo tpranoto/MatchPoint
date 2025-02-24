@@ -112,6 +112,22 @@ class ReservationProvider extends ChangeNotifier {
     _venueScheduleStream.add(_venueSchedule);
   }
 
+  Future<List<Reservation>> getUserReservations(String profileId) async {
+    try {
+      QuerySnapshot snapshot = await _reservationCollection
+          .where("profileId", isEqualTo: profileId)
+          .orderBy("reservation Date", descending: false)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => Reservation.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print("Error fetching user reservations: $e");
+      return [];
+    }
+  }
+
   _putRsvToSchedule(Reservation rsv) {
     for (var tsIdx in rsv.timeSlots) {
       _venueSchedule.reservations[tsIdx] =
@@ -125,4 +141,5 @@ class ReservationProvider extends ChangeNotifier {
           ReservationStatus(TimeSlot.values[tsIdx], false, details: null);
     }
   }
+
 }

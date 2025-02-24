@@ -17,7 +17,7 @@ class IconWithText extends StatelessWidget {
     return Row(
       spacing: 10,
       children: [
-        Icon(icon, color: Colors.blueAccent),
+        Icon(icon, color: Colors.black),
         Expanded(
           child: Text(
             text,
