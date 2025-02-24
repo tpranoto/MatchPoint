@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'common.dart';
 import '../models/profile.dart';
+import 'package:matchpoint/providers/profile_provider.dart';
 
 class ProfileInfo extends StatelessWidget {
   final Profile profileData;
@@ -8,6 +10,7 @@ class ProfileInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         CircleAvatar(
@@ -25,12 +28,12 @@ class ProfileInfo extends StatelessWidget {
 }
 
 class ProfileStats extends StatelessWidget {
-  final Profile profileData;
-
-  const ProfileStats({super.key, required this.profileData});
+  const ProfileStats({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final profileProvider = Provider.of<ProfileProvider>(context);
+
     return PaddedCard(
       padding: 15,
       color: Theme.of(context).colorScheme.surfaceContainerHigh,
@@ -39,13 +42,13 @@ class ProfileStats extends StatelessWidget {
           Expanded(
             child: _profileAppStatsData(
               "Reservations",
-              profileData.reservationsCount,
+              profileProvider.getProfile.reservationsCount,
             ),
           ),
           Expanded(
             child: _profileAppStatsData(
               "Reviews",
-              profileData.reviewsCount,
+              profileProvider.getProfile.reviewsCount,
             ),
           ),
         ],

@@ -81,6 +81,7 @@ class ReservationProvider extends ChangeNotifier {
       _rmRsvToSchedule(rsv);
     }
     _venueScheduleStream.add(_venueSchedule);
+    notifyListeners();
   }
 
   Future<void> loadReservationsByVenue(

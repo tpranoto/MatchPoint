@@ -21,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProfileInfo(profileData: profileData),
-            ProfileStats(profileData: profileData),
+            ProfileStats(),
             _LogOutButton(),
           ],
         ),

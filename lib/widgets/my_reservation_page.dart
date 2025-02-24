@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:matchpoint/models/reservation.dart';
 import 'package:matchpoint/providers/reservation_provider.dart';
 
+import '../providers/profile_provider.dart';
+
 class MyReservationPage extends StatefulWidget {
   final String profileId;
 
@@ -64,10 +66,17 @@ class _MyReservationPageState extends State<MyReservationPage> {
   }
 
   Future<void> _cancelReservation(BuildContext context, Reservation rsv) async {
-    await Provider.of<ReservationProvider>(context, listen: false).removeReservation(rsv);
-    setState(() {
-      _reservationsFuture = Provider.of<ReservationProvider>(context, listen: false)
-          .getUserReservations(widget.profileId);
-    });
+    final reservationProvider = Provider.of<ReservationProvider>(context, listen: false);
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+
+    await reservationProvider.removeReservation(rsv);
+    await profileProvider.decrReservations();
+
+    if (mounted) {
+      setState(() {
+        _reservationsFuture = reservationProvider.getUserReservations(widget.profileId);
+      });
+    }
   }
+
 }
