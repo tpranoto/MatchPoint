@@ -1,19 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:matchpoint/models/timeslot.dart';
+import 'package:matchpoint/models/venue.dart';
 
 class Reservation {
   final String venueId;
   final String profileId;
   final DateTime createdAt;
   final DateTime reservationDate;
-  final List<int> timeSlots; //use TimeSlots ENUM index
+  final List<TimeSlot> timeSlots;
+  final Venue venueDetails;
 
-  Reservation(
-      {required this.venueId,
-      required this.profileId,
-      required this.createdAt,
-      required this.reservationDate,
-      required this.timeSlots});
+  Reservation({
+    required this.venueId,
+    required this.profileId,
+    required this.createdAt,
+    required this.reservationDate,
+    required this.timeSlots,
+    required this.venueDetails,
+  });
 
   factory Reservation.fromMap(Map<String, dynamic> data) {
     return Reservation(
@@ -21,7 +25,10 @@ class Reservation {
       profileId: data['profileId'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       reservationDate: (data['reservationDate'] as Timestamp).toDate(),
-      timeSlots: (data['timeSlots'] as List).map((e) => e as int).toList(),
+      timeSlots: (data['timeSlots'] as List)
+          .map((idx) => TimeSlot.values[idx])
+          .toList(),
+      venueDetails: Venue.fromMap(data["venueDetails"]),
     );
   }
 
@@ -31,8 +38,13 @@ class Reservation {
       "profileId": profileId,
       "reservationDate": reservationDate,
       "createdAt": createdAt,
-      "timeSlots": timeSlots,
+      "timeSlots": timeSlots.map((item) => item.index).toList(),
+      "venueDetails": venueDetails.toMap(),
     };
+  }
+
+  List<int> getTimeSlotsIdx() {
+    return timeSlots.map((element) => element.index).toList();
   }
 }
 

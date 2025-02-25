@@ -6,7 +6,6 @@ import 'package:matchpoint/widgets/entry.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
-import 'package:matchpoint/widgets/login_page.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
 import 'package:matchpoint/models/auth.dart';
 import 'package:matchpoint/models/category.dart';
@@ -84,7 +83,7 @@ void main() {
         latitude: 48,
         longitude: -122,
         distance: 2,
-        photoUrl: "",
+        photoUrls: [],
         sportCategory: SportsCategories.tennis,
         priceInCent: 30,
         ratings: 8.9,

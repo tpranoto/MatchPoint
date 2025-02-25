@@ -10,26 +10,53 @@ class HomeVenueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).colorScheme.surfaceContainer,
-      margin: const EdgeInsets.symmetric(vertical: 5.0),
+    return Container(
+      margin: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              spreadRadius: 2,
+              blurRadius: 8),
+        ],
+      ),
       child: ListTile(
         leading: ImageWithDefault(
-          photoUrl: venue.photoUrl,
+          photoUrl: (venue.photoUrls != null && venue.photoUrls!.isNotEmpty)
+              ? (venue.photoUrls!..shuffle()).first
+              : null,
           defaultAsset: "assets/matchpoint.png",
           size: 56,
         ),
-        title: Text(venue.name),
+        title: SizedBox(
+          height: 48,
+          child: Text(
+            venue.name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         subtitle: Text(
           "${venue.sportCategory.categoryString} • ${venue.distance.toStringAsPrecision(2)} mi",
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         trailing: Text(
-          "\$${venue.priceInCent / 100}/hr",
-          style: TextStyle(
+          "${venue.priceInCent / 100}/hr",
+          style: const TextStyle(
+            fontSize: 16,
             fontWeight: FontWeight.bold,
+            color: Colors.green,
           ),
         ),
         onTap: () {

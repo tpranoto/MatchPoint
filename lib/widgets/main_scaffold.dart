@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'my_rsv_screen.dart';
+import 'my_reservation_screen.dart';
 import 'profile_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -20,18 +20,6 @@ class _MainScaffoldState extends State<MainScaffold> {
     _selectedIndex = widget.startIndex;
   }
 
-  final List<Widget> _screens = [
-    HomeScreen(),
-    MyRsvScreen(),
-    ProfileScreen(),
-  ];
-
-  final List<String> _screenTitle = [
-    "Match Point",
-    "My Reservations",
-    "My Profile",
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -44,33 +32,24 @@ class _MainScaffoldState extends State<MainScaffold> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          _screenTitle[_selectedIndex],
+          ["Match Point", "My Reservations", "My Profile"][_selectedIndex],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: _screens[_selectedIndex],
+      body: [
+        HomeScreen(),
+        MyReservationScreen(),
+        ProfileScreen(),
+      ][_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (idx) => _onItemTapped(idx),
+        onTap: _onItemTapped,
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            label: 'Home',
-          ),
+              icon: Icon(Icons.article), label: 'Reservations'),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.article,
-            ),
-            label: 'Reservations',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.account_circle,
-            ),
-            label: 'Account',
-          )
+              icon: Icon(Icons.account_circle), label: 'Account'),
         ],
       ),
     );

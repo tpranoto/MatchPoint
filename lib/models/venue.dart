@@ -7,7 +7,7 @@ class Venue {
   final double latitude;
   final double longitude;
   final double distance;
-  final String? photoUrl;
+  final List<String>? photoUrls;
   final SportsCategories sportCategory;
   final int priceInCent;
   final double? ratings;
@@ -20,7 +20,7 @@ class Venue {
     required this.latitude,
     required this.longitude,
     required this.distance,
-    required this.photoUrl,
+    required this.photoUrls,
     required this.sportCategory,
     required this.priceInCent,
     required this.ratings,
@@ -30,10 +30,11 @@ class Venue {
   factory Venue.fromResponse(Map<String, dynamic> data) {
     final mainGeocodes = data["geocodes"]["main"];
     final List<dynamic> photos = data["photos"];
-    String? photoUrl;
-    if (photos.isNotEmpty) {
-      photoUrl = "${photos.last["prefix"]}original${photos.last["suffix"]}";
-    }
+    List<String>? photoUrl = photos.isNotEmpty
+        ? photos
+            .map((photo) => "${photo["prefix"]}original${photo["suffix"]}")
+            .toList()
+        : null;
 
     final List<dynamic> categories = data["categories"];
     final currCategory = categoryEnum(categories[0]["name"]);
@@ -51,12 +52,46 @@ class Venue {
       latitude: mainGeocodes["latitude"],
       longitude: mainGeocodes["longitude"],
       distance: data["distance"] / metersInOneMile,
-      photoUrl: photoUrl,
+      photoUrls: photoUrl,
       sportCategory: currCategory,
       priceInCent: currCategory.categoryBasedPrice,
-      ratings: data["rating"],
+      ratings: data["rating"]!=null?data["rating"]/2:data["rating"],
       ratingsTotal: ratingTotal,
     );
+  }
+
+  factory Venue.fromMap(Map<String, dynamic> data) {
+    final currCategory = categoryEnum(data["sportCategory"]);
+
+    return Venue(
+      id: data["id"],
+      name: data["name"],
+      address: data["address"],
+      latitude: data["latitude"],
+      longitude: data["longitude"],
+      distance: data["distance"],
+      photoUrls: (data["photoUrls"] as List).map((e) => e as String).toList(),
+      sportCategory: currCategory,
+      priceInCent: currCategory.categoryBasedPrice,
+      ratings: data["ratings"],
+      ratingsTotal: data["totalRatings"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "address": address,
+      "latitude": latitude,
+      "longitude": longitude,
+      "distance": distance,
+      "photoUrls": photoUrls,
+      "sportCategory": sportCategory.categoryString,
+      "priceInCent": priceInCent,
+      "ratings": ratings,
+      "ratingsTotal": ratingsTotal,
+    };
   }
 
   @override
@@ -69,7 +104,7 @@ class Venue {
         other.latitude == latitude &&
         other.longitude == longitude &&
         other.distance == distance &&
-        other.photoUrl == photoUrl &&
+        other.photoUrls == photoUrls &&
         other.sportCategory == sportCategory &&
         other.priceInCent == priceInCent &&
         other.ratings == ratings &&
@@ -85,7 +120,7 @@ class Venue {
         latitude.hashCode ^
         longitude.hashCode ^
         distance.hashCode ^
-        photoUrl.hashCode ^
+        photoUrls.hashCode ^
         sportCategory.hashCode ^
         priceInCent.hashCode ^
         ratings.hashCode ^

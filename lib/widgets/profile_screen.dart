@@ -21,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProfileInfo(profileData: profileData),
-            ProfileStats(profileData: profileData),
+            ProfileStats(),
             _LogOutButton(),
           ],
         ),
@@ -49,8 +49,8 @@ class _LogOutButton extends StatelessWidget {
                 "Log Out",
                 () async {
                   await authProvider.signOut();
-                  profileProvider.removeProfile();
                   venueProvider.resetVenues();
+                  profileProvider.removeProfile();
                 },
               );
             },

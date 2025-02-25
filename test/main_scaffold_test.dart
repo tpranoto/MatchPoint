@@ -16,6 +16,7 @@ import 'package:matchpoint/providers/auth_provider.dart';
 import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
+import 'package:matchpoint/providers/reservation_provider.dart';
 import 'main_scaffold_test.mocks.dart';
 
 @GenerateNiceMocks([
@@ -23,6 +24,7 @@ import 'main_scaffold_test.mocks.dart';
   MockSpec<AppAuthProvider>(),
   MockSpec<ProfileProvider>(),
   MockSpec<VenueProvider>(),
+  MockSpec<ReservationProvider>(),
 ])
 void main() {
   testWidgets(
@@ -61,7 +63,7 @@ void main() {
         latitude: 48,
         longitude: -122,
         distance: 2,
-        photoUrl: "",
+        photoUrls: [],
         sportCategory: SportsCategories.tennis,
         priceInCent: 30,
         ratings: 8.9,

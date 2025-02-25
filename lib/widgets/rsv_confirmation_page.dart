@@ -6,7 +6,6 @@ import 'main_scaffold.dart';
 import 'simple_venue_detail.dart';
 import '../models/reservation.dart';
 import '../models/venue.dart';
-import '../models/timeslot.dart';
 import '../providers/profile_provider.dart';
 import '../providers/reservation_provider.dart';
 
@@ -17,17 +16,18 @@ class RsvConfirmationPage extends StatelessWidget {
   const RsvConfirmationPage(this.venue, this.selectedDate, {super.key});
 
   _onConfirmPress(BuildContext context) async {
-    final rsvProvider = context.watch<ReservationProvider>();
+    final rsvProvider = context.read<ReservationProvider>();
     final profileProvider = context.read<ProfileProvider>();
 
-    await rsvProvider.createReservation(Reservation(
-      venueId: venue.id,
-      profileId: profileProvider.getProfile.id,
-      createdAt: DateTime.now(),
-      reservationDate:
-          DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
-      timeSlots: rsvProvider.selectedTimeslots,
-    ));
+    await context.read<ReservationProvider>().createReservation(Reservation(
+          venueId: venue.id,
+          profileId: profileProvider.getProfile.id,
+          createdAt: DateTime.now(),
+          reservationDate:
+              DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
+          timeSlots: rsvProvider.selectedTimeslots,
+          venueDetails: venue,
+        ));
 
     await profileProvider.incrReservations();
 
@@ -110,13 +110,12 @@ class _PaymentSummary extends StatelessWidget {
           ),
           SizedBox(height: 5),
           ...(rsvProvider.selectedTimeslots
-                ..sort((a, b) =>
-                    TimeSlot.values[a].time.compareTo(TimeSlot.values[b].time)))
+                ..sort((a, b) => a.time.compareTo(b.time)))
               .map((item) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(TimeSlot.values[item].showTimeRange),
+                Text(item.showTimeRange),
                 Text("${venue.priceInCent / 100}")
               ],
             );
