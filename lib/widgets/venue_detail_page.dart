@@ -15,45 +15,60 @@ class VenueDetailPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-      SliverAppBar(
-        expandedHeight: 300,
-        floating: false,
-        pinned: true,
-        stretch: true,
-        backgroundColor: Colors.black12,
-        flexibleSpace: FlexibleSpaceBar(
-          background: ImageCarousel(photoUrl: venue.photoUrls),
-          titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
-          centerTitle: false,
-        ),
-      ),
-      SliverList(
-        delegate: SliverChildListDelegate([
-        Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 25),
-            Center(
-                  child: Text(
-                    venue.name,
-                    style: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
+          SliverAppBar(
+            expandedHeight: 300,
+            floating: false,
+            pinned: true,
+            stretch: true,
+            backgroundColor: Colors.black12,
+            flexibleSpace: FlexibleSpaceBar(
+              background: ImageCarousel(photoUrl: venue.photoUrls),
+              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+              centerTitle: false,
+            ),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                shadows: const [
+                  Shadow(
+                    color: Colors.black,
+                    blurRadius: 20.0,
                   ),
-                ),
-                _placeInfo(),
-                VenueDetailRsv(venue),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.12),
-              ],
+                ],
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Pop the current screen
+              },
             ),
           ),
-        ]),
-      ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 25),
+                    Center(
+                      child: Text(
+                        venue.name,
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    _placeInfo(),
+                    VenueDetailRsv(venue),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                  ],
+                ),
+              ),
+            ]),
+          ),
         ],
       ),
     );
@@ -93,9 +108,9 @@ class VenueDetailPage extends StatelessWidget {
           ),
           SizedBox(height: 8),
           IconWithText(
-              icon: Icons.location_on,
-              text: venue.address,
-              textColor: Colors.blueGrey,
+            icon: Icons.location_on,
+            text: venue.address,
+            textColor: Colors.blueGrey,
           ),
         ],
       ),

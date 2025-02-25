@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/models/timeslot.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
+import '../models/timeslot.dart';
 import '../providers/reservation_provider.dart';
 
 class VenueDetailTimeslot extends StatefulWidget {

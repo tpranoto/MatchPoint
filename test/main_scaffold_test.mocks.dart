@@ -10,10 +10,13 @@ import 'package:geolocator/geolocator.dart' as _i2;
 import 'package:matchpoint/models/auth.dart' as _i3;
 import 'package:matchpoint/models/category.dart' as _i13;
 import 'package:matchpoint/models/profile.dart' as _i4;
+import 'package:matchpoint/models/reservation.dart' as _i15;
+import 'package:matchpoint/models/timeslot.dart' as _i16;
 import 'package:matchpoint/models/venue.dart' as _i12;
 import 'package:matchpoint/providers/auth_provider.dart' as _i7;
 import 'package:matchpoint/providers/location_provider.dart' as _i5;
 import 'package:matchpoint/providers/profile_provider.dart' as _i8;
+import 'package:matchpoint/providers/reservation_provider.dart' as _i14;
 import 'package:matchpoint/providers/venue_provider.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i11;
@@ -206,6 +209,24 @@ class MockProfileProvider extends _i1.Mock implements _i8.ProfileProvider {
           as _i6.Future<void>);
 
   @override
+  _i6.Future<void> incrReservations() =>
+      (super.noSuchMethod(
+            Invocation.method(#incrReservations, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> decrReservations() =>
+      (super.noSuchMethod(
+            Invocation.method(#decrReservations, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
   void removeProfile() => super.noSuchMethod(
     Invocation.method(#removeProfile, []),
     returnValueForMissingStub: null,
@@ -352,6 +373,129 @@ class MockVenueProvider extends _i1.Mock implements _i10.VenueProvider {
   @override
   void removeListener(_i9.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+    Invocation.method(#notifyListeners, []),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [ReservationProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockReservationProvider extends _i1.Mock
+    implements _i14.ReservationProvider {
+  @override
+  _i6.Stream<_i15.RsStatusList> get venueScheduleStream =>
+      (super.noSuchMethod(
+            Invocation.getter(#venueScheduleStream),
+            returnValue: _i6.Stream<_i15.RsStatusList>.empty(),
+            returnValueForMissingStub: _i6.Stream<_i15.RsStatusList>.empty(),
+          )
+          as _i6.Stream<_i15.RsStatusList>);
+
+  @override
+  List<_i15.Reservation> get userReservations =>
+      (super.noSuchMethod(
+            Invocation.getter(#userReservations),
+            returnValue: <_i15.Reservation>[],
+            returnValueForMissingStub: <_i15.Reservation>[],
+          )
+          as List<_i15.Reservation>);
+
+  @override
+  List<_i16.TimeSlot> get selectedTimeslots =>
+      (super.noSuchMethod(
+            Invocation.getter(#selectedTimeslots),
+            returnValue: <_i16.TimeSlot>[],
+            returnValueForMissingStub: <_i16.TimeSlot>[],
+          )
+          as List<_i16.TimeSlot>);
+
+  @override
+  set selectedTimeslots(List<_i16.TimeSlot>? timeSlots) => super.noSuchMethod(
+    Invocation.setter(#selectedTimeslots, timeSlots),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  bool get hasListeners =>
+      (super.noSuchMethod(
+            Invocation.getter(#hasListeners),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
+
+  @override
+  void addTimeslot(_i16.TimeSlot? ts) => super.noSuchMethod(
+    Invocation.method(#addTimeslot, [ts]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void rmTimeslot(_i16.TimeSlot? ts) => super.noSuchMethod(
+    Invocation.method(#rmTimeslot, [ts]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i6.Future<void> createReservation(_i15.Reservation? rsv) =>
+      (super.noSuchMethod(
+            Invocation.method(#createReservation, [rsv]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> loadReservationsByVenue(
+    DateTime? currentDate,
+    String? venueId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadReservationsByVenue, [currentDate, venueId]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> loadReservationByUser(String? profileId) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadReservationByUser, [profileId]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> removeUserReservation(_i15.Reservation? rsv) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeUserReservation, [rsv]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#addListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeListener(_i9.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#removeListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
     returnValueForMissingStub: null,
   );
 
