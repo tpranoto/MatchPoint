@@ -30,8 +30,6 @@ class Entry extends StatelessWidget {
               return LoginPage();
             }
 
-            if (!snapshot.hasData) {}
-
             return MainScaffold();
           },
         );

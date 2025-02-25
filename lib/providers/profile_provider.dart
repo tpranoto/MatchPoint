@@ -62,14 +62,11 @@ class ProfileProvider extends ChangeNotifier {
 
     final profileRef = _profileCollection.doc(_currentProfile!.id);
 
-    await profileRef.update({
-      'reservationsCount': FieldValue.increment(-1),
-    });
-
     if (_currentProfile!.reservationsCount > 0) {
       await profileRef.update({
         'reservationsCount': FieldValue.increment(-1),
       });
+      print("again");
       _currentProfile!.reservationsCount--;
     }
     notifyListeners();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'my_reservation_page.dart';
+import 'my_reservation_screen.dart';
 import 'profile_screen.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -38,7 +38,7 @@ class _MainScaffoldState extends State<MainScaffold> {
       ),
       body: [
         HomeScreen(),
-        MyReservationPage(),
+        MyReservationScreen(),
         ProfileScreen(),
       ][_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

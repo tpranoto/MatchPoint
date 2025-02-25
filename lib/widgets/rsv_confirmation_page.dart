@@ -6,7 +6,6 @@ import 'main_scaffold.dart';
 import 'simple_venue_detail.dart';
 import '../models/reservation.dart';
 import '../models/venue.dart';
-import '../models/timeslot.dart';
 import '../providers/profile_provider.dart';
 import '../providers/reservation_provider.dart';
 
@@ -20,15 +19,15 @@ class RsvConfirmationPage extends StatelessWidget {
     final rsvProvider = context.read<ReservationProvider>();
     final profileProvider = context.read<ProfileProvider>();
 
-    await rsvProvider.createReservation(Reservation(
-      venueId: venue.id,
-      profileId: profileProvider.getProfile.id,
-      createdAt: DateTime.now(),
-      reservationDate:
-          DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
-      timeSlots: rsvProvider.selectedTimeslots,
-      venueDetails: venue,
-    ));
+    await context.read<ReservationProvider>().createReservation(Reservation(
+          venueId: venue.id,
+          profileId: profileProvider.getProfile.id,
+          createdAt: DateTime.now(),
+          reservationDate:
+              DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
+          timeSlots: rsvProvider.selectedTimeslots,
+          venueDetails: venue,
+        ));
 
     await profileProvider.incrReservations();
 

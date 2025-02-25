@@ -49,8 +49,8 @@ class _LogOutButton extends StatelessWidget {
                 "Log Out",
                 () async {
                   await authProvider.signOut();
-                  profileProvider.removeProfile();
                   venueProvider.resetVenues();
+                  profileProvider.removeProfile();
                 },
               );
             },

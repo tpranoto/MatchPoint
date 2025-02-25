@@ -55,7 +55,7 @@ class Venue {
       photoUrls: photoUrl,
       sportCategory: currCategory,
       priceInCent: currCategory.categoryBasedPrice,
-      ratings: data["rating"] / 2,
+      ratings: data["rating"]!=null?data["rating"]/2:data["rating"],
       ratingsTotal: ratingTotal,
     );
   }

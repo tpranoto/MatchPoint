@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:matchpoint/models/reservation.dart';
-import 'package:matchpoint/models/timeslot.dart';
+import '../models/reservation.dart';
+import '../models/timeslot.dart';
 
 class ReservationProvider extends ChangeNotifier {
   final CollectionReference _reservationCollection;
@@ -61,29 +60,6 @@ class ReservationProvider extends ChangeNotifier {
     _venueScheduleStream.add(_venueSchedule);
   }
 
-  Future<void> removeReservation(Reservation rsv) async {
-    final rsvRef = _reservationCollection
-        .where("venueId", isEqualTo: rsv.venueId)
-        .where("profileId", isEqualTo: rsv.profileId)
-        .where("reservationDate", isEqualTo: rsv.reservationDate)
-        .where("timeSlots", isEqualTo: rsv.getTimeSlotsIdx());
-
-    final snapshot = await rsvRef.get();
-    if (snapshot.size == 0) {
-      return;
-    }
-
-    for (var doc in snapshot.docs) {
-      if (!doc.exists) {
-        continue;
-      }
-      final rsv = Reservation.fromMap(doc.data() as Map<String, dynamic>);
-      await doc.reference.delete();
-      _rmRsvToSchedule(rsv);
-    }
-    _venueScheduleStream.add(_venueSchedule);
-  }
-
   Future<void> loadReservationsByVenue(
       DateTime currentDate, String venueId) async {
     _venueSchedule = RsStatusList(currentDate, getDefaultDailySchedule());
@@ -116,7 +92,7 @@ class ReservationProvider extends ChangeNotifier {
   Future<void> loadReservationByUser(String profileId) async {
     final rsvRef = _reservationCollection
         .where("profileId", isEqualTo: profileId)
-        .orderBy("reservationDate", descending: false);
+        .orderBy("reservationDate", descending: true);
 
     final snapshot = await rsvRef.get();
     if (snapshot.size == 0) {
@@ -129,17 +105,33 @@ class ReservationProvider extends ChangeNotifier {
         .toList();
   }
 
+  Future<void> removeUserReservation(Reservation rsv) async {
+    final rsvRef = _reservationCollection
+        .where("venueId", isEqualTo: rsv.venueId)
+        .where("profileId", isEqualTo: rsv.profileId)
+        .where("reservationDate", isEqualTo: rsv.reservationDate)
+        .where("timeSlots", isEqualTo: rsv.getTimeSlotsIdx());
+
+    final snapshot = await rsvRef.get();
+    if (snapshot.size == 0) {
+      return;
+    }
+
+    for (var doc in snapshot.docs) {
+      if (!doc.exists) {
+        continue;
+      }
+      final rsv = Reservation.fromMap(doc.data() as Map<String, dynamic>);
+      await doc.reference.delete();
+      _userReservationsList.remove(rsv);
+    }
+    notifyListeners();
+  }
+
   _putRsvToSchedule(Reservation rsv) {
     for (var ts in rsv.timeSlots) {
       _venueSchedule.reservations[ts.index] =
           ReservationStatus(TimeSlot.values[ts.index], true, details: rsv);
-    }
-  }
-
-  _rmRsvToSchedule(Reservation rsv) {
-    for (var ts in rsv.timeSlots) {
-      _venueSchedule.reservations[ts.index] =
-          ReservationStatus(TimeSlot.values[ts.index], false, details: null);
     }
   }
 }
