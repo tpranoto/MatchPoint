@@ -22,12 +22,12 @@ class RsvConfirmationPage extends StatelessWidget {
 
     await rsvProvider.createReservation(Reservation(
       venueId: venue.id,
-      venueName: venue.name,
       profileId: profileProvider.getProfile.id,
       createdAt: DateTime.now(),
       reservationDate:
           DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
       timeSlots: rsvProvider.selectedTimeslots,
+      venueDetails: venue,
     ));
 
     await profileProvider.incrReservations();
@@ -111,13 +111,12 @@ class _PaymentSummary extends StatelessWidget {
           ),
           SizedBox(height: 5),
           ...(rsvProvider.selectedTimeslots
-                ..sort((a, b) =>
-                    TimeSlot.values[a].time.compareTo(TimeSlot.values[b].time)))
+                ..sort((a, b) => a.time.compareTo(b.time)))
               .map((item) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(TimeSlot.values[item].showTimeRange),
+                Text(item.showTimeRange),
                 Text("${venue.priceInCent / 100}")
               ],
             );

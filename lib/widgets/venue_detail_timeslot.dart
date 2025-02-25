@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/models/timeslot.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import '../providers/reservation_provider.dart';
@@ -12,13 +13,13 @@ class VenueDetailTimeslot extends StatefulWidget {
 }
 
 class _VenueDetailTimeslotState extends State<VenueDetailTimeslot> {
-  _onTimeSlotClick(index) {
+  _onTimeSlotClick(TimeSlot ts) {
     final rsvProvider = context.read<ReservationProvider>();
     setState(() {
-      if (rsvProvider.selectedTimeslots.contains(index)) {
-        rsvProvider.rmTimeslot(index);
+      if (rsvProvider.selectedTimeslots.contains(ts)) {
+        rsvProvider.rmTimeslot(ts);
       } else {
-        rsvProvider.addTimeslot(index);
+        rsvProvider.addTimeslot(ts);
       }
     });
   }
@@ -63,16 +64,17 @@ class _VenueDetailTimeslotState extends State<VenueDetailTimeslot> {
                                     snapshot.data!.reservations[index].reserved
                                         ? null
                                         : () {
-                                            _onTimeSlotClick(index);
+                                            _onTimeSlotClick(
+                                                TimeSlot.values[index]);
                                           },
                                 bg: rsvProvider.selectedTimeslots
-                                        .contains(index)
+                                        .contains(TimeSlot.values[index])
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context)
                                         .colorScheme
                                         .secondaryContainer,
                                 fg: rsvProvider.selectedTimeslots
-                                        .contains(index)
+                                        .contains(TimeSlot.values[index])
                                     ? Theme.of(context).colorScheme.onPrimary
                                     : Theme.of(context)
                                         .colorScheme

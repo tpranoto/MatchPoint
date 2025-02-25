@@ -4,38 +4,33 @@ import 'package:matchpoint/models/reservation.dart';
 import 'package:matchpoint/providers/reservation_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 
-class MyReservationPage extends StatefulWidget {
-  final String profileId;
+import 'common/error_dialog.dart';
+import 'common/mp_future_builder.dart';
 
-  const MyReservationPage({super.key, required this.profileId});
+class MyReservationPage extends StatefulWidget {
+  const MyReservationPage({super.key});
 
   @override
   State<MyReservationPage> createState() => _MyReservationPageState();
 }
 
 class _MyReservationPageState extends State<MyReservationPage> {
-  late Future<List<Reservation>> _reservationsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _reservationsFuture = Provider.of<ReservationProvider>(context, listen: false)
-        .getUserReservations(widget.profileId);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final rsvProvider = context.watch<ReservationProvider>();
+    final profileProvider = context.read<ProfileProvider>();
+
     return Scaffold(
-      body: FutureBuilder<List<Reservation>>(
-        future: _reservationsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: MPFutureBuilder(
+        future:
+            rsvProvider.loadReservationByUser(profileProvider.getProfile.id),
+        onSuccess: (context, snapshot) {
           if (snapshot.hasError) {
+            errorDialog(context, "${snapshot.error}");
             return Center(child: Text("Error loading reservations"));
           }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+
+          if (rsvProvider.userReservations.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -44,21 +39,18 @@ class _MyReservationPageState extends State<MyReservationPage> {
                   SizedBox(height: 10),
                   Text(
                     "No reservations found",
-                    style: TextStyle(fontSize: 18, color: Colors.grey
-                      ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
             );
           }
 
-          final reservations = snapshot.data!;
-
           return ListView.builder(
             padding: EdgeInsets.all(10),
-            itemCount: reservations.length,
+            itemCount: rsvProvider.userReservations.length,
             itemBuilder: (context, index) {
-              final rsv = reservations[index];
+              final rsv = rsvProvider.userReservations[index];
 
               return AnimatedContainer(
                 duration: Duration(milliseconds: 300),
@@ -82,43 +74,36 @@ class _MyReservationPageState extends State<MyReservationPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                rsv.venueName,
+                                rsv.venueDetails.name,
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                    fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Icon(
-                                      Icons.calendar_today,
-                                      size: 16, color: Colors.blueGrey
-                                  ),
+                                  Icon(Icons.calendar_today,
+                                      size: 16, color: Colors.blueGrey),
                                   SizedBox(width: 6),
                                   Text(
-                                    rsv.reservationDate.toLocal().toString().split(' ')[0],
+                                    rsv.reservationDate
+                                        .toLocal()
+                                        .toString()
+                                        .split(' ')[0],
                                     style: TextStyle(
-                                        fontSize: 14, color: Colors.blueGrey
-                                    ),
+                                        fontSize: 14, color: Colors.blueGrey),
                                   ),
                                 ],
                               ),
                               SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Icon(
-                                      Icons.access_time,
-                                      size: 16,
-                                      color: Colors.blueGrey
-                                  ),
+                                  Icon(Icons.access_time,
+                                      size: 16, color: Colors.blueGrey),
                                   SizedBox(width: 6),
                                   Text(
-                                    rsv.timeSlots.map((ts) => formatTimeSlot(ts)).join(", "),
+                                    rsv.timeSlots.map((ts) => ts).join(", "),
                                     style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.blueGrey
-                                    ),
+                                        fontSize: 14, color: Colors.blueGrey),
                                   ),
                                 ],
                               ),
@@ -141,28 +126,20 @@ class _MyReservationPageState extends State<MyReservationPage> {
     );
   }
 
-  String formatTimeSlot(int slot) {
-    const timeSlots = [
-      "6:00 AM - 7:00 AM", "7:00 AM - 8:00 AM", "8:00 AM - 9:00 AM",
-      "9:00 AM - 10:00 AM", "10:00 AM - 11:00 AM", "11:00 AM - 12:00 PM",
-      "12:00 PM - 1:00 PM", "1:00 PM - 2:00 PM", "2:00 PM - 3:00 PM",
-      "3:00 PM - 4:00 PM", "4:00 PM - 5:00 PM", "5:00 PM - 6:00 PM",
-      "6:00 PM - 7:00 PM", "7:00 PM - 8:00 PM"
-    ];
-    return timeSlots[slot];
-  }
-
   Future<void> _cancelReservation(BuildContext context, Reservation rsv) async {
-    final reservationProvider = Provider.of<ReservationProvider>(context, listen: false);
-    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
-
-    await reservationProvider.removeReservation(rsv);
-    await profileProvider.decrReservations();
-
-    if (mounted) {
-      setState(() {
-        _reservationsFuture = reservationProvider.getUserReservations(widget.profileId);
-      });
-    }
+    // final reservationProvider =
+    //     Provider.of<ReservationProvider>(context, listen: false);
+    // final profileProvider =
+    //     Provider.of<ProfileProvider>(context, listen: false);
+    //
+    // await reservationProvider.removeReservation(rsv);
+    // await profileProvider.decrReservations();
+    //
+    // if (mounted) {
+    //   setState(() {
+    //     _reservationsFuture =
+    //         reservationProvider.getUserReservations(widget.profileId);
+    //   });
+    // }
   }
 }

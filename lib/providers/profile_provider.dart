@@ -45,6 +45,8 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> incrReservations() async {
+    if (_currentProfile == null) return;
+
     final profileRef = _profileCollection.doc(_currentProfile!.id);
 
     await profileRef.update({
@@ -64,8 +66,12 @@ class ProfileProvider extends ChangeNotifier {
       'reservationsCount': FieldValue.increment(-1),
     });
 
-    _currentProfile!.reservationsCount =
-        (_currentProfile!.reservationsCount - 1).clamp(0, double.infinity).toInt();
+    if (_currentProfile!.reservationsCount > 0) {
+      await profileRef.update({
+        'reservationsCount': FieldValue.increment(-1),
+      });
+      _currentProfile!.reservationsCount--;
+    }
     notifyListeners();
   }
 

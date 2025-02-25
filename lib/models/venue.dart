@@ -30,11 +30,11 @@ class Venue {
   factory Venue.fromResponse(Map<String, dynamic> data) {
     final mainGeocodes = data["geocodes"]["main"];
     final List<dynamic> photos = data["photos"];
-    //String? photoUrl;
-      List<String>? photoUrl = photos.isNotEmpty
-          ? photos.map((photo) => "${photo["prefix"]}original${photo["suffix"]}").toList()
-          : null;
-
+    List<String>? photoUrl = photos.isNotEmpty
+        ? photos
+            .map((photo) => "${photo["prefix"]}original${photo["suffix"]}")
+            .toList()
+        : null;
 
     final List<dynamic> categories = data["categories"];
     final currCategory = categoryEnum(categories[0]["name"]);
@@ -55,9 +55,43 @@ class Venue {
       photoUrls: photoUrl,
       sportCategory: currCategory,
       priceInCent: currCategory.categoryBasedPrice,
-      ratings: data["rating"],
+      ratings: data["rating"] / 2,
       ratingsTotal: ratingTotal,
     );
+  }
+
+  factory Venue.fromMap(Map<String, dynamic> data) {
+    final currCategory = categoryEnum(data["sportCategory"]);
+
+    return Venue(
+      id: data["id"],
+      name: data["name"],
+      address: data["address"],
+      latitude: data["latitude"],
+      longitude: data["longitude"],
+      distance: data["distance"],
+      photoUrls: (data["photoUrls"] as List).map((e) => e as String).toList(),
+      sportCategory: currCategory,
+      priceInCent: currCategory.categoryBasedPrice,
+      ratings: data["ratings"],
+      ratingsTotal: data["totalRatings"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "address": address,
+      "latitude": latitude,
+      "longitude": longitude,
+      "distance": distance,
+      "photoUrls": photoUrls,
+      "sportCategory": sportCategory.categoryString,
+      "priceInCent": priceInCent,
+      "ratings": ratings,
+      "ratingsTotal": ratingsTotal,
+    };
   }
 
   @override

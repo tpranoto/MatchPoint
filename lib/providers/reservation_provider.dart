@@ -10,27 +10,28 @@ class ReservationProvider extends ChangeNotifier {
   late RsStatusList _venueSchedule;
   final StreamController<RsStatusList> _venueScheduleStream =
       StreamController<RsStatusList>.broadcast();
-
-  List<int> _selectedTimeslots = [];
+  List<Reservation> _userReservationsList = [];
+  List<TimeSlot> _selectedTimeslots = [];
 
   ReservationProvider(FirebaseFirestore firestore)
       : _reservationCollection = firestore.collection("reservation");
 
   Stream<RsStatusList> get venueScheduleStream => _venueScheduleStream.stream;
-  List<int> get selectedTimeslots => _selectedTimeslots;
+  List<Reservation> get userReservations => _userReservationsList;
+  List<TimeSlot> get selectedTimeslots => _selectedTimeslots;
 
-  set selectedTimeslots(List<int> timeSlots) {
+  set selectedTimeslots(List<TimeSlot> timeSlots) {
     _selectedTimeslots = timeSlots;
     notifyListeners();
   }
 
-  void addTimeslot(int tsIdx) {
-    _selectedTimeslots.add(tsIdx);
+  void addTimeslot(TimeSlot ts) {
+    _selectedTimeslots.add(ts);
     notifyListeners();
   }
 
-  void rmTimeslot(int tsIdx) {
-    _selectedTimeslots.remove(tsIdx);
+  void rmTimeslot(TimeSlot ts) {
+    _selectedTimeslots.remove(ts);
     notifyListeners();
   }
 
@@ -39,7 +40,7 @@ class ReservationProvider extends ChangeNotifier {
         .where("venueId", isEqualTo: rsv.venueId)
         .where("profileId", isEqualTo: rsv.profileId)
         .where("reservationDate", isEqualTo: rsv.reservationDate)
-        .where("timeSlots", isEqualTo: rsv.timeSlots);
+        .where("timeSlots", isEqualTo: rsv.getTimeSlotsIdx());
 
     final snapshot = await rsvRef.get();
     if (snapshot.size > 0) {
@@ -65,7 +66,7 @@ class ReservationProvider extends ChangeNotifier {
         .where("venueId", isEqualTo: rsv.venueId)
         .where("profileId", isEqualTo: rsv.profileId)
         .where("reservationDate", isEqualTo: rsv.reservationDate)
-        .where("timeSlots", isEqualTo: rsv.timeSlots);
+        .where("timeSlots", isEqualTo: rsv.getTimeSlotsIdx());
 
     final snapshot = await rsvRef.get();
     if (snapshot.size == 0) {
@@ -81,7 +82,6 @@ class ReservationProvider extends ChangeNotifier {
       _rmRsvToSchedule(rsv);
     }
     _venueScheduleStream.add(_venueSchedule);
-    notifyListeners();
   }
 
   Future<void> loadReservationsByVenue(
@@ -113,34 +113,33 @@ class ReservationProvider extends ChangeNotifier {
     _venueScheduleStream.add(_venueSchedule);
   }
 
-  Future<List<Reservation>> getUserReservations(String profileId) async {
-    try {
-      QuerySnapshot snapshot = await _reservationCollection
-          .where("profileId", isEqualTo: profileId)
-          .orderBy("reservationDate", descending: false)
-          .get();
+  Future<void> loadReservationByUser(String profileId) async {
+    final rsvRef = _reservationCollection
+        .where("profileId", isEqualTo: profileId)
+        .orderBy("reservationDate", descending: false);
 
-      return snapshot.docs
-          .map((doc) => Reservation.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-    } catch (e) {
-      print("Error fetching user reservations: $e");
-      return [];
+    final snapshot = await rsvRef.get();
+    if (snapshot.size == 0) {
+      _userReservationsList = [];
+      return;
     }
+
+    _userReservationsList = snapshot.docs
+        .map((doc) => Reservation.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
   _putRsvToSchedule(Reservation rsv) {
-    for (var tsIdx in rsv.timeSlots) {
-      _venueSchedule.reservations[tsIdx] =
-          ReservationStatus(TimeSlot.values[tsIdx], true, details: rsv);
+    for (var ts in rsv.timeSlots) {
+      _venueSchedule.reservations[ts.index] =
+          ReservationStatus(TimeSlot.values[ts.index], true, details: rsv);
     }
   }
 
   _rmRsvToSchedule(Reservation rsv) {
-    for (var tsIdx in rsv.timeSlots) {
-      _venueSchedule.reservations[tsIdx] =
-          ReservationStatus(TimeSlot.values[tsIdx], false, details: null);
+    for (var ts in rsv.timeSlots) {
+      _venueSchedule.reservations[ts.index] =
+          ReservationStatus(TimeSlot.values[ts.index], false, details: null);
     }
   }
-
 }
