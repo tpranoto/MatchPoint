@@ -1,3 +1,4 @@
+import 'auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile {
@@ -5,8 +6,8 @@ class Profile {
   final String email;
   final String name;
   final String photoUrl;
-  final int reservationsCount;
-  final int reviewsCount;
+  int reservationsCount;
+  int reviewsCount;
 
   Profile(this.id, this.email, this.name, this.photoUrl, this.reservationsCount,
       this.reviewsCount);
@@ -27,6 +28,17 @@ class Profile {
       user.email ?? "",
       user.displayName ?? "",
       user.photoURL ?? "",
+      0,
+      0,
+    );
+  }
+
+  factory Profile.fromAuth(Auth auth) {
+    return Profile(
+      auth.uid,
+      auth.email,
+      auth.displayName,
+      auth.photoUrl,
       0,
       0,
     );

@@ -1,36 +1,74 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../models/auth.dart';
 import '../models/profile.dart';
-import '../services/firestore.dart';
 
-class AppProfileProvider extends ChangeNotifier {
-  final FirestoreService firestoreService;
+class ProfileProvider extends ChangeNotifier {
+  final CollectionReference _profileCollection;
 
   Profile? _currentProfile;
 
-  AppProfileProvider({required this.firestoreService});
+  ProfileProvider(FirebaseFirestore firestore)
+      : _profileCollection = firestore.collection("profile");
 
-  Profile? get getData {
-    return _currentProfile;
+  Profile get getProfile => _currentProfile!;
+
+  Future<void> loadProfile(String uid) async {
+    final profileRef = _profileCollection.doc(uid);
+    final snapshot = await profileRef.get();
+    if (!snapshot.exists) {
+      throw Exception('error no profile found');
+    }
+    _currentProfile = Profile.fromMap(
+      snapshot.data() as Map<String, dynamic>,
+      snapshot.id,
+    );
   }
 
-  Future<void> loadAndSaveProfile(String uid) async {
-    final storedProfile = await firestoreService.getById(uid);
-    _currentProfile = storedProfile;
+  Future<void> loadAndSaveProfile(Auth auth) async {
+    final profileRef = _profileCollection.doc(auth.uid);
+
+    final snapshot = await profileRef.get();
+    if (!snapshot.exists) {
+      final newProfile = Profile.fromAuth(auth);
+      await profileRef.set(newProfile);
+      _currentProfile = newProfile;
+      notifyListeners();
+      return;
+    }
+
+    _currentProfile = Profile.fromMap(
+      snapshot.data() as Map<String, dynamic>,
+      snapshot.id,
+    );
     notifyListeners();
   }
 
-  void saveProfileFromUser(User? gUser) {
-    if (gUser == null) {
-      return;
-    }
+  Future<void> incrReservations() async {
+    if (_currentProfile == null) return;
 
-    final appProfile =
-        firestoreService.addProfileIfNotExists(Profile.fromUser(gUser));
-    if (appProfile == null) {
-      return;
+    final profileRef = _profileCollection.doc(_currentProfile!.id);
+
+    await profileRef.update({
+      'reservationsCount': FieldValue.increment(1),
+    });
+
+    _currentProfile!.reservationsCount++;
+    notifyListeners();
+  }
+
+  Future<void> decrReservations() async {
+    if (_currentProfile == null) return;
+
+    final profileRef = _profileCollection.doc(_currentProfile!.id);
+
+    if (_currentProfile!.reservationsCount > 0) {
+      await profileRef.update({
+        'reservationsCount': FieldValue.increment(-1),
+      });
+      print("again");
+      _currentProfile!.reservationsCount--;
     }
-    _currentProfile = appProfile;
     notifyListeners();
   }
 

@@ -1,20 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../models/auth.dart';
 
-class AuthService {
+class AppAuthProvider {
   final FirebaseAuth _firebaseAuth;
-  final _googleSignIn = GoogleSignIn();
+  late Auth _authData;
 
-  AuthService(this._firebaseAuth);
+  AppAuthProvider(this._firebaseAuth);
 
-  Stream<User?> get loginChanges {
-    return _firebaseAuth.authStateChanges();
+  Auth get getData => _authData;
+
+  Stream<Auth?> get stateChanges {
+    return _firebaseAuth.authStateChanges().map((user) {
+      if (user != null) {
+        return Auth.fromUser(user);
+      }
+      return null;
+    });
   }
 
-  Future<User?> signInWithGoogle() async {
-    final googleAuth = await _googleSignIn.signIn();
+  Future<void> signInWithGoogle() async {
+    final googleAuth = await GoogleSignIn().signIn();
     if (googleAuth == null) {
-      return null;
+      throw Exception('error signing in with Google');
     }
 
     final GoogleSignInAuthentication gAuth = await googleAuth.authentication;
@@ -26,13 +34,12 @@ class AuthService {
     final UserCredential signInCreds =
         await _firebaseAuth.signInWithCredential(creds);
     if (signInCreds.user != null) {
-      return signInCreds.user!;
+      _authData = Auth.fromUser(signInCreds.user!);
     }
-    return null;
   }
 
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    await GoogleSignIn().signOut();
     return await _firebaseAuth.signOut();
   }
 }

@@ -1,25 +1,36 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-class LocationProvider extends ChangeNotifier {
+class LocationData {
+  final Position position;
+  final Placemark placemark;
+
+  LocationData(this.position, this.placemark);
+}
+
+class LocationProvider {
   final GeolocatorPlatform geolocator;
   bool _permissionDenied = false;
-  Position? _latLong;
+  late Position _latLong;
   Placemark? _currentLocation;
-  bool _isLoading = false;
+  final StreamController<LocationData> _locStream =
+      StreamController<LocationData>.broadcast();
 
-  LocationProvider({required this.geolocator});
+  LocationProvider(this.geolocator);
 
   bool get permissionDenied => _permissionDenied;
-  bool get isLoading => _isLoading;
-  Position? get latLong => _latLong;
+  Position get latLong => _latLong;
   Placemark? get currentLocation => _currentLocation;
+  Stream<LocationData> get locationStream => _locStream.stream;
 
-  Future<void> getCurrentLocation() async {
-    _isLoading = true;
-    notifyListeners();
+  void streamCurrentLocation() {
+    if (_currentLocation != null) {
+      _locStream.add(LocationData(_latLong, _currentLocation!));
+    }
+  }
 
+  Future<void> loadCurrentLocation() async {
     LocationPermission permission = await geolocator.checkPermission();
 
     if (permission != LocationPermission.whileInUse &&
@@ -27,28 +38,20 @@ class LocationProvider extends ChangeNotifier {
       permission = await geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.denied) {
-      _isLoading = false;
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       _permissionDenied = true;
       return;
     }
+    _permissionDenied = false;
 
-    if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always) {
-      _permissionDenied = false;
-      notifyListeners();
+    _latLong = await geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
 
-      Position position = await geolocator.getCurrentPosition(
-          locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(_latLong.latitude, _latLong.longitude);
+    _currentLocation = placemarks.first;
 
-      _latLong = position;
-
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      _currentLocation = placemarks.first;
-      _isLoading = false;
-      notifyListeners();
-    }
+    _locStream.add(LocationData(_latLong, _currentLocation!));
   }
 }

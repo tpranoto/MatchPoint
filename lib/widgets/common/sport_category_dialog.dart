@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../models/category.dart';
+import '../../models/category.dart';
 
 void showSportsFilterDialog(
   BuildContext context,
