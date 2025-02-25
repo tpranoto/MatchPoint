@@ -37,7 +37,13 @@ class Venue {
         : null;
 
     final List<dynamic> categories = data["categories"];
-    final currCategory = categoryEnum(categories[0]["name"]);
+    SportsCategories currCategory = SportsCategories.all;
+    for (var item in categories) {
+      if (categoryEnum(item["name"]) != SportsCategories.all) {
+        currCategory = categoryEnum(item["name"]);
+        break;
+      }
+    }
     final double metersInOneMile = 1609.344;
 
     int? ratingTotal = 0;
@@ -55,7 +61,7 @@ class Venue {
       photoUrls: photoUrl,
       sportCategory: currCategory,
       priceInCent: currCategory.categoryBasedPrice,
-      ratings: data["rating"]!=null?data["rating"]/2:data["rating"],
+      ratings: data["rating"] != null ? data["rating"] / 2 : data["rating"],
       ratingsTotal: ratingTotal,
     );
   }
