@@ -46,6 +46,17 @@ class Reservation {
   List<int> getTimeSlotsIdx() {
     return timeSlots.map((element) => element.index).toList();
   }
+
+  bool rsvPassed() {
+    for (var ts in timeSlots) {
+      DateTime rsvDate = reservationDate;
+      if (rsvDate.add(ts.time).isBefore(DateTime.now())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
 class ReservationStatus {

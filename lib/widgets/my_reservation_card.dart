@@ -26,24 +26,39 @@ class MyReservationCard extends StatelessWidget {
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        title: SizedBox(
-          height: 48,
-          child: Text(
-            rsv.venueDetails.name,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          title: SizedBox(
+            height: 48,
+            child: Text(
+              rsv.venueDetails.name,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        subtitle: _RsvDetails(rsv),
-        trailing: IconButton(
-          icon: Icon(Icons.delete, color: Colors.red),
-          onPressed: () => _onCancelPress(context, rsv),
+          subtitle: _RsvDetails(rsv),
+          trailing: IconButton(
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed:
+                rsv.rsvPassed() ? null : () => _onCancelPress(context, rsv),
+          ),
+          expandedAlignment: Alignment.centerLeft,
+          children: [
+            ...rsv.timeSlots.map((ts) {
+              return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Text(
+                    ts.showTimeRange,
+                    style: TextStyle(fontSize: 14),
+                  ));
+            })
+          ],
         ),
       ),
     );
