@@ -89,8 +89,8 @@ class _PaymentSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final rsvProvider = context.watch<ReservationProvider>();
 
-    return PaddedCard(
-      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
           Align(
@@ -100,7 +100,7 @@ class _PaymentSummary extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          Divider(color: Colors.black, thickness: 1.0),
+          Divider(color: Colors.black, thickness: 2.0),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -116,7 +116,7 @@ class _PaymentSummary extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(item.showTimeRange),
-                Text("${venue.priceInCent / 100}")
+                Text("\$ ${venue.priceInCent / 100}")
               ],
             );
           }),
@@ -127,7 +127,7 @@ class _PaymentSummary extends StatelessWidget {
               Text("Total cost",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               Text(
-                "${venue.priceInCent * rsvProvider.selectedTimeslots.length / 100}",
+                "\$ ${venue.priceInCent * rsvProvider.selectedTimeslots.length / 100}",
                 style: TextStyle(fontWeight: FontWeight.bold),
               )
             ],

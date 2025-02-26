@@ -99,37 +99,4 @@ class Venue {
       "ratingsTotal": ratingsTotal,
     };
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Venue &&
-        other.id == id &&
-        other.name == name &&
-        other.address == address &&
-        other.latitude == latitude &&
-        other.longitude == longitude &&
-        other.distance == distance &&
-        other.photoUrls == photoUrls &&
-        other.sportCategory == sportCategory &&
-        other.priceInCent == priceInCent &&
-        other.ratings == ratings &&
-        other.ratingsTotal == ratingsTotal;
-  }
-
-  // Override hashCode
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        address.hashCode ^
-        latitude.hashCode ^
-        longitude.hashCode ^
-        distance.hashCode ^
-        photoUrls.hashCode ^
-        sportCategory.hashCode ^
-        priceInCent.hashCode ^
-        ratings.hashCode ^
-        ratingsTotal.hashCode;
-  }
 }

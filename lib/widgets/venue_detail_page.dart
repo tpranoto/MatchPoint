@@ -38,7 +38,7 @@ class VenueDetailPage extends StatelessWidget {
                 ],
               ),
               onPressed: () {
-                Navigator.of(context).pop(); // Pop the current screen
+                Navigator.of(context).pop();
               },
             ),
           ),
@@ -61,9 +61,9 @@ class VenueDetailPage extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    _placeInfo(),
+                    _PlaceInfo(venue),
                     VenueDetailRsv(venue),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                   ],
                 ),
               ),
@@ -73,8 +73,14 @@ class VenueDetailPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _placeInfo() {
+class _PlaceInfo extends StatelessWidget {
+  final Venue venue;
+  const _PlaceInfo(this.venue);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -90,7 +96,7 @@ class VenueDetailPage extends StatelessWidget {
                   textColor: Colors.blueGrey,
                 ),
               ),
-              SizedBox(width: 16), // Space between the two items
+              SizedBox(width: 16),
               Expanded(
                 child: IconWithText(
                   icon: Icons.sports_soccer_outlined,

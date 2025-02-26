@@ -40,7 +40,7 @@ class MyReservationScreen extends StatelessWidget {
           }
 
           return ListView.builder(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             itemCount: rsvProvider.userReservations.length,
             itemBuilder: (context, index) {
               return AnimatedContainer(

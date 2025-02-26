@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
-import '../models/reservation.dart';
 import '../providers/profile_provider.dart';
 import '../providers/reservation_provider.dart';
+import '../models/reservation.dart';
+import '../models/category.dart';
 
 class MyReservationCard extends StatelessWidget {
   final Reservation rsv;
@@ -23,49 +24,66 @@ class MyReservationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 10),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+      child: ListTile(
+        title: SizedBox(
+          height: 48,
+          child: Text(
+            rsv.venueDetails.name,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                spacing: 4,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    rsv.venueDetails.name,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  IconWithText(
-                    icon: Icons.calendar_today,
-                    text:
-                        rsv.reservationDate.toLocal().toString().split(' ')[0],
-                    size: 14,
-                  ),
-                  IconWithText(
-                    icon: Icons.access_time,
-                    text: "${rsv.timeSlots.length} timeslots reserved",
-                    size: 14,
-                  ),
-                ],
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        subtitle: _RsvDetails(rsv),
+        trailing: IconButton(
+          icon: Icon(Icons.delete, color: Colors.red),
+          onPressed: () => _onCancelPress(context, rsv),
+        ),
+      ),
+    );
+  }
+}
+
+class _RsvDetails extends StatelessWidget {
+  final Reservation rsv;
+  const _RsvDetails(this.rsv);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: IconWithText(
+                icon: Icons.calendar_today,
+                text: rsv.reservationDate.toLocal().toString().split(' ')[0],
+                size: 14,
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _onCancelPress(context, rsv),
+            Flexible(
+              child: IconWithText(
+                icon: Icons.sports_soccer_outlined,
+                text: rsv.venueDetails.sportCategory.categoryString,
+                size: 14,
+              ),
             ),
           ],
         ),
-      ),
+        IconWithText(
+          icon: Icons.access_time,
+          text: "${rsv.timeSlots.length} timeslots reserved",
+          size: 14,
+        ),
+      ],
     );
   }
 }

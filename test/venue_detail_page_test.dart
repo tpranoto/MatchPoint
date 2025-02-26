@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matchpoint/models/reservation.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:matchpoint/widgets/venue_detail_page.dart';
 import 'package:matchpoint/models/category.dart';
@@ -12,7 +14,8 @@ void main() {
       'Venue Detail Page shows the venue data and reservations availability based on the passed in Object',
       (WidgetTester tester) async {
     final mockRsvProvider = MockReservationProvider();
-
+    when(mockRsvProvider.venueScheduleStream).thenAnswer((_) => Stream.value(
+        RsStatusList(DateTime(2025, 02, 28), getDefaultDailySchedule())));
     final mockVenue = Venue(
       id: "id1",
       name: "the tennis court",
