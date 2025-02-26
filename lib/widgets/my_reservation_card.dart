@@ -44,7 +44,7 @@ class MyReservationCard extends StatelessWidget {
           ),
           subtitle: _RsvDetails(rsv),
           trailing: IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: Icon(Icons.delete, color:rsv.rsvPassed() ? Colors.grey : Colors.red),
             onPressed:
                 rsv.rsvPassed() ? null : () => _onCancelPress(context, rsv),
           ),
