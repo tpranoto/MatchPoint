@@ -74,6 +74,5 @@ class ProfileProvider extends ChangeNotifier {
 
   void removeProfile() {
     _currentProfile = null;
-    notifyListeners();
   }
 }

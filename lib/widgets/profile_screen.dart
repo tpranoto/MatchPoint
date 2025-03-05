@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
+import 'entry.dart';
 import 'profile_information.dart';
 import '../providers/profile_provider.dart';
 import '../providers/auth_provider.dart';
@@ -51,6 +52,10 @@ class _LogOutButton extends StatelessWidget {
                   await authProvider.signOut();
                   venueProvider.resetVenues();
                   profileProvider.removeProfile();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (ctx) => Entry()),
+                          (Route<dynamic> route) => false);
                 },
               );
             },
