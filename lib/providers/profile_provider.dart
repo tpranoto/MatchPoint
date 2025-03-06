@@ -31,7 +31,7 @@ class ProfileProvider extends ChangeNotifier {
     final snapshot = await profileRef.get();
     if (!snapshot.exists) {
       final newProfile = Profile.fromAuth(auth);
-      await profileRef.set(newProfile);
+      await profileRef.set(newProfile.toMap());
       _currentProfile = newProfile;
       notifyListeners();
       return;
@@ -66,7 +66,6 @@ class ProfileProvider extends ChangeNotifier {
       await profileRef.update({
         'reservationsCount': FieldValue.increment(-1),
       });
-      print("again");
       _currentProfile!.reservationsCount--;
     }
     notifyListeners();

@@ -32,4 +32,14 @@ class Profile {
       data["reviewsCount"] ?? 0,
     );
   }
+
+  Map<String,dynamic> toMap(){
+    return {
+      "email":email,
+      "name":name,
+      "photoUrl": photoUrl,
+      "reservationsCount": reservationsCount,
+      "reviewsCount": reviewsCount,
+    };
+  }
 }
