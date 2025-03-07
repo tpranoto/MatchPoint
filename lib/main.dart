@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,8 @@ class MyApp extends StatelessWidget {
           create: (ctx) => ReservationProvider(FirebaseFirestore.instance),
         ),
         Provider(
-          create: (ctx) => NotificationProvider(FirebaseMessaging.instance),
+          create: (ctx) => NotificationProvider(
+              FirebaseMessaging.instance, FlutterLocalNotificationsPlugin()),
         ),
       ],
       child: MaterialApp(
