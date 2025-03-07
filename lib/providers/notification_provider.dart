@@ -24,7 +24,7 @@ class NotificationProvider {
       await ctx.read<ProfileProvider>().updateFCMToken(newToken);
     });
 
-    var androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var androidSettings = AndroidInitializationSettings("@mipmap/ic_launcher");
     var initializationSettings =
         InitializationSettings(android: androidSettings);
     await _localNotifPlugin.initialize(initializationSettings);
@@ -37,7 +37,7 @@ class NotificationProvider {
   }
 
   Future<void> _showNotification(RemoteMessage message) async {
-    String title = message.notification?.title ?? 'Hello';
+    String title = message.notification?.title ?? "Hello";
     String body = message.notification?.body ?? "Hello";
 
     var androidDetails = AndroidNotificationDetails(
