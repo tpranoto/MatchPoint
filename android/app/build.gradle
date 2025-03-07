@@ -14,6 +14,7 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -49,8 +50,17 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+
+    buildFeatures {
+        viewBinding true // Optional if you're using view binding
+    }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }

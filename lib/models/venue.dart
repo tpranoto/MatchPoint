@@ -76,7 +76,8 @@ class Venue {
       latitude: data["latitude"],
       longitude: data["longitude"],
       distance: data["distance"],
-      photoUrls: (data["photoUrls"] as List).map((e) => e as String).toList(),
+      photoUrls:
+          (data["photoUrls"] as List?)?.map((e) => e as String).toList() ?? [],
       sportCategory: currCategory,
       priceInCent: currCategory.categoryBasedPrice,
       ratings: data["ratings"],

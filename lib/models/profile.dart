@@ -7,9 +7,11 @@ class Profile {
   final String photoUrl;
   int reservationsCount;
   int reviewsCount;
+  String? fcmToken;
 
   Profile(this.id, this.email, this.name, this.photoUrl, this.reservationsCount,
-      this.reviewsCount);
+      this.reviewsCount,
+      {this.fcmToken});
 
   factory Profile.fromAuth(Auth auth) {
     return Profile(
@@ -30,16 +32,18 @@ class Profile {
       data["photoUrl"],
       data["reservationsCount"] ?? 0,
       data["reviewsCount"] ?? 0,
+      fcmToken: data["fcmToken"],
     );
   }
 
-  Map<String,dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
-      "email":email,
-      "name":name,
+      "email": email,
+      "name": name,
       "photoUrl": photoUrl,
       "reservationsCount": reservationsCount,
       "reviewsCount": reviewsCount,
+      "fcmToken": fcmToken,
     };
   }
 }

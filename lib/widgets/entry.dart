@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import 'login_page.dart';
@@ -11,8 +12,9 @@ class Entry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileProvider = context.watch<ProfileProvider>();
-    final authProvider = context.watch<AppAuthProvider>();
+    final profileProvider = context.read<ProfileProvider>();
+    final authProvider = context.read<AppAuthProvider>();
+    final notifProvider = context.read<NotificationProvider>();
 
     return MPStreamBuilder(
       stream: authProvider.stateChanges,
@@ -23,16 +25,24 @@ class Entry extends StatelessWidget {
         }
 
         return MPFutureBuilder(
-          future: profileProvider.loadProfile(snapshot.data!.uid),
-          onSuccess: (context, snapshot) {
-            if (snapshot.hasError) {
-              errorDialog(context, "${snapshot.error}");
-              return LoginPage();
-            }
+            future: profileProvider.loadProfile(snapshot.data!.uid),
+            onSuccess: (context, snapshot) {
+              if (snapshot.hasError) {
+                errorDialog(context, "${snapshot.error}");
+                return LoginPage();
+              }
 
-            return MainScaffold();
-          },
-        );
+              return MPFutureBuilder(
+                future: notifProvider.setupNotification(context),
+                onSuccess: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    errorDialog(context, "${snapshot.error}");
+                    return LoginPage();
+                  }
+                  return MainScaffold();
+                },
+              );
+            });
       },
     );
   }

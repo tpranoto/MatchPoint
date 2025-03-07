@@ -71,6 +71,19 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateFCMToken(String? token) async {
+    if (_currentProfile == null || token == null) return;
+
+    final profileRef = _profileCollection.doc(_currentProfile!.id);
+
+    await profileRef.update({
+      'fcmToken': token,
+    });
+
+    _currentProfile!.fcmToken = token;
+    notifyListeners();
+  }
+
   void removeProfile() {
     _currentProfile = null;
   }
