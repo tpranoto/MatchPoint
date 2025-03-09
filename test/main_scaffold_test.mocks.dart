@@ -6,17 +6,21 @@
 import 'dart:async' as _i6;
 import 'dart:ui' as _i9;
 
+import 'package:flutter/material.dart' as _i18;
 import 'package:geolocator/geolocator.dart' as _i2;
 import 'package:matchpoint/models/auth.dart' as _i3;
 import 'package:matchpoint/models/category.dart' as _i13;
 import 'package:matchpoint/models/profile.dart' as _i4;
 import 'package:matchpoint/models/reservation.dart' as _i15;
+import 'package:matchpoint/models/review.dart' as _i20;
 import 'package:matchpoint/models/timeslot.dart' as _i16;
 import 'package:matchpoint/models/venue.dart' as _i12;
 import 'package:matchpoint/providers/auth_provider.dart' as _i7;
 import 'package:matchpoint/providers/location_provider.dart' as _i5;
+import 'package:matchpoint/providers/notification_provider.dart' as _i17;
 import 'package:matchpoint/providers/profile_provider.dart' as _i8;
 import 'package:matchpoint/providers/reservation_provider.dart' as _i14;
+import 'package:matchpoint/providers/review_provider.dart' as _i19;
 import 'package:matchpoint/providers/venue_provider.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i11;
@@ -221,6 +225,24 @@ class MockProfileProvider extends _i1.Mock implements _i8.ProfileProvider {
   _i6.Future<void> decrReservations() =>
       (super.noSuchMethod(
             Invocation.method(#decrReservations, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> incrReviews() =>
+      (super.noSuchMethod(
+            Invocation.method(#incrReviews, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> updateFCMToken(String? token) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateFCMToken, [token]),
             returnValue: _i6.Future<void>.value(),
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
@@ -482,6 +504,15 @@ class MockReservationProvider extends _i1.Mock
           as _i6.Future<void>);
 
   @override
+  _i6.Future<void> userReservationReviewed(String? rsvId) =>
+      (super.noSuchMethod(
+            Invocation.method(#userReservationReviewed, [rsvId]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
   void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
@@ -504,4 +535,68 @@ class MockReservationProvider extends _i1.Mock
     Invocation.method(#notifyListeners, []),
     returnValueForMissingStub: null,
   );
+}
+
+/// A class which mocks [NotificationProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationProvider extends _i1.Mock
+    implements _i17.NotificationProvider {
+  @override
+  _i6.Future<void> setupNotification(_i18.BuildContext? ctx) =>
+      (super.noSuchMethod(
+            Invocation.method(#setupNotification, [ctx]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+}
+
+/// A class which mocks [ReviewProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockReviewProvider extends _i1.Mock implements _i19.ReviewProvider {
+  @override
+  List<_i20.Review> get venueReviewData =>
+      (super.noSuchMethod(
+            Invocation.getter(#venueReviewData),
+            returnValue: <_i20.Review>[],
+            returnValueForMissingStub: <_i20.Review>[],
+          )
+          as List<_i20.Review>);
+
+  @override
+  double get ratings =>
+      (super.noSuchMethod(
+            Invocation.getter(#ratings),
+            returnValue: 0.0,
+            returnValueForMissingStub: 0.0,
+          )
+          as double);
+
+  @override
+  _i6.Future<void> loadVenueReviews(
+    String? venueId,
+    double? oldRatings,
+    int? ratingsCount,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadVenueReviews, [
+              venueId,
+              oldRatings,
+              ratingsCount,
+            ]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> addMyNewReview(_i20.Review? review) =>
+      (super.noSuchMethod(
+            Invocation.method(#addMyNewReview, [review]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
 }

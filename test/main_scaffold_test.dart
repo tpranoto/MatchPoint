@@ -17,6 +17,8 @@ import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
 import 'package:matchpoint/providers/reservation_provider.dart';
+import 'package:matchpoint/providers/notification_provider.dart';
+import 'package:matchpoint/providers/review_provider.dart';
 import 'main_scaffold_test.mocks.dart';
 
 @GenerateNiceMocks([
@@ -25,6 +27,8 @@ import 'main_scaffold_test.mocks.dart';
   MockSpec<ProfileProvider>(),
   MockSpec<VenueProvider>(),
   MockSpec<ReservationProvider>(),
+  MockSpec<NotificationProvider>(),
+  MockSpec<ReviewProvider>(),
 ])
 void main() {
   testWidgets(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:matchpoint/widgets/venue_detail_page.dart';
+import 'package:matchpoint/widgets/venue_detail_timeslot.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/models/venue.dart';
 import 'package:matchpoint/models/reservation.dart';
@@ -12,12 +12,13 @@ import 'main_scaffold_test.mocks.dart';
 
 void main() {
   testWidgets(
-      'Venue Detail Page shows the venue data and reservations availability based on the passed in Object',
+      'Venue Detail Timeslot shows all available time slots based on provider source and clickable',
       (WidgetTester tester) async {
     final mockRsvProvider = MockReservationProvider();
     final mockReviewProvider = MockReviewProvider();
     when(mockRsvProvider.venueScheduleStream).thenAnswer((_) => Stream.value(
-        RsStatusList(DateTime(2025, 02, 28), getDefaultDailySchedule())));
+        RsStatusList(
+            DateTime.now().add(Duration(days: 1)), getDefaultDailySchedule())));
     final mockVenue = Venue(
       id: "id1",
       name: "the tennis court",
@@ -43,15 +44,22 @@ void main() {
               value: mockReviewProvider,
             ),
           ],
-          child: VenueDetailPage(mockVenue),
+          child: Scaffold(
+            body: VenueDetailTimeslot(
+                selectedDate: DateTime.now().add(Duration(days: 1))),
+          ),
         ),
       ),
     );
 
     await tester.pumpAndSettle();
 
-    expect(find.text("the tennis court"), findsOneWidget);
-    expect(find.text("Make a reservation"), findsOneWidget);
-    expect(find.text("Available timeslots"), findsOneWidget);
+    expect(find.text("07:00"), findsOneWidget);
+
+    await tester.tap(find.text("07:00"));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text("07:00"));
+    await tester.pumpAndSettle();
   });
 }
