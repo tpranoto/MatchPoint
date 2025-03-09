@@ -29,8 +29,8 @@ class NotificationProvider {
         InitializationSettings(android: androidSettings);
     await _localNotifPlugin.initialize(initializationSettings);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _showNotification(message);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      await _showNotification(message);
     });
 
     FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);

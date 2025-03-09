@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:matchpoint/providers/notification_provider.dart';
+import 'package:matchpoint/providers/review_provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'widgets/entry.dart';
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
           create: (ctx) => NotificationProvider(
               FirebaseMessaging.instance, FlutterLocalNotificationsPlugin()),
         ),
+        Provider(
+          create: (ctx) => ReviewProvider(FirebaseFirestore.instance),
+        )
       ],
       child: MaterialApp(
         title: 'Match Point',

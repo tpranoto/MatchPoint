@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
+import 'review_input_dialog.dart';
 import '../providers/profile_provider.dart';
 import '../providers/reservation_provider.dart';
 import '../models/reservation.dart';
@@ -23,6 +24,7 @@ class MyReservationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profileProv = context.watch<ProfileProvider>();
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -43,11 +45,27 @@ class MyReservationCard extends StatelessWidget {
             ),
           ),
           subtitle: _RsvDetails(rsv),
-          trailing: IconButton(
-            icon: Icon(Icons.delete, color:rsv.rsvPassed() ? Colors.grey : Colors.red),
-            onPressed:
-                rsv.rsvPassed() ? null : () => _onCancelPress(context, rsv),
-          ),
+          trailing: rsv.rsvPassed()
+              ? rsv.reviewed == null
+                  ? IconButton(
+                      tooltip: "Give reviews",
+                      icon: Icon(Icons.reviews,
+                          color: Theme.of(context).colorScheme.tertiary),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ReviewDialog(
+                                  rsv, profileProv.getProfile.name);
+                            });
+                      },
+                    )
+                  : SizedBox.shrink()
+              : IconButton(
+                  tooltip: "Cancel reservation",
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => _onCancelPress(context, rsv),
+                ),
           expandedAlignment: Alignment.centerLeft,
           children: [
             ...rsv.timeSlots.map((ts) {
