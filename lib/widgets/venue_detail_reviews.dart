@@ -68,7 +68,16 @@ class VenueDetailsReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(review.name),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(review.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            const Spacer(),
+            Text(review.createdAt.toLocal().toString().split(' ')[0],
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            ),
+          ],
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
