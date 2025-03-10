@@ -31,8 +31,10 @@ class _MainScaffoldState extends State<MainScaffold> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          ["Match Point", "My Reservations", "My Profile"][_selectedIndex],
+        elevation: 5,
+        backgroundColor: Colors.indigo.shade100,
+       title: Text(
+          ["Match Point Home", "My Reservations", "My Profile"][_selectedIndex],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -44,6 +46,10 @@ class _MainScaffoldState extends State<MainScaffold> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        backgroundColor: Colors.indigo.shade100,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.black,
+        showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
