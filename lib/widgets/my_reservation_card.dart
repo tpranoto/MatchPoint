@@ -28,21 +28,29 @@ class MyReservationCard extends StatelessWidget {
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 10),
-      child: Theme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Column(
+      children: [
+        Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          title: SizedBox(
-            height: 48,
-            child: Text(
-              rsv.venueDetails.name,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(rsv.venueDetails.name,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                ),
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            ],
           ),
           subtitle: _RsvDetails(rsv),
           trailing: rsv.rsvPassed()
@@ -52,15 +60,12 @@ class MyReservationCard extends StatelessWidget {
                       icon: Icon(Icons.reviews,
                           color: Theme.of(context).colorScheme.tertiary),
                       onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ReviewDialog(
-                                  rsv, profileProv.getProfile.name);
+                        showDialog(context: context, builder: (BuildContext context) {
+                              return ReviewDialog(rsv, profileProv.getProfile.name);
                             });
                       },
                     )
-                  : SizedBox.shrink()
+                  : const SizedBox.shrink()
               : IconButton(
                   tooltip: "Cancel reservation",
                   icon: Icon(Icons.delete, color: Colors.red),
@@ -68,16 +73,36 @@ class MyReservationCard extends StatelessWidget {
                 ),
           expandedAlignment: Alignment.centerLeft,
           children: [
-            ...rsv.timeSlots.map((ts) {
-              return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: Text(
-                    ts.showTimeRange,
-                    style: TextStyle(fontSize: 14),
-                  ));
-            })
-          ],
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: rsv.timeSlots.map((ts) {
+                  return Container(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    margin: const EdgeInsets.only(bottom: 6),
+                    decoration: BoxDecoration(color: Colors.blueGrey.shade50, borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time, size: 18, color: Colors.teal),
+                        const SizedBox(width: 8),
+                        Text(ts.showTimeRange, style: const TextStyle(fontSize: 14),),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(height: 8),
+        const Center(child: Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 28),),
+        const SizedBox(height: 8),
+      ],
       ),
     );
   }
@@ -92,29 +117,17 @@ class _RsvDetails extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
-              child: IconWithText(
-                icon: Icons.calendar_today,
-                text: rsv.reservationDate.toLocal().toString().split(' ')[0],
-                size: 14,
+            Flexible(child: IconWithText(icon: Icons.calendar_today, text: rsv.reservationDate.toLocal().toString().split(' ')[0], size: 14,
               ),
             ),
-            Flexible(
-              child: IconWithText(
-                icon: Icons.sports_soccer_outlined,
-                text: rsv.venueDetails.sportCategory.categoryString,
-                size: 14,
+            Flexible(child: IconWithText(icon: Icons.sports_soccer_outlined, text: rsv.venueDetails.sportCategory.categoryString, size: 14,
               ),
             ),
           ],
         ),
-        IconWithText(
-          icon: Icons.access_time,
-          text: "${rsv.timeSlots.length} timeslots reserved",
-          size: 14,
+        IconWithText(icon: Icons.access_time, text: "${rsv.timeSlots.length} timeslots reserved", size: 14,
         ),
       ],
     );
