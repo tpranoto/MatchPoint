@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/widgets/my_review_page.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import 'entry.dart';
+import 'my_review_page.dart';
 import 'profile_information.dart';
 import '../providers/profile_provider.dart';
 import '../providers/auth_provider.dart';
@@ -15,12 +15,14 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final profileData = context.watch<ProfileProvider>().getProfile;
     return Scaffold(
-      body: Container( decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.white, Colors.indigo.shade100],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.indigo.shade100],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-      ),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -31,8 +33,8 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 ProfileInfo(profileData: profileData),
                 ProfileStats(),
-                _MyReviewsButton(),
-                _LogOutButton(),
+                Flexible(child: _MyReviewsButton()),
+                Flexible(child: _LogOutButton()),
               ],
             ),
           ),
@@ -79,13 +81,13 @@ class _LogOutButton extends StatelessWidget {
         showConfirmationDialog(
           context,
           "Log Out",
-              () async {
+          () async {
             await authProvider.signOut();
             venueProvider.resetVenues();
             profileProvider.removeProfile();
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (ctx) => Entry()),
-                    (Route<dynamic> route) => false);
+                (Route<dynamic> route) => false);
           },
         );
       },
@@ -112,7 +114,8 @@ Widget _styledButton({
         shadowColor: Colors.black38,
       ),
       icon: Icon(icon, size: 22),
-      label: Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+      label: Text(text,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
       onPressed: onPressed,
     ),
   );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/widgets/venue_detail_reviews.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import 'main_scaffold.dart';
 import 'simple_venue_detail.dart';
+import 'venue_detail_reviews.dart';
 import 'venue_detail_rsv.dart';
 import '../models/venue.dart';
 import '../providers/review_provider.dart';

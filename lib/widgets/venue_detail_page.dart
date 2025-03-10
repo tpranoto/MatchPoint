@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/widgets/venue_detail_content.dart';
-import '../models/venue.dart';
+import 'venue_detail_content.dart';
 import 'carousel_image.dart';
+import '../models/venue.dart';
 
 class VenueDetailPage extends StatelessWidget {
   final Venue venue;
