@@ -14,7 +14,7 @@ class ProfileInfo extends StatelessWidget {
     return Column(
       children: [
         CircleAvatar(
-          radius: 50,
+          radius: 90,
           backgroundImage: NetworkImage(profileData.photoUrl),
         ),
         CenteredTitle(profileData.name, size: 22),
@@ -36,7 +36,7 @@ class ProfileStats extends StatelessWidget {
 
     return PaddedCard(
       padding: 15,
-      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      color: Theme.of(context).colorScheme.onPrimary,
       child: Row(
         children: [
           Expanded(

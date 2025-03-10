@@ -17,37 +17,41 @@ class MyReviewPage extends StatelessWidget {
         centerTitle: true,
         elevation: 5,
         backgroundColor: Colors.indigo.shade100,
-        title: Text(
-          "My Reviews",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("My Reviews",
+            style: TextStyle(fontWeight: FontWeight.bold)),
       ),
-      body: MPFutureBuilder(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.indigo.shade50, Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: MPFutureBuilder(
           future: reviewProv.loadUserReviews(profileId),
           onSuccess: (ctx, snapshot) {
             if (snapshot.hasError) {
               errorDialog(ctx, "${snapshot.error}");
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                      builder: (ctx) => MainScaffold(
-                            startIndex: 2,
-                          )),
-                  (Route<dynamic> route) => false);
+                      builder: (ctx) => const MainScaffold(startIndex: 2)),
+                      (Route<dynamic> route) => false);
             }
-
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.all(15),
               child: reviewProv.userReviewData.isEmpty
-                  ? Center(child: Text("No reviews available"))
-                  : Column(
-                      spacing: 10,
-                      children: [
-                        ...reviewProv.userReviewData
-                            .map((item) => _MyReviewCard(item)),
-                      ],
-                    ),
+                  ? const Center(
+                  child: Text("No reviews available",
+                      style: TextStyle(fontSize: 16, color: Colors.grey)))
+                  : ListView.builder(
+                  itemCount: reviewProv.userReviewData.length,
+                  itemBuilder: (_, i) =>
+                      _MyReviewCard(reviewProv.userReviewData[i])),
             );
-          }),
+          },
+        ),
+      ),
     );
   }
 }
@@ -59,9 +63,34 @@ class _MyReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(review.name),
-        subtitle: Text(review.comment),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 5,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+                children: [CircleAvatar(
+                  backgroundColor: Colors.indigo.shade100,
+                  child: Text(review.name[0].toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+              const SizedBox(width: 10),
+              Expanded(
+                  child: Text(review.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+              Text(review.createdAt.toLocal().toString().split(' ')[0],
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+            ]),
+            const SizedBox(height: 8),
+            RatingStar(
+                rating: review.rating.toDouble(), count: 5, useNumeric: true),
+            const SizedBox(height: 6),
+            Text(review.comment,
+                style: const TextStyle(fontSize: 14, color: Colors.black87)),
+          ],
+        ),
       ),
     );
   }

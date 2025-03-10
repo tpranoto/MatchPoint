@@ -14,48 +14,50 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileData = context.watch<ProfileProvider>().getProfile;
-
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Column(
-          spacing: 10,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ProfileInfo(profileData: profileData),
-            ProfileStats(),
-            SizedBox(height: 20),
-            _MyReviewsButton(),
-            _LogOutButton(),
-          ],
+    return Scaffold(
+      body: Container( decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [Colors.white, Colors.indigo.shade100],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        ),
+      ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ProfileInfo(profileData: profileData),
+                const SizedBox(height: 20),
+                ProfileStats(),
+                SizedBox(height: 20),
+                _MyReviewsButton(),
+                const SizedBox(height: 20),
+                _LogOutButton(),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
-
 class _MyReviewsButton extends StatelessWidget {
   const _MyReviewsButton();
 
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<ProfileProvider>().getProfile;
-
-    return Row(
-      children: [
-        Expanded(
-          child: SquaredButton(
-            text: "My Reviews",
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (ctx) => MyReviewPage(profile.id)));
-            },
-            icon: Icon(
-              Icons.reviews,
-            ),
-          ),
-        ),
-      ],
+    return _styledButton(
+      text: "My Reviews",
+      icon: Icons.reviews,
+      bgColor: Colors.white,
+      textColor: Colors.black,
+      onPressed: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (ctx) => MyReviewPage(profile.id)));
+      },
     );
   }
 }
@@ -68,34 +70,50 @@ class _LogOutButton extends StatelessWidget {
     final profileProvider = context.read<ProfileProvider>();
     final authProvider = context.read<AppAuthProvider>();
     final venueProvider = context.read<VenueProvider>();
-    return Row(
-      children: [
-        Expanded(
-          child: SquaredButton(
-            text: "Log Out",
-            onPressed: () {
-              showConfirmationDialog(
-                context,
-                "Log Out",
-                () async {
-                  await authProvider.signOut();
-                  venueProvider.resetVenues();
-                  profileProvider.removeProfile();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (ctx) => Entry()),
-                      (Route<dynamic> route) => false);
-                },
-              );
-            },
-            icon: Icon(
-              Icons.logout,
-              color: Colors.white,
-            ),
-            bg: Colors.redAccent,
-            fg: Colors.white,
-          ),
-        ),
-      ],
+
+    return _styledButton(
+      text: "Log Out",
+      icon: Icons.logout,
+      bgColor: Colors.redAccent.shade200,
+      textColor: Colors.white,
+      onPressed: () {
+        showConfirmationDialog(
+          context,
+          "Log Out",
+              () async {
+            await authProvider.signOut();
+            venueProvider.resetVenues();
+            profileProvider.removeProfile();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (ctx) => Entry()),
+                    (Route<dynamic> route) => false);
+          },
+        );
+      },
     );
   }
+}
+Widget _styledButton({
+  required String text,
+  required IconData icon,
+  required Color bgColor,
+  required Color textColor,
+  required VoidCallback onPressed,
+}) {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        backgroundColor: bgColor,
+        foregroundColor: textColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 6,
+        shadowColor: Colors.black38,
+      ),
+      icon: Icon(icon, size: 22),
+      label: Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+      onPressed: onPressed,
+    ),
+  );
 }
