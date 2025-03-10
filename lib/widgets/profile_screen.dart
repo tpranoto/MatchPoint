@@ -25,15 +25,13 @@ class ProfileScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
+              spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ProfileInfo(profileData: profileData),
-                const SizedBox(height: 20),
                 ProfileStats(),
-                SizedBox(height: 20),
                 _MyReviewsButton(),
-                const SizedBox(height: 20),
                 _LogOutButton(),
               ],
             ),
@@ -43,6 +41,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
 class _MyReviewsButton extends StatelessWidget {
   const _MyReviewsButton();
 
@@ -93,6 +92,7 @@ class _LogOutButton extends StatelessWidget {
     );
   }
 }
+
 Widget _styledButton({
   required String text,
   required IconData icon,

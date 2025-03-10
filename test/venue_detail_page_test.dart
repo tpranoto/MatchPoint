@@ -51,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text("the tennis court"), findsOneWidget);
-    expect(find.text("Make a reservation"), findsOneWidget);
-    expect(find.text("Available timeslots"), findsOneWidget);
+    expect(find.text("Make a Reservation"), findsOneWidget);
+    expect(find.text("Available Timeslots"), findsOneWidget);
   });
 }
