@@ -6,11 +6,13 @@ class ReviewProvider {
 
   late double _ratings;
   late List<Review> _venueReviewData;
+  late List<Review> _userReviewData;
 
   ReviewProvider(FirebaseFirestore firestore)
       : _reviewCollection = firestore.collection("review");
 
   List<Review> get venueReviewData => _venueReviewData;
+  List<Review> get userReviewData => _userReviewData;
   double get ratings => _ratings;
 
   Future<void> loadVenueReviews(
@@ -36,11 +38,27 @@ class ReviewProvider {
     }
 
     if (oldRatings == null) {
-      _ratings = inAppRatings;
+      _ratings = inAppRatings / _venueReviewData.length;
     } else {
       _ratings = (inAppRatings + (oldRatings * (ratingsCount ?? 0))) /
           ((ratingsCount ?? 0) + _venueReviewData.length);
     }
+  }
+
+  Future<void> loadUserReviews(String profileId) async {
+    final reviewRef = _reviewCollection
+        .where("profileId", isEqualTo: profileId)
+        .orderBy("createdAt", descending: true);
+
+    final snapshot = await reviewRef.get();
+    if (snapshot.size == 0) {
+      _userReviewData = [];
+      return;
+    }
+
+    _userReviewData = snapshot.docs
+        .map((doc) => Review.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> addMyNewReview(Review review) async {

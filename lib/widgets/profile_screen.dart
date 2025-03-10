@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/widgets/my_review_page.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import 'entry.dart';
@@ -18,15 +19,43 @@ class ProfileScreen extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
-          spacing: 20,
+          spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ProfileInfo(profileData: profileData),
             ProfileStats(),
+            SizedBox(height: 20),
+            _MyReviewsButton(),
             _LogOutButton(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _MyReviewsButton extends StatelessWidget {
+  const _MyReviewsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final profile = context.watch<ProfileProvider>().getProfile;
+
+    return Row(
+      children: [
+        Expanded(
+          child: SquaredButton(
+            text: "My Reviews",
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (ctx) => MyReviewPage(profile.id)));
+            },
+            icon: Icon(
+              Icons.reviews,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -53,9 +82,8 @@ class _LogOutButton extends StatelessWidget {
                   venueProvider.resetVenues();
                   profileProvider.removeProfile();
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (ctx) => Entry()),
-                          (Route<dynamic> route) => false);
+                      MaterialPageRoute(builder: (ctx) => Entry()),
+                      (Route<dynamic> route) => false);
                 },
               );
             },
