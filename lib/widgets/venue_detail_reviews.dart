@@ -12,8 +12,8 @@ class VenueDetailReviews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reviewProv = context.watch<ReviewProvider>();
-    final totalReviews = reviewProv.venueReviewData.length +
-        (venue.ratingsTotal ?? 0);
+    final totalReviews =
+        reviewProv.venueReviewData.length + (venue.ratingsTotal ?? 0);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -26,11 +26,15 @@ class VenueDetailReviews extends StatelessWidget {
             children: [
               title("Customer Ratings & Reviews", 18, FontWeight.bold),
               const SizedBox(height: 6),
-              Text("${reviewProv.ratings}",
+              Text(reviewProv.ratings.toStringAsPrecision(2),
                   style: const TextStyle(
-                      fontSize: 32, fontWeight: FontWeight.bold, color: Colors.indigo)),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.indigo)),
               const SizedBox(height: 6),
-              RatingStar(rating: reviewProv.ratings, count: totalReviews,
+              RatingStar(
+                  rating: reviewProv.ratings,
+                  count: totalReviews,
                   isCentered: true),
               const SizedBox(height: 4),
               Text("$totalReviews ratings",
@@ -40,7 +44,7 @@ class VenueDetailReviews extends StatelessWidget {
                 title("Reviews", 16, FontWeight.w600),
               const SizedBox(height: 8),
               ...reviewProv.venueReviewData.map(
-                      (review) => VenueDetailsReviewCard(review, totalReviews)),
+                  (review) => VenueDetailsReviewCard(review, totalReviews)),
             ],
           ),
         ),
@@ -49,10 +53,10 @@ class VenueDetailReviews extends StatelessWidget {
   }
 
   Widget title(String text, double size, FontWeight weight) => Text(
-    text,
-    style: TextStyle(fontSize: size, fontWeight: weight),
-    textAlign: TextAlign.center,
-  );
+        text,
+        style: TextStyle(fontSize: size, fontWeight: weight),
+        textAlign: TextAlign.center,
+      );
 }
 
 class VenueDetailsReviewCard extends StatelessWidget {
@@ -63,22 +67,16 @@ class VenueDetailsReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
+      child: ListTile(
+        title: Text(review.name),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(review.name,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 4),
-            RatingStar(rating: review.rating.toDouble(), count: reviewCount,
+            RatingStar(
+                rating: review.rating.toDouble(),
+                count: reviewCount,
                 useNumeric: true),
-            const SizedBox(height: 6),
-            Text(review.comment,
-                style: const TextStyle(fontSize: 14, color: Colors.black87)),
+            Text(review.comment),
           ],
         ),
       ),

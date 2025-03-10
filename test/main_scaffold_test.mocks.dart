@@ -566,6 +566,15 @@ class MockReviewProvider extends _i1.Mock implements _i19.ReviewProvider {
           as List<_i20.Review>);
 
   @override
+  List<_i20.Review> get userReviewData =>
+      (super.noSuchMethod(
+            Invocation.getter(#userReviewData),
+            returnValue: <_i20.Review>[],
+            returnValueForMissingStub: <_i20.Review>[],
+          )
+          as List<_i20.Review>);
+
+  @override
   double get ratings =>
       (super.noSuchMethod(
             Invocation.getter(#ratings),
@@ -586,6 +595,15 @@ class MockReviewProvider extends _i1.Mock implements _i19.ReviewProvider {
               oldRatings,
               ratingsCount,
             ]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> loadUserReviews(String? profileId) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadUserReviews, [profileId]),
             returnValue: _i6.Future<void>.value(),
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
