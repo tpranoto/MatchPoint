@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'common.dart';
 import '../models/category.dart';
 import '../models/venue.dart';
+import '../providers/review_provider.dart';
 
 class SimpleVenueDetail extends StatelessWidget {
   final Venue venue;
@@ -28,7 +30,7 @@ class SimpleVenueDetail extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            _PlaceInfo(venue),
+            VenuePlaceInfo(venue),
           ],
         ),
       ),
@@ -36,18 +38,44 @@ class SimpleVenueDetail extends StatelessWidget {
   }
 }
 
-class _PlaceInfo extends StatelessWidget {
+class VenuePlaceInfo extends StatelessWidget {
   final Venue venue;
-  const _PlaceInfo(this.venue);
+  const VenuePlaceInfo(this.venue, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    final reviewProv = context.watch<ReviewProvider>();
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         spacing: 8,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            spacing: 16,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: IconWithText(
+                  icon: Icons.sports_soccer_outlined,
+                  text: venue.sportCategory.categoryString,
+                  textColor: Colors.blueGrey,
+                ),
+              ),
+              Expanded(
+                child: venue.ratingsTotal == null && venue.ratings == null ||
+                        reviewProv.ratings == 0
+                    ? SizedBox.shrink()
+                    : RatingStar(
+                        rating: reviewProv.ratings,
+                        count: reviewProv.venueReviewData.length +
+                            (venue.ratingsTotal ?? 0),
+                        size: 20,
+                        useNumeric: true,
+                      ),
+              ),
+            ],
+          ),
           Row(
             spacing: 16,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,11 +89,11 @@ class _PlaceInfo extends StatelessWidget {
               ),
               Expanded(
                 child: IconWithText(
-                  icon: Icons.sports_soccer_outlined,
-                  text: venue.sportCategory.categoryString,
+                  icon: Icons.attach_money_outlined,
+                  text: "${venue.priceInCent / 100}/hr",
                   textColor: Colors.blueGrey,
                 ),
-              ),
+              )
             ],
           ),
           IconWithText(

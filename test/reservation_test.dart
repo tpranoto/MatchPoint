@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matchpoint/models/category.dart';
-import 'package:matchpoint/models/profile.dart';
-import 'package:matchpoint/models/auth.dart';
 import 'package:matchpoint/models/reservation.dart';
 import 'package:matchpoint/models/timeslot.dart';
 import 'package:matchpoint/models/venue.dart';

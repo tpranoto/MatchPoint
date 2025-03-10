@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:matchpoint/widgets/entry.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
+import 'package:matchpoint/widgets/entry.dart';
 import 'package:matchpoint/widgets/main_scaffold.dart';
 import 'package:matchpoint/models/auth.dart';
 import 'package:matchpoint/models/category.dart';
@@ -14,6 +14,7 @@ import 'package:matchpoint/providers/auth_provider.dart';
 import 'package:matchpoint/providers/location_provider.dart';
 import 'package:matchpoint/providers/profile_provider.dart';
 import 'package:matchpoint/providers/venue_provider.dart';
+import 'package:matchpoint/providers/notification_provider.dart';
 import 'main_scaffold_test.mocks.dart';
 
 void main() {
@@ -21,6 +22,7 @@ void main() {
       (WidgetTester tester) async {
     final mockAuthProvider = MockAppAuthProvider();
     final mockProfileProvider = MockProfileProvider();
+    final mockNotifProvider = MockNotificationProvider();
 
     when(mockAuthProvider.stateChanges)
         .thenAnswer((_) => Stream.fromIterable([]));
@@ -34,6 +36,9 @@ void main() {
             ),
             ChangeNotifierProvider<ProfileProvider>.value(
               value: mockProfileProvider,
+            ),
+            Provider<NotificationProvider>.value(
+              value: mockNotifProvider,
             ),
           ],
           child: Entry(),
@@ -51,6 +56,7 @@ void main() {
     final mockAuthProvider = MockAppAuthProvider();
     final mockProfileProvider = MockProfileProvider();
     final mockVenueProvider = MockVenueProvider();
+    final mockNotifProvider = MockNotificationProvider();
 
     when(mockAuthProvider.stateChanges).thenAnswer((_) => Stream.value(
         Auth("id1", "email1@gmail.com", "Hey Ho", "http://my-profile-pic")));
@@ -111,6 +117,9 @@ void main() {
             ),
             ChangeNotifierProvider<VenueProvider>.value(
               value: mockVenueProvider,
+            ),
+            Provider<NotificationProvider>.value(
+              value: mockNotifProvider,
             ),
           ],
           child: Entry(),

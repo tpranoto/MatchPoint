@@ -101,7 +101,8 @@ class ReservationProvider extends ChangeNotifier {
     }
 
     _userReservationsList = snapshot.docs
-        .map((doc) => Reservation.fromMap(doc.data() as Map<String, dynamic>))
+        .map((doc) => Reservation.fromMap(doc.data() as Map<String, dynamic>,
+            rsvId: doc.id))
         .toList();
   }
 
@@ -124,6 +125,25 @@ class ReservationProvider extends ChangeNotifier {
       final rsv = Reservation.fromMap(doc.data() as Map<String, dynamic>);
       await doc.reference.delete();
       _userReservationsList.remove(rsv);
+    }
+    notifyListeners();
+  }
+
+  Future<void> userReservationReviewed(String rsvId) async {
+    final rsvRef = _reservationCollection.doc(rsvId);
+    final snapshot = await rsvRef.get();
+    if (!snapshot.exists) {
+      return;
+    }
+
+    await rsvRef.update({
+      "reviewed": true,
+    });
+
+    for (var rsv in _userReservationsList) {
+      if (rsv.rsvId == rsvId) {
+        rsv.reviewed = true;
+      }
     }
     notifyListeners();
   }

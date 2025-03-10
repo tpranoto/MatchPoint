@@ -2,22 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:matchpoint/widgets/venue_detail_page.dart';
+import 'package:matchpoint/widgets/venue_detail_reviews.dart';
 import 'package:matchpoint/models/category.dart';
 import 'package:matchpoint/models/venue.dart';
-import 'package:matchpoint/models/reservation.dart';
+import 'package:matchpoint/models/review.dart';
 import 'package:matchpoint/providers/review_provider.dart';
 import 'package:matchpoint/providers/reservation_provider.dart';
 import 'main_scaffold_test.mocks.dart';
 
 void main() {
   testWidgets(
-      'Venue Detail Page shows the venue data and reservations availability based on the passed in Object',
+      'Venue Detail Review shows the ratings and reviews based on the passed in Object',
       (WidgetTester tester) async {
     final mockRsvProvider = MockReservationProvider();
     final mockReviewProvider = MockReviewProvider();
-    when(mockRsvProvider.venueScheduleStream).thenAnswer((_) => Stream.value(
-        RsStatusList(DateTime(2025, 02, 28), getDefaultDailySchedule())));
+
+    when(mockReviewProvider.ratings).thenReturn(4.8);
+    when(mockReviewProvider.venueReviewData).thenReturn([
+      Review(
+          venueId: "id1",
+          profileId: "pId1",
+          rsvId: "rsvId1",
+          rating: 4,
+          comment: "this is a comment",
+          name: "Hur dur",
+          createdAt: DateTime.now())
+    ]);
+
     final mockVenue = Venue(
       id: "id1",
       name: "the tennis court",
@@ -43,15 +54,17 @@ void main() {
               value: mockReviewProvider,
             ),
           ],
-          child: VenueDetailPage(mockVenue),
+          child: Scaffold(
+            body: VenueDetailReviews(mockVenue),
+          ),
         ),
       ),
     );
 
     await tester.pumpAndSettle();
 
-    expect(find.text("the tennis court"), findsOneWidget);
-    expect(find.text("Make a Reservation"), findsOneWidget);
-    expect(find.text("Available Timeslots"), findsOneWidget);
+    expect(find.text("4.8"), findsOneWidget);
+    expect(find.text("13 ratings"), findsOneWidget);
+    expect(find.text("this is a comment"), findsOneWidget);
   });
 }

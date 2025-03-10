@@ -71,6 +71,19 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> incrReviews() async {
+    if (_currentProfile == null) return;
+
+    final profileRef = _profileCollection.doc(_currentProfile!.id);
+
+    await profileRef.update({
+      'reviewsCount': FieldValue.increment(1),
+    });
+
+    _currentProfile!.reservationsCount++;
+    notifyListeners();
+  }
+
   Future<void> updateFCMToken(String? token) async {
     if (_currentProfile == null || token == null) return;
 

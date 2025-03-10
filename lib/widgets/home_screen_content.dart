@@ -20,8 +20,8 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
 
   fetchVenuesList() async {
     final locProvider = context.read<LocationProvider>();
-    final venueProvider = context.read<VenueProvider>();
-    await venueProvider.fetchVenues(locProvider.latLong, selectedCategory,
+    await context.read<VenueProvider>().fetchVenues(
+        locProvider.latLong, selectedCategory,
         searchName: searchPlaceQuery.text);
   }
 
@@ -35,7 +35,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
   @override
   void initState() {
     super.initState();
-
     final venueProvider = context.read<VenueProvider>();
     if (venueProvider.getList.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -65,9 +64,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 SearchVenueBar(
                   outputCtrl: searchPlaceQuery,
                   selectedCat: selectedCategory,
-                  onSubmit: (value) {
-                    fetchVenuesList();
-                  },
+                  onSubmit: (value) => fetchVenuesList(),
                 ),
                 SizedBox(height: 10),
                 FilterBar(

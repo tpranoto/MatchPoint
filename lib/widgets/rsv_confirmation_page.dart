@@ -44,6 +44,8 @@ class RsvConfirmationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        elevation: 5,
+        backgroundColor: Colors.indigo.shade100,
         title: Text(
           "Confirmation",
           style: TextStyle(fontWeight: FontWeight.bold),

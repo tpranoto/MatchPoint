@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common.dart';
 import '../models/profile.dart';
-import 'package:matchpoint/providers/profile_provider.dart';
+import '../providers/profile_provider.dart';
 
 class ProfileInfo extends StatelessWidget {
   final Profile profileData;
@@ -10,11 +10,10 @@ class ProfileInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         CircleAvatar(
-          radius: 50,
+          radius: 90,
           backgroundImage: NetworkImage(profileData.photoUrl),
         ),
         CenteredTitle(profileData.name, size: 22),
@@ -36,7 +35,7 @@ class ProfileStats extends StatelessWidget {
 
     return PaddedCard(
       padding: 15,
-      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      color: Theme.of(context).colorScheme.onPrimary,
       child: Row(
         children: [
           Expanded(

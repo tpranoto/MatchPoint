@@ -3,12 +3,14 @@ import 'package:matchpoint/models/timeslot.dart';
 import 'package:matchpoint/models/venue.dart';
 
 class Reservation {
+  String? rsvId;
   final String venueId;
   final String profileId;
   final DateTime createdAt;
   final DateTime reservationDate;
   final List<TimeSlot> timeSlots;
   final Venue venueDetails;
+  bool? reviewed;
 
   Reservation({
     required this.venueId,
@@ -17,10 +19,12 @@ class Reservation {
     required this.reservationDate,
     required this.timeSlots,
     required this.venueDetails,
+    this.reviewed,
+    this.rsvId,
   });
 
-  factory Reservation.fromMap(Map<String, dynamic> data) {
-    return Reservation(
+  factory Reservation.fromMap(Map<String, dynamic> data, {String? rsvId}) {
+    Reservation rsv = Reservation(
       venueId: data['venueId'],
       profileId: data['profileId'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -29,7 +33,14 @@ class Reservation {
           .map((idx) => TimeSlot.values[idx])
           .toList(),
       venueDetails: Venue.fromMap(data["venueDetails"]),
+      reviewed: data['reviewed'],
     );
+
+    if (rsvId != null) {
+      rsv.rsvId = rsvId;
+    }
+
+    return rsv;
   }
 
   Map<String, dynamic> toMap() {
@@ -40,6 +51,7 @@ class Reservation {
       "createdAt": createdAt,
       "timeSlots": timeSlots.map((item) => item.index).toList(),
       "venueDetails": venueDetails.toMap(),
+      "reviewed": reviewed,
     };
   }
 
