@@ -27,11 +27,6 @@ class Entry extends StatelessWidget {
         return MPFutureBuilder(
             future: profileProvider.loadProfile(snapshot.data!.uid),
             onSuccess: (context, snapshot) {
-              if (snapshot.hasError) {
-                errorDialog(context, "${snapshot.error}");
-                return LoginPage();
-              }
-
               return MPFutureBuilder(
                 future: notifProvider.setupNotification(context),
                 onSuccess: (context, snapshot) {
