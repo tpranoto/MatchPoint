@@ -14,6 +14,9 @@ class ProfileProvider extends ChangeNotifier {
   Profile get getProfile => _currentProfile!;
 
   Future<void> loadProfile(String uid) async {
+    if (_currentProfile != null) {
+      return;
+    }
     final profileRef = _profileCollection.doc(uid);
     final snapshot = await profileRef.get();
     if (!snapshot.exists) {
