@@ -36,18 +36,18 @@ class MyReviewPage extends StatelessWidget {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                       builder: (ctx) => const MainScaffold(startIndex: 2)),
-                      (Route<dynamic> route) => false);
+                  (Route<dynamic> route) => false);
             }
             return Padding(
               padding: const EdgeInsets.all(15),
               child: reviewProv.userReviewData.isEmpty
                   ? const Center(
-                  child: Text("No reviews available",
-                      style: TextStyle(fontSize: 16, color: Colors.grey)))
+                      child: Text("No reviews available",
+                          style: TextStyle(fontSize: 16, color: Colors.grey)))
                   : ListView.builder(
-                  itemCount: reviewProv.userReviewData.length,
-                  itemBuilder: (_, i) =>
-                      _MyReviewCard(reviewProv.userReviewData[i])),
+                      itemCount: reviewProv.userReviewData.length,
+                      itemBuilder: (_, i) =>
+                          _MyReviewCard(reviewProv.userReviewData[i])),
             );
           },
         ),
@@ -71,21 +71,23 @@ class _MyReviewCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-                children: [CircleAvatar(
+            Row(children: [
+              CircleAvatar(
                   backgroundColor: Colors.indigo.shade100,
                   child: Text(review.name[0].toUpperCase(),
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white))),
               const SizedBox(width: 10),
               Expanded(
                   child: Text(review.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16))),
               Text(review.createdAt.toLocal().toString().split(' ')[0],
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
             ]),
             const SizedBox(height: 8),
             RatingStar(
-                rating: review.rating.toDouble(), count: 5, useNumeric: true),
+                rating: review.rating.toDouble(), count: 5, useNumeric: false),
             const SizedBox(height: 6),
             Text(review.comment,
                 style: const TextStyle(fontSize: 14, color: Colors.black87)),

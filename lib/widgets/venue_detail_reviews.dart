@@ -71,9 +71,11 @@ class VenueDetailsReviewCard extends StatelessWidget {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(review.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(review.name,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             const Spacer(),
-            Text(review.createdAt.toLocal().toString().split(' ')[0],
+            Text(
+              review.createdAt.toLocal().toString().split(' ')[0],
               style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             ),
           ],
@@ -84,7 +86,7 @@ class VenueDetailsReviewCard extends StatelessWidget {
             RatingStar(
                 rating: review.rating.toDouble(),
                 count: reviewCount,
-                useNumeric: true),
+                useNumeric: false),
             Text(review.comment),
           ],
         ),
